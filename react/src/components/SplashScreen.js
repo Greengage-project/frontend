@@ -19,7 +19,7 @@ const SlashScreen = () => (
   >
     <img
       alt='Splash logo'
-      src='/static/customization/logo-splash.svg'
+      src='/static/customization/logo-splash.png'
       height='60px'
     />
   </Box>
