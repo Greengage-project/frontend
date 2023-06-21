@@ -1,12 +1,11 @@
 name: build-and-publish-docker
 
 on:
-
   workflow_dispatch:
 
   push:
     tags:
-      - '*'
+      - "*"
 
     branches:
       - "master"
@@ -36,10 +35,10 @@ jobs:
           context: ./react
           push: true
           tags: |
-            interlinkproject/frontend:${{ github.ref_name }}
-            interlinkproject/frontend:${{ github.ref_name }}.${{ steps.date.outputs.date }}
-          cache-from: type=registry,ref=interlinkproject/frontend:buildcache
-          cache-to: type=registry,ref=interlinkproject/frontend:buildcache,mode=max
+            projectgreengage/ :${{ github.ref_name }}
+            projectgreengage/frontend:${{ github.ref_name }}.${{ steps.date.outputs.date }}
+          cache-from: type=registry,ref=projectgreengage/frontend:buildcache
+          cache-to: type=registry,ref=projectgreengage/frontend:buildcache,mode=max
       - name: Build and push Docker Image Documentation
         id: docker_build_frontend_docs
         uses: docker/build-push-action@v2
@@ -48,10 +47,10 @@ jobs:
           file: docs/Dockerfile
           push: true
           tags: |
-            interlinkproject/frontend-docs:${{ github.ref_name }}
-            interlinkproject/frontend-docs:${{ github.ref_name }}.${{ github.ref_name }}
-          cache-from: type=registry,ref=interlinkproject/frontend-docs:buildcache
-          cache-to: type=registry,ref=interlinkproject/frontend-docs:buildcache,mode=max
+            projectgreengage/frontend-docs:${{ github.ref_name }}
+            projectgreengage/frontend-docs:${{ github.ref_name }}.${{ github.ref_name }}
+          cache-from: type=registry,ref=projectgreengage/frontend-docs:buildcache
+          cache-to: type=registry,ref=projectgreengage/frontend-docs:buildcache,mode=max
       - name: Trigger Dev Deployment
         uses: octokit/request-action@v2.x
         id: trigger_dev_deployment
@@ -61,4 +60,4 @@ jobs:
           repo: interlink-project
           event_type: update-dev-environment
         env:
-          GITHUB_TOKEN: ${{ secrets.INTERLINK_PROJECT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GREENGAGE_PROJECT_GITHUB_TOKEN }}
