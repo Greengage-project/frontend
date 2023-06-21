@@ -35,7 +35,7 @@ jobs:
           context: ./react
           push: true
           tags: |
-            projectgreengage/ :${{ github.ref_name }}
+            projectgreengage/frontend:${{ github.ref_name }}
             projectgreengage/frontend:${{ github.ref_name }}.${{ steps.date.outputs.date }}
           cache-from: type=registry,ref=projectgreengage/frontend:buildcache
           cache-to: type=registry,ref=projectgreengage/frontend:buildcache,mode=max
