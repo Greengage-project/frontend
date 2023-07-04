@@ -9,6 +9,9 @@ import PublicCoproductionLayout from 'components/layouts/PublicCoproductionLayou
 import PublicCoproductionCatalogue from 'pages/dashboard/publiccoproductions/PublicCoproductionCatalogue';
 import PublicCoproductionProfile from 'pages/dashboard/publiccoproductions/PublicCoproductionProfile';
 import CatalogueSelector from 'components/dashboard/CatalogueSelector';
+import SucessfullClaimRegistration from 'pages/dashboard/assignments/sucessfullClaimRegistration';
+import CoproductionProcessDownload from 'pages/dashboard/coproductionprocesses/CoproductionProcessDownload';
+import CertificateDownload from 'pages/CertificateDownload';
 
 
 const CoproductionProcessProfile = Loadable(
@@ -34,11 +37,17 @@ const InterlinkerProfile = Loadable(
 const Organizations = Loadable(
   lazy(() => import('../pages/dashboard/organizations/index'))
 );
+const AssignmentsClaim = Loadable(
+  lazy(() => import('../pages/dashboard/assignments/newassignationclaim'))
+);
 const OrganizationProfile = Loadable(
   lazy(() => import('../components/dashboard/organizations/OrganizationProfile'))
 );
 const Workspace = Loadable(lazy(() => import('../pages/dashboard/workspace')));
 const WelcomeView = Loadable(lazy(() => import('../pages/dashboard/workspace/ProjectsOverview')));
+const TermsAndPrivacy = Loadable(lazy(() => import('../pages/dashboard/workspace/TermsAndPrivacy')));
+const CookiePolicy = Loadable(lazy(() => import('../pages/dashboard/workspace/CookiePolicy')));
+const PrivacyPolicy = Loadable(lazy(() => import('../pages/dashboard/workspace/PrivacyPolicy')));
 
 export const routes = [
   {
@@ -72,6 +81,25 @@ export const routes = [
       }
     ]
     },
+ 
+    {
+      path: 'cookie-policy',
+      element: <CookiePolicy />,
+    },
+    {
+      path: 'terms',
+      element: <TermsAndPrivacy />,
+    },
+    {
+      path: 'privacy',
+      element: <PrivacyPolicy />,
+    },
+    {
+      path:'certificatedownload',
+      element: <AuthGuard><CertificateDownload/></AuthGuard>
+    },
+    
+ 
   {
     path: 'stories',
     element: (
@@ -131,6 +159,16 @@ export const routes = [
         ]
       },
       {
+        path: 'coproductionprocesses/:processId/download',
+        children: [
+          {
+            path: '',
+            element: <AuthGuard><CoproductionProcessDownload /></AuthGuard>
+            ,
+          }
+        ]
+      },
+      {
         path: 'coproductionprocesses/:processId/:treeitemId/guide',
         children: [
           {
@@ -182,6 +220,20 @@ export const routes = [
           {
             path: ':organizationIdPage/:teamId',
             element: <OrganizationProfileSolo />,
+          }
+        ],
+      },
+      {
+      
+        path: 'assignments',
+        children: [
+          {
+            path: 'success',
+            element: <SucessfullClaimRegistration />,
+          },
+          {
+            path: 'registerclaim/:assignmentIdPage',
+            element: <AssignmentsClaim />,
           }
         ],
       }

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   AvatarGroup,
   Box,
@@ -15,9 +16,13 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Divider,
+  Dialog,
+  DialogContent,
+  IconButton,
 } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { Add, Folder, MenuBook } from "@mui/icons-material";
+import { Add, Folder, MenuBook,FileUpload, Close, ViewList } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import AuthGuardSkeleton from "components/guards/AuthGuardSkeleton";
 import useMounted from "hooks/useMounted";
@@ -39,6 +44,11 @@ import HelpAlert from "components/HelpAlert";
 import SearchBox from "components/SearchBox";
 import moment from "moment";
 import TeamAvatar from "components/TeamAvatar";
+import Ballot from "@mui/icons-material/Ballot";
+
+import { coproductionProcessesApi } from "__api__";
+import { styled } from "@mui/material/styles";
+import InterlinkAnimation from "components/home/InterlinkLoading";
 
 function ProcessRow({ process, t }) {
   const navigate = useNavigate();
@@ -124,6 +134,28 @@ const ProjectsOverview = () => {
   const momentComparator = (a, b) => {
     return moment(a).diff(moment(b));
   };
+
+  const [importDialogOpen, setImportDialogOpen] = React.useState(false);
+
+  const [fileContent, setFileContent] = React.useState('');
+  
+  const [isImporting, setIsImporting] = React.useState(false);
+
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  }));
+
+  const logoStyle = {
+    width: "300px",
+    height: "auto",
+  };
+
+  const [showTakeLongMsn, setShowTakeLongMsn] = React.useState(false);
+  
 
   const QuickSearchToolbar = () => {
     return (
@@ -366,6 +398,51 @@ const ProjectsOverview = () => {
   const onProcessCreate = (res) => {
     navigate(`/dashboard/coproductionprocesses/${res.id}/overview`);
   };
+
+  const handleDiscovery= () => {
+    // Navigate to the desired page
+    navigate("/dashboard/interlinkers?tab=Processes");
+  };
+
+  const handleImportProcess= () => {
+    // Show panel to import a process from a zip file.
+    //alert("show panel of import with a file");
+    setImportDialogOpen(true);
+  };
+
+
+  const handleCapture = async ({ target }) => {
+    const file = target.files[0];
+    if (file) {
+        setIsImporting(true);
+
+        // Prepare to show the modal after 10 seconds if the API call isn't done
+        const modalTimeout = setTimeout(() => {
+          setShowTakeLongMsn(true);
+        }, 10000);  // 10 seconds delay
+
+        try {
+            const fileName = file.name;
+            console.log('File Name: ', fileName);
+            const response = await coproductionProcessesApi.importProcess(file);
+
+            // Clear the timeout once the API call completes, if it's within 10 seconds.
+            // This will prevent the modal from showing.
+            clearTimeout(modalTimeout);
+
+            console.log(response);
+            setIsImporting(false);
+            navigate(`/dashboard/coproductionprocesses/${response.id}/overview`);
+        } catch (error) {
+            // Clear the timeout in case of an error as well, so the modal doesn't show if the error occurs within 10 seconds.
+            clearTimeout(modalTimeout);
+            setIsImporting(false);
+            console.error("Error during import:", error);
+            // Optionally, notify the user about the error
+        }
+    }
+};
+
   return (
     <>
       <Helmet>
@@ -415,7 +492,9 @@ const ProjectsOverview = () => {
                     {t("workspace-subtitle")}
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Stack direction="row"  spacing={2} alignItems="center">
+
+                <Grid sx={{m:2}} item>
                   <LoadingButton
                     onClick={() => setCoproductionProcessCreatorOpen(true)}
                     loading={loadingProcesses}
@@ -428,7 +507,23 @@ const ProjectsOverview = () => {
                   >
                     {t("add-process")}
                   </LoadingButton>
+                  
+
                 </Grid>
+
+                <Grid sx={{m:2}}  item>
+                <Button variant="contained" color="primary" startIcon={<FileUpload />} size="small" sx={{ textAlign: "center", mt: 1, mb: 2 }} onClick={handleImportProcess} data-cy="help">
+                    {t("Import a process")}
+                  </Button>
+                  </Grid>
+                
+                <Grid sx={{m:2}}  item>
+                  <Button variant="contained" color="primary" startIcon={<Ballot />} size="small" sx={{ textAlign: "center", mt: 1, mb: 2 }} onClick={handleDiscovery} data-cy="help">
+                    {t("Discover open processes")}
+                  </Button>
+
+                  </Grid>
+                  </Stack>
               </Grid>
             </Grid>
             <Box sx={{ mt: 4 }}>
@@ -480,6 +575,126 @@ const ProjectsOverview = () => {
           </AuthGuardSkeleton>
         </Container>
       </Box>
+
+      <Dialog
+        open={importDialogOpen}
+        onClose={() => {
+          setImportDialogOpen(false);
+      
+        }}
+      >
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            setImportDialogOpen(false);
+      
+          }}
+          sx={{
+            position: "absolute",
+            right: 4,
+            top: 4,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <Close />
+        </IconButton>
+
+        <DialogContent sx={{ p: 3 }}>
+        <>
+            <Typography variant="h6" sx={{ mt: 3 }}>
+              {t("Import a Coproduction Process")}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6} md={8}>
+                <Typography variant="p" sx={{ mt: 3 }}>
+                  {t("Set up a new collaborative coproduction process utilizing an already downloaded zip file")+"."}
+                </Typography>
+
+                {/* <Typography variant="p" sx={{ mt: 3 }}>
+                  {t("Example file:")}
+                </Typography>
+
+                <Link
+                  to="/static/story/ExampleTemplate.json"
+                  target="_blank"
+                  download
+                >
+                  <Download sx={{ ml: 1 }} />{" "}
+                </Link> */}
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <Stack direction="row" spacing={0}>
+                  <LoadingButton
+                    variant="contained"
+                    disabled={false}
+                    loading={false}
+                    //color="warning"
+                    //onClick={handleCapture}
+                    component="label"
+                    startIcon={<ViewList />}
+                    sx={{ mb: 3, justifyContent: "right", textAlign: "center" }}
+                  >
+                    {t("Import from file")}
+                    <input
+                      type="file"
+                      accept=".zip"
+                      hidden
+                      onChange={handleCapture}
+                    />
+                  </LoadingButton>
+                </Stack>
+
+                {/* <Button sx={{ mt: 2 }} variant="contained" component="label">
+                  {t("Publish from a File")}
+                  <input
+                    type="file"
+                    accept=".json"
+                    hidden
+                    onChange={handleCapture}
+                  />
+                </Button> */}
+              </Grid>
+            </Grid>
+          </>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isImporting} >
+      {showTakeLongMsn && (
+        <IconButton
+            aria-label="close"
+            onClick={() => setIsImporting(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <Close />
+          </IconButton>
+        )}
+
+        <DialogContent sx={{ 
+            p: 2, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center' 
+        }}>
+            <Stack spacing={2} alignItems="center">
+                <div style={logoStyle}>
+                    <InterlinkAnimation />
+                </div>
+                <div>{t("Importing the process please wait.")}</div>
+                <div>{t("The process could last some minutes.")}</div>
+                {showTakeLongMsn && (
+                    <Alert severity="error">The process is taking longer than usual. You can wait here or close the window and check back later.</Alert>
+                )}
+            </Stack>
+        </DialogContent>
+        </Dialog>
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
   organizationsApi,
   usernotificationsApi,
   participationrequestsApi,
+  assignmentsApi,
   coproductionprocessnotificationsApi,
   teamsApi,
   tasksApi,
@@ -30,6 +31,9 @@ const initialState = {
 
   participationrequests: [],
   loadingParticipationRequests: false,
+
+  assignments: [],
+  loadingAssignments: false,
 
   coproductionprocessnotifications: [],
   loadingCoproductionProcessNotifications: false,
@@ -57,6 +61,9 @@ const initialState = {
 
   userActivities: [],
   loadingUserActivities: false,
+
+  assignment:null,
+  loadingAssignment:false,
 
   tags: [],
   loadingTags: false,
@@ -89,6 +96,18 @@ const slice = createSlice({
     },
     setLoadingUserNotifications(state, action) {
       state.loadingUserNotifications = action.payload;
+    },
+    setAssignments(state, action) {
+      state.assignments = action.payload;
+    },
+    setLoadingAssignments(state, action) {
+      state.loadingAssignments = action.payload;
+    },
+    setAssignment(state, action) {
+      state.assignment = action.payload;
+    },
+    setLoadingAssignment(state, action) {
+      state.loadingAssignment = action.payload;
     },
     setParticipationsRequests(state, action) {
       state.participationrequests = action.payload;
@@ -220,6 +239,49 @@ export const getFullParticipationsRequestsbyCoproId = (search) => async (dispatc
   dispatch(slice.actions.setLoadingParticipationsRequests(false));
 };
 
+export const getInPendingAssignmentsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getInPendingAssignmentsbyCoproId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getAssignmentbyId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getAssignmentbyId({ search });
+  dispatch(slice.actions.setAssignments([assignments_data]));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getFullAssignmentsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getFullAssignmentsbyCoproId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getFullAssignmentsbyCoproIdUserId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getFullAssignmentsbyCoproIdUserId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getInPendingAssignmentsbyCoproIdUserId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getInPendingAssignmentsbyCoproIdUserId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+
+
+
 
 export const getUserAplicationsHistorybyCoproId = (search) => async (dispatch) => {
   dispatch(slice.actions.setLoadingUserNotifications(true));
@@ -260,6 +322,13 @@ export const getSelectedStory = (id) => async (dispatch) => {
   const selectedStory_data = await storiesApi.getStoriesbyId(id);
   dispatch(slice.actions.setSelectedStory(selectedStory_data));
   dispatch(slice.actions.setLoadingSelectedStory(false));
+};
+
+export const getAssignment = (id) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignment(true));
+  const assigment_data = await assignmentsApi.get(id);
+  dispatch(slice.actions.setAssignment(assigment_data));
+  dispatch(slice.actions.setLoadingAssignment(false));
 };
 
 export const getSelectedPubliccoproduction = (id) => async (dispatch) => {

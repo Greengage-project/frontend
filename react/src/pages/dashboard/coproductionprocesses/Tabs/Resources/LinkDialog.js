@@ -13,40 +13,27 @@ import {
   Typography,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import { updateProcess } from "slices/process";
-import useMounted from "hooks/useMounted";
-import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import { coproductionProcessesApi } from "__api__";
+import { useTranslation } from "react-i18next";
+import { inArray } from "jquery";
 
-const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
+const LinkDialog = ({ open, handleClose, title, sub_text, imp_text, submitText="Submit" }) => {
   const { t } = useTranslation();
-
-  const mounted = useMounted();
-
-  const { process } = useSelector(
-    (state) => state.process
-  );
-
-  const [isPublic, setIsPublic] = useState(
-    process.is_public
-  );
-
+  const { selectedPubliccoproduction } = useSelector((state) => state.general);
+ console.log(imp_text)
   useEffect(() => {
     clearFields();
   }, [open]);
 
-  const dispatch = useDispatch()
-
   // State variables
-  const [requirements, setRequirements] = useState("");
+
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [logotype, setLogotype] = useState(null);
 
   // Form submission handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validations:
@@ -54,37 +41,26 @@ const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
       return;
     }
 
-    // Set the requirements field of coproduction
-    // and Make it public
-
-    setIsPublic(!isPublic);
-    
-    //Hide guide startup checklist
-    const values = { is_public: !isPublic, requirements: requirements };
     
 
-    try {
-      dispatch(
-        updateProcess({
-          id: process.id,
-          data: values,
-          logotype,
-          onSuccess: () => {
-            if (mounted.current) {
-              console.log(process);
-            }
-          },
-        })
-      );
-    } catch (err) {
-      console.error(err);
+    //Todo Submit Event
+    
+    if ("clipboard" in navigator) {
+
+      const copied=await navigator.clipboard.writeText(imp_text);
+      //alert('Message sent successfully!')
+      clearFields();
+      handleClose();
+      return copied
+      
+    } else {
+      const copied=document.execCommand("copy", true, imp_text);
+      //alert('Message sent successfully!')
+      clearFields();
+      handleClose();
+      return copied
     }
-
-    switchEvent();
     
-    //alert('Message sent successfully!')
-    clearFields();
-    handleClose();
   };
 
   // Form cancellation handler
@@ -97,7 +73,7 @@ const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
   };
 
   const clearFields = () => {
-    setRequirements("");
+    //setValue("");
   };
 
   // Form validation function
@@ -105,10 +81,10 @@ const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
     let valid = true;
 
     // Validations:
-    if (requirements === "") {
+    if (imp_text === "") {
       setIsError(true);
       setErrorMessage(
-        "Include a short description of your interest in this co-production process"
+        t("Include a short description of your interest in this co-production process")
       );
       valid = false;
     }
@@ -124,7 +100,7 @@ const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle sx={{ mt: 1,fontWeight: "bold" }}>
-      {t("Specify what collaboration and by whom we need")}
+        {t(title)}
       </DialogTitle>
       <IconButton
         aria-label="close"
@@ -148,24 +124,25 @@ const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
               >
                 
 
-                {t("We want to identify possible new collaborators that can contribute with their knowledge and enthusiasm") + "?"}
+                {t(sub_text) + "."}
                
-                
                 
               </InputLabel>
               <TextField
                 fullWidth
-                label={t("Type here")}
-                name="Requirements"
-                onChange={(e) => {
-                  setRequirements(e.target.value);
-                  validateForm();
-                }}
-                value={requirements}
+                label="Link"
+                name="Value"
+                // onChange={(e) => {
+                //   setValue(e.target.value);
+                //   validateForm();
+                // }}
+                value={imp_text}
                 variant="outlined"
                 multiline
                 rows={4}
                 sx={{ mt: 1 }}
+                disabled
+
               />
             </Grid>
           </Grid>
@@ -179,11 +156,11 @@ const MakePublicDialog = ({ open, handleClose, switchEvent }) => {
         )}
         <Button onClick={handleCancel}>{t("Cancel")}</Button>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
-          {t("Submit")}
+        {t(submitText)}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default MakePublicDialog;
+export default LinkDialog;

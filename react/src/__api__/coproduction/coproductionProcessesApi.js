@@ -9,6 +9,39 @@ class CoproductionProcessesApi extends GeneralApi {
   }
 
 
+  async download(id){
+    if (id) {
+      const res = await axiosInstance.get(`/${this.url}/${id}/download`, { responseType: 'blob' });
+      return res;
+    }
+  }
+
+  async last_created_zip(id){
+    if (id) {
+      const res = await axiosInstance.get(`/${this.url}/${id}/last_created_zip`, { responseType: 'blob' });
+      return res;
+    }
+  }
+
+  async importProcess(file) {
+    if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await axiosInstance.post(`/${this.url}/import`, formData, {
+                timeout: 240000 // Set timeout to 4 min
+            });
+            console.log('the response of import is: ', res.data);
+            return res.data;
+        } catch (error) {
+            // If the request took longer than 24000 seconds, it will throw an error which you can catch here
+            console.error(error);
+        }
+    }
+}
+
+
   async getPublicProcesses(params = {}, language = getLanguage()) {
     //console.log(`/${this.url}` + params);
     //Get data of user_notifications
@@ -108,6 +141,32 @@ class CoproductionProcessesApi extends GeneralApi {
       return res.data;
     }
   }
+
+
+  // The timeout: 0 is needed to avoid the default timeout of 40s
+  async publish(id,label_name,from_view='settings',extractedData) {
+    console.log(`/${this.url}/${id}/publish_story?label_name=${label_name}&from_view=${from_view}`);
+
+  if (id) {
+    try {
+      const res = await axiosInstance.request({
+        method: 'post',
+        url: `/${this.url}/${id}/publish_story?label_name=${label_name}&from_view=${from_view}`,
+        data: extractedData, 
+        timeout: 0,
+      });
+      console.log('publish', res.data);
+      return res.data;
+    } catch (error) {
+      console.error('Error during publish:', error);
+      // Handle or throw the error based on your use case
+      throw error;
+    }
+  }
+  }
+
+
+
 }
 
 export const coproductionProcessesApi = new CoproductionProcessesApi();
