@@ -22,11 +22,11 @@
       },
       "primary": {
         "contrastText": "#ffffff",
-        "main": "#0f97c7"
+        "main": "#006E5E"
       },
       "secondary": {
         "contrastText": "#ffffff",
-        "main": "#aa00de"
+        "main": "#9CAE53"
       },
       "success": {
         "contrastText": "#ffffff",
@@ -34,7 +34,7 @@
         "secondary": "#0ca811"
       },
       "text": {
-        "primary": "#172b4d",
+        "primary": "#707E85",
         "secondary": "#6b778c"
       },
       "warning": {
@@ -53,7 +53,7 @@
         "main": "#F44336",
         "contrastText": "#ffffff"
       },
-      "progressBarColor": "#d822a3"
+      "progressBarColor": "#9CAE53"
     },
     "dark": {
       "background": {
@@ -67,11 +67,11 @@
       },
       "primary": {
         "contrastText": "#ffffff",
-        "main": "#0f97c7"
+        "main": "#006E5E"
       },
       "secondary": {
         "contrastText": "#000000",
-        "main": "#aa00de"
+        "main": "#9CAE53"
       },
       "success": {
         "contrastText": "#ffffff",
@@ -98,7 +98,7 @@
         "main": "#F44336",
         "contrastText": "#ffffff"
       },
-      "progressBarColor": "#d822a3"
+      "progressBarColor": "#9CAE53"
     }
   }
 }
