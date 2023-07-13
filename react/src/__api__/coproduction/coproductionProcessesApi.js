@@ -1,11 +1,24 @@
 import axiosInstance from 'axiosInstance';
-import GeneralApi from '../general';
+import GeneralApi, { removeEmpty } from '../general';
 import { coproductionSchemasApi } from '../catalogue/coproductionSchemasApi';
 import { getLanguage } from 'translations/i18n';
 
 class CoproductionProcessesApi extends GeneralApi {
   constructor() {
     super('coproduction/api/v1/coproductionprocesses');
+  }
+
+
+  async getPublicProcesses(params = {}, language = getLanguage()) {
+    //console.log(`/${this.url}` + params);
+    //Get data of user_notifications
+    const res = await axiosInstance.get(`/${this.url}/public`, {
+      params: removeEmpty(params),
+      headers: {
+        "Accept-Language": language,
+      },
+    });
+    return res.data;
   }
 
   async getProcessCatalogue(id, language = getLanguage()) {
@@ -43,6 +56,10 @@ class CoproductionProcessesApi extends GeneralApi {
       console.log('add user', res.data);
       return res.data;
     }
+  }
+
+  async emailApplyToBeContributor(data) {
+    return axiosInstance.post(`/${this.url}/emailApplyToBeContributor`, data);
   }
 
   async getTree(id) {

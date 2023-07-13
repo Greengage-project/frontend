@@ -20,9 +20,10 @@ import "./translations/i18n";
 import { useDispatch, useSelector } from "react-redux";
 import { getProcess, getTree } from "slices/process";
 import getAssets from "./components/dashboard/coproductionprocesses/RightSide";
-import { getCoproductionProcesses } from "slices/general";
+import { getCoproductionProcesses, getTags, getUserNotifications } from "slices/general";
 import { getOrganizations } from "slices/general";
 import { getUnseenUserNotifications } from "slices/general";
+import { getContributions } from "slices/general";
 
 export const RemoveTrailingSlash = ({ ...rest }) => {
   const location = useLocation();
@@ -87,6 +88,8 @@ const App = () => {
         dispatch(getCoproductionProcesses());
         dispatch(getOrganizations(""));
         dispatch(getUnseenUserNotifications({ user_id: auth.user.id }));
+        dispatch(getUserNotifications({ user_id: auth.user.id }));
+      
 
         if (window.location.pathname.includes("organizations")) {
           dispatch(getOrganizations(""));
@@ -105,6 +108,8 @@ const App = () => {
       personalSocket.close();
       setPersonalSocket(null);
     }
+
+    dispatch(getTags());
   }, [location, auth]);
 
   useEffect(() => {
@@ -168,6 +173,13 @@ const App = () => {
       socket.onmessage = (message) => {
         const { event, name, extra } = JSON.parse(message.data);
         console.log(event, extra, name);
+
+        if (event.includes("contribution")) {
+          if (selectedTreeItem.id == extra.task_id) {
+            dispatch(getContributions(extra.task_id));
+          }
+        }
+
         if (event.includes("treeitem")) {
           if (event.includes("removed")) {
             if (selectedTreeItem.name === name) {
@@ -208,7 +220,14 @@ const App = () => {
           event.includes("coproductionprocess") ||
           event.includes("permission")
         ) {
-          dispatch(getProcess(process.id, false, selectedTreeItem.id));
+          console.log(process);
+          dispatch(
+            getProcess(
+              process.id,
+              false,
+              selectedTreeItem.id ? selectedTreeItem.id : null
+            )
+          );
         } else if (event.includes("asset")) {
           const datosTemp = JSON.parse(message.data);
           // console.log(datosTemp)
@@ -228,10 +247,30 @@ const App = () => {
   }, [selectedTreeItem]);
 
   // ANALYTICS
-  const { enableLinkTracking, trackPageView } = useMatomo();
+  const { enableLinkTracking, trackPageView, pushInstruction } = useMatomo();
   enableLinkTracking();
   useEffect(() => {
-    trackPageView();
+  
+    //If the user is logged in, send the user data to Matomo
+    if (
+      auth.isInitialized &&
+      auth.user &&
+      auth.user._id &&
+      auth.user.email &&
+      auth.user.full_name
+    ) {
+      pushInstruction("setUserId", auth.user.email);
+      // const customDimensions = {
+      //   id: 1,
+      //   value:'developer'
+      // };
+      //trackPageView(customDimensions);
+      trackPageView();
+    } else {
+      trackPageView();
+    }
+    
+    
   }, [window.location.href]);
 
   return settings.loaded ? (

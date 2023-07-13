@@ -5,6 +5,10 @@ import Loadable from './Loadable';
 import OrganizationProfileSolo from 'components/dashboard/organizations/OrganizationProfileSolo';
 import StoryLayout from 'components/layouts/StoryLayout';
 import RedirectProcessAsset from 'pages/dashboard/coproductionprocesses/RedirectProcessAsset';
+import PublicCoproductionLayout from 'components/layouts/PublicCoproductionLayout';
+import PublicCoproductionCatalogue from 'pages/dashboard/publiccoproductions/PublicCoproductionCatalogue';
+import PublicCoproductionProfile from 'pages/dashboard/publiccoproductions/PublicCoproductionProfile';
+import CatalogueSelector from 'components/dashboard/CatalogueSelector';
 
 
 const CoproductionProcessProfile = Loadable(
@@ -37,7 +41,37 @@ const Workspace = Loadable(lazy(() => import('../pages/dashboard/workspace')));
 const WelcomeView = Loadable(lazy(() => import('../pages/dashboard/workspace/ProjectsOverview')));
 
 export const routes = [
-  
+  {
+    path: 'publiccoproductions',
+    element: (
+      <PublicCoproductionLayout />
+    ),
+    children: [
+      {
+        path: '',
+        element: <PublicCoproductionCatalogue />,
+      },
+      {
+        path: ':processId',
+        children: [
+          {
+            path: '',
+            element: <PublicCoproductionProfile />
+            ,
+          },
+          {
+            path: ':tab',
+            element: <PublicCoproductionProfile />
+          },
+          {
+            path: 'apply',
+            element: <AuthGuard><PublicCoproductionProfile /></AuthGuard>
+          },
+          
+        ]
+      }
+    ]
+    },
   {
     path: 'stories',
     element: (
@@ -125,7 +159,7 @@ export const routes = [
         children: [
           {
             path: '',
-            element: <Catalogue />,
+            element: <CatalogueSelector />,
           },
           {
             path: ':interlinkerId',

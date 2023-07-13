@@ -10,7 +10,7 @@ const initialDefaultFilters = {
 
   //problemprofiles: [],
   //nature: ['softwareinterlinker', 'knowledgeinterlinker', 'externalsoftwareinterlinker', 'externalknowledgeinterlinker'],
-  keyword: ['childcare'],
+  keyword: [],
   
   rating: null,
 };

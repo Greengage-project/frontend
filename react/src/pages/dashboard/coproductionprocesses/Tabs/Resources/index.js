@@ -1,40 +1,112 @@
-import { AppBar, Box, Paper, Tab, Tabs, Typography } from '@mui/material';
-import { AccountTree, OpenInNew } from '@mui/icons-material';
-import { AssetsTable } from 'components/dashboard/assets';
-import { useCustomTranslation } from 'hooks/useDependantTranslation';
-import useMounted from 'hooks/useMounted';
-import * as React from 'react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
-import { setSelectedTreeItemById } from 'slices/process';
-import { coproductionProcessesApi } from '__api__';
-import TimeLine from 'components/dashboard/coproductionprocesses/TimeLine';
-import CoproNotifications from 'components/dashboard/coproductionprocesses/CoproNotifications';
-import {  getAssetsList_byCopro, getCoproductionProcessNotifications } from 'slices/general';
-import useAuth from 'hooks/useAuth';
-import { cleanProcess } from 'slices/process';
-import { defaultReduceAnimations } from '@mui/lab/CalendarPicker/CalendarPicker';
+import {
+  AppBar,
+  Box,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+  Divider,
+  Alert,
+  Avatar,
+  Button,
+  Card,
+  CardActionArea,
+  CardHeader,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  TableRow,
+  CardContent,
+  Fab,
+  Chip,
+  Tabs as MuiTabs,
+  CardActions,
+} from "@mui/material";
+import { AccountTree, OpenInNew, ExpandMore } from "@mui/icons-material";
+import { AssetsTable } from "components/dashboard/assets";
+import { useCustomTranslation } from "hooks/useDependantTranslation";
+import useMounted from "hooks/useMounted";
+import * as React from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { setSelectedTreeItemById } from "slices/process";
+import {
+  getFullAssignmentsbyCoproIdUserId,
+  getInPendingAssignmentsbyCoproIdUserId,
+} from "slices/general";
+import { assignmentsApi, coproductionProcessesApi } from "__api__";
+import TimeLine from "components/dashboard/coproductionprocesses/TimeLine";
+import CoproNotifications from "components/dashboard/coproductionprocesses/CoproNotifications";
+import {
+  getAssetsList_byCopro,
+  getCoproductionProcessNotifications,
+} from "slices/general";
+import useAuth from "hooks/useAuth";
+import { cleanProcess } from "slices/process";
+import { defaultReduceAnimations } from "@mui/lab/CalendarPicker/CalendarPicker";
+import moment from "moment";
+import {
+  Add,
+  ArrowForward,
+  CheckOutlined,
+  Close,
+  Delete,
+  Archive,
+  Undo,
+  Inventory,
+  Edit,
+} from "@mui/icons-material";
+import { ClaimDialog } from "components/dashboard/coproductionprocesses/ClaimDialog";
 
-export default function Resources({ }) {
-  const { process, isAdministrator, tree } = useSelector((state) => state.process);
+export default function Resources({}) {
+  const { process, isAdministrator, tree } = useSelector(
+    (state) => state.process
+  );
   const t = useCustomTranslation(process.language);
-  const [tab, setTab] = useState(isAdministrator & !process.is_part_of_publication ? 'progress' : 'assets');
+  const [tab, setTab] = useState(
+    isAdministrator & !process.is_part_of_publication ? "progress" : "assets"
+  );
   const [loading, setLoading] = React.useState(true);
   //const [assets, setAssets] = React.useState([]);
-  const { assetsList } = useSelector((state) => state.general);
+  const { assetsList, assignments } = useSelector((state) => state.general);
   const mounted = useMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = React.useState('');
-
+  const [searchValue, setSearchValue] = React.useState("");
 
   const { user, isAuthenticated } = useAuth();
+  const [selectedTab, setSelectedTab] = React.useState("0");
+  const [showHistory, setShowHistory] = React.useState(false);
+  const [claimDialogOpen, setClaimDialogOpen] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+
+  React.useEffect(() => {
+    if (mounted) {
+      const search = location.search;
+      const params = new URLSearchParams(search);
+      const selectedTabTemp = params.get("tab");
+      if (selectedTabTemp) {
+        if (selectedTabTemp === "Assignments") {
+          setSelectedTab("1");
+        }
+      }
+    }
+  }, []);
 
   React.useEffect(() => {
     setLoading(true);
-    
-    
+
     // coproductionProcessesApi.getAssets(process.id).then((res) => {
     //   if (mounted.current) {
     //     setAssets(res);
@@ -43,41 +115,42 @@ export default function Resources({ }) {
     // });
     dispatch(getAssetsList_byCopro(process.id));
     setLoading(false);
-
   }, [process]);
 
+  const style = {
+    minHeight: "90vh",
+    display: "flex",
+    flexDirection: "column",
+  };
+
   React.useEffect(() => {
-    if(tab === "notifications"){
-      //Load notifications when the tab change to notifications:
-      dispatch(getCoproductionProcessNotifications({'coproductionprocess_id':process.id,'asset_id':''}));
-
+    if (mounted) {
+      showAssignments();
     }
-  }, [tab]);
-
-  const notificationsList = useSelector((state) => {
-      return state.general.coproductionprocessnotifications;
-  });
+  }, [mounted]);
 
   const getAssetsActions = (asset) => {
     const actions = [];
     actions.push({
       id: `${asset.id}-open-action`,
       onClick: (closeMenuItem) => {
-        window.open(`${asset.link}/view`, '_blank');
+        window.open(`${asset.id}/view`, "_blank");
         closeMenuItem();
       },
-      text: t('Open'),
-      icon: <OpenInNew fontSize='small' />
+      text: t("Open"),
+      icon: <OpenInNew fontSize="small" />,
     });
     actions.push({
       id: `${asset.id}-open-task-action`,
       onClick: (closeMenuItem) => {
-        dispatch(setSelectedTreeItemById(asset.task_id, () => {
-          navigate(`/dashboard/coproductionprocesses/${process.id}/guide`);
-        }));
+        dispatch(
+          setSelectedTreeItemById(asset.task_id, () => {
+            navigate(`/dashboard/coproductionprocesses/${process.id}/guide`);
+          })
+        );
       },
-      text: t('Go to the task'),
-      icon: <AccountTree fontSize='small' />
+      text: t("Go to the task"),
+      icon: <AccountTree fontSize="small" />,
     });
     return actions;
   };
@@ -86,25 +159,367 @@ export default function Resources({ }) {
     return;
   }
 
+  const listAssignmentsContainer2 = assignments.map((assignment) => {
+    
+    function approveAssignment() {
+      assignmentsApi.setApprovedAssignment({
+        assignmentId: assignment.id,
+      });
+      setShowHistory(false);
+      dispatch(
+        getInPendingAssignmentsbyCoproIdUserId({
+          coproductionprocess_id: process.id,
+        })
+      );
+    }
+
+    function inprogressAssignment() {
+      assignmentsApi.setInProgressAssignment({
+        assignmentId: assignment.id,
+      });
+      setShowHistory(false);
+      dispatch(
+        getInPendingAssignmentsbyCoproIdUserId({
+          coproductionprocess_id: process.id,
+        })
+      );
+    }
+
+    return (
+      <>
+        <TableRow>
+          <TableCell width="10%" align="center">
+            {moment(assignment.created_at).fromNow()}
+          </TableCell>
+
+          
+
+          <TableCell align="center" width="10%">
+            {!assignment.state ? (
+              
+            <Chip label="In Progress"  />
+            
+              
+
+            ) : (
+              <Chip label="Archived" variant="outlined" color="warning" />
+            )}
+          </TableCell>
+
+
+          <TableCell align="left" component="th" scope="row">
+            {assignment.title}
+          </TableCell>
+          <TableCell align="left" component="th" scope="row">
+            {assignment.description}
+          </TableCell>
+          <TableCell align="center">
+            {!assignment.state ? (
+              <IconButton onClick={() => approveAssignment()}>
+                <Archive /> 
+              </IconButton>
+              
+
+            ) : (
+              <IconButton onClick={() => inprogressAssignment()}>
+                <Undo color="success" />
+              </IconButton>
+            )}
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell colSpan={1}></TableCell>
+          <TableCell colSpan={4}>
+            <Accordion
+              style={{ width: "100%" }}
+              sx={{
+                mb: 1,
+                mt: 1,
+                bgcolor: "background.paper",
+                borderRadius: 1,
+                boxShadow: 3,
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMore />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Box display="flex" flexDirection="row" alignItems="center"  gap={2}>
+                <Fab color="primary" aria-label="add" size="small" 
+                  onClick={() => {
+                    setSelectedAssignment(assignment);
+                    console.log(assignment);
+                    handleClaim(assignment.asset);}} // <-- add your click event here
+                >
+                  <Add />
+                </Fab>
+                <Divider orientation="vertical" flexItem />
+                <Typography color="text.secondary">Claims ({assignment.claims.length})</Typography>
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+             
+         
+              {assignment.claims.map((claim) => {
+                return(
+                <Card sx={{ minWidth: 275 }} key={'card_'+claim.id} >
+                  <CardContent>
+                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                   {moment(claim.created_at).format('MMMM Do YYYY, h:mm:ss a')}
+                  </Typography>
+                    <Typography variant="h5" component="div">
+                      {claim.title}
+                    </Typography>
+                    
+                    <Typography>
+                      {claim.description}
+                    </Typography>
+                    
+                  </CardContent>
+                  <CardActions align="right" sx={{justifyContent: 'flex-end'}}>
+               
+                    <Button size="small" color='error' startIcon={<Delete />}>
+                      Delete
+                    </Button>
+            
+                  </CardActions>
+                  
+                </Card>
+                )
+                })}
+              </AccordionDetails>
+            </Accordion>
+          </TableCell>
+        </TableRow>
+      </>
+    );
+  });
+
+  // const listAssignmentsContainer = assignments.map((assignment) => {
+  //   console.log(assignment);
+
+  //   function approveAssignment() {
+  //     assignmentsApi.setApprovedAssignment({
+  //       assignmentId: assignment.id,
+  //     });
+  //     dispatch(
+  //       getInPendingAssignmentsbyCoproIdUserId({
+  //         coproductionprocess_id: process.id,
+  //       })
+  //     );
+  //   }
+
+  //   return (
+  //     <>
+  //       <TableRow>
+  //         <TableCell width="10%" align="center">
+  //           {moment(assignment.created_at).fromNow()}
+  //         </TableCell>
+  //         <TableCell align="left" component="th" scope="row">
+  //           {assignment.title}
+  //         </TableCell>
+  //         <TableCell align="left" component="th" scope="row">
+  //           {assignment.description}
+  //         </TableCell>
+  //         <TableCell align="center">
+  //           {!assignment.state ? (
+  //             <IconButton onClick={() => approveAssignment()}>
+  //               <Archive />
+  //             </IconButton>
+  //           ) : (
+  //             <IconButton>
+  //               <Inventory color="error" />
+  //             </IconButton>
+  //           )}
+  //         </TableCell>
+  //       </TableRow>
+  //     </>
+  //   );
+  // });
+
+  React.useEffect(() => {
+    if (mounted) {
+      showAssignments();
+    }
+  }, [mounted]);
+
+  const onSelect = (value) => {
+    if (mounted.current) {
+      setSelectedTab(value);
+    }
+  };
+
+  const showAssigmentsApproved = () => {
+    dispatch(
+      getFullAssignmentsbyCoproIdUserId({ coproductionprocess_id: process.id })
+    );
+    setShowHistory(true);
+  };
+
+  const showAssignments = () => {
+    dispatch(
+      getInPendingAssignmentsbyCoproIdUserId({
+        coproductionprocess_id: process.id,
+      })
+    );
+    setShowHistory(false);
+  };
+
+  const handleClaim = (asset) => {
+    //window.open(`${asset.link}/download`, '_blank');
+    setSelectedAsset(asset);
+    setClaimDialogOpen(true);
+  };
 
   return (
-    <Box sx={{ pb: 3, justifyContent: "center" }}>
-      <AppBar sx={{ position: "relative" }}>
-        <Typography variant="h6" sx={{ p: 2 }}>
-          {t("Resources")}
-        </Typography>
-      </AppBar>
-            
-      
-        <Box sx={{ p: 3, justifyContent: "center" }}>
-          <AssetsTable
-            language={process.language}
-            loading={loading}
-            getActions={getAssetsActions}
-          />
+    <>
+      <Card sx={{ ...style, mb: 3 }}>
+        <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+          <Grid container>
+            <Grid item xl={12} lg={12} md={12} xs={12}></Grid>
+
+            <AppBar
+              position="static"
+              sx={{
+                color: "white",
+              }}
+            >
+              <MuiTabs
+                indicatorColor="secondary"
+                onChange={(event, value) => onSelect(value)}
+                value={selectedTab}
+                // centered
+                variant="scrollable"
+                textColor="inherit"
+                aria-label="Coproduction phases tabs"
+                sx={{
+                  "& .Mui-selected": {
+                    background: "#a4cbd8",
+                    color: "black",
+                  },
+                  "& .MuiTabs-flexContainer": {
+                    "justify-content": "center",
+                  },
+                }}
+              >
+                <Tab key="1" label={t("Resources")} value="0"></Tab>
+                {isAdministrator && (
+                  <Tab key="2" label={t("Assignments")} value="1"></Tab>
+                )}
+              </MuiTabs>
+              {/* {loading && <LinearProgress />} */}
+            </AppBar>
+          </Grid>
         </Box>
-   
-      
-    </Box>
+
+        {/* Show the Resources Tab */}
+        {selectedTab === "0" && (
+          <Box sx={{ p: 3, justifyContent: "center" }}>
+            <AssetsTable
+              language={process.language}
+              loading={loading}
+              getActions={getAssetsActions}
+            />
+          </Box>
+        )}
+
+        {/* //Show the Assignments Tab */}
+        {selectedTab === "1" && (
+          <>
+            <Grid item xs={12} sx={{ textAlign: "center" }}>
+
+            <Grid container justifyContent="space-between">
+              <Grid item sx={{ textAlign: "left", m: 2 }}>
+              <Typography
+                  color="textPrimary"
+                  variant="h5"
+                  data-cy="welcome-to-user"
+                >
+                  {t("User Assignments")}
+                </Typography>
+                <Typography
+                  color="textSecondary"
+                  variant="subtitle2"
+                  data-cy={
+                    t("Here is the recent assignments you should work on") + "."
+                  }
+                >
+                  {t("Here is the recent assignments you should work on") + "."}
+                </Typography>
+              </Grid>
+
+              <Grid item sx={{ textAlign: "right", m: 2 }}>
+              {!showHistory ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => showAssigmentsApproved()}
+                  >
+                    {t("Show All Assignments")}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => showAssignments()}
+                  >
+                    {t("Show in progress assignments")}
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
+            
+
+              <Card sx={{ p: 1 }}>
+                <Grid item xs={12} md={9}>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell width="10%" align="center">
+                        <Typography variant="subtitle2" color="secundary">
+                          {t("Date")}
+                          </Typography>
+                        </TableCell>
+                        <TableCell width="10%" align="center">
+                        <Typography variant="subtitle2" color="secundary">
+                          {t("State")}
+                          </Typography>
+                        </TableCell>
+                        <TableCell width="45%" align="left">
+                          <Typography variant="subtitle2" color="secundary">
+                            {t("Title")}
+                          </Typography>
+                        </TableCell>
+                        <TableCell width="45%" align="left">
+                        <Typography variant="subtitle2" color="secundary">
+                          {t("Instructions")}
+                          </Typography>
+                        </TableCell>
+
+                        <TableCell width="10%" align="center">
+                        <Typography variant="subtitle2" color="secundary">
+                          {t("Archive")}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>{listAssignmentsContainer2}</TableBody>
+                  </Table>
+                </Grid>
+              </Card>
+            </Grid>
+          </>
+        )}
+      </Card>
+
+      <ClaimDialog claimDialogOpen={claimDialogOpen} setClaimDialogOpen={setClaimDialogOpen} 
+      selectedAsset={selectedAsset} 
+      selectedAssignment={selectedAssignment} 
+      afterRefreshEvent={getInPendingAssignmentsbyCoproIdUserId({
+          coproductionprocess_id: process.id,
+        })} />
+
+    </>
   );
 }
