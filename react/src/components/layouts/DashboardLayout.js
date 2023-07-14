@@ -2,11 +2,13 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/styles';
 import ProcessSidebar from 'components/navsidebars/ProcessSidebar';
 import StorySidebar from 'components/navsidebars/StorySidebar';
+
 import useAuth from 'hooks/useAuth';
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import DashboardMobileAppbar from '../navsidebars/DashboardMobileAppbar';
 import DashboardNavbar from '../navsidebars/DashboardNavbar';
+import PublicCoproductionSidebar from 'components/navsidebars/PublicCoproductionSidebar';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -64,6 +66,7 @@ const DashboardLayout = () => {
 
   const coproductionProcessLocation = location.pathname.indexOf('/dashboard/coproductionprocesses/') > -1;
   const storyLocation = location.pathname.indexOf('/dashboard/stories/') > -1;
+  const publiccoproductionLocation = location.pathname.indexOf('/dashboard/publiccoproductions/') > -1;
 
   const content = (
     <DashboardLayoutContainer>
@@ -86,6 +89,14 @@ const DashboardLayout = () => {
       {storyLocation && (
       
       <StorySidebar
+        onMobileClose={() => setIsSidebarMobileOpen(false)}
+        openMobile={!onMobile && isSidebarMobileOpen}
+      />
+      )}
+
+      {publiccoproductionLocation && (
+      
+      <PublicCoproductionSidebar
         onMobileClose={() => setIsSidebarMobileOpen(false)}
         openMobile={!onMobile && isSidebarMobileOpen}
       />

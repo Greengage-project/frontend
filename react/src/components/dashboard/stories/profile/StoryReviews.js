@@ -3,12 +3,23 @@ import { Box, Button, Card, CardContent, Grid, Paper, Rating, TextField, Typogra
 import StoryReviewCard from './StoryReviewCard';
 import { useEffect, useState } from 'react';
 import axiosInstance from 'axiosInstance';
-import { ratingsApi } from '__api__/catalogue/ratingsApi';
+import { ratingsApi } from '__api__/coproduction/ratingsApi';
 import { LoadingButton } from '@mui/lab';
 import useAuth from 'hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { usersApi } from '__api__';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { getSelectedStory } from 'slices/general';
+
 
 const StoryRatings = ({ story }) => {
+
+
+  const dispatch = useDispatch();
+  
+
+
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState([]);
 
@@ -28,13 +39,22 @@ const StoryRatings = ({ story }) => {
     _setNewCommentDialog(bool);
   };
 
-  const update = () => {
+  const update = async() => {
+    dispatch(getSelectedStory(story.id));
     setLoading(true);
-    ratingsApi.getMulti(story.id).then((res) => {
-      setLoading(false);
-      setRatings(res.items);
-      setNewCommentDialog(false);
-    });
+    let res= await ratingsApi.getMulti(story.id,"story")
+    setLoading(false);
+
+   
+    //Add users info
+    for(let i=0;i<res.items.length;i++){
+      let user=await usersApi.get(res.items[i].user_id);
+      res.items[i].user=user;
+    }
+    
+    setRatings(res.items);
+    setNewCommentDialog(false);
+    
   };
   useEffect(() => {
     update();
@@ -95,12 +115,13 @@ const StoryRatings = ({ story }) => {
       </Card>
       {isAuthenticated && (
       <Button
-        variant='text'
+        variant='contained'
         fullWidth
         onClick={() => setNewCommentDialog(true)}
-        sx={{ mt: 1 }}
+        sx={{ mt: 2 }}
+        size="medium"
       >
-        {t('rate-story')}
+        {t('Rate this story')}
       </Button>
       )}
 
@@ -156,7 +177,8 @@ const StoryRatings = ({ story }) => {
             loading={loading}
             variant='contained'
             size='small'
-            onClick={() => ratingsApi.create(title, text, value, story.id).then(update)}
+            onClick={() => {
+              ratingsApi.create(title, text, value, story.id,"story").then(update)}}
           >
             {t('Send')}
           </LoadingButton>

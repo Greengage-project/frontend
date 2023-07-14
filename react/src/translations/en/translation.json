@@ -155,6 +155,7 @@
     "treeitem-creation-title": "Create new tree item",
     "Parent item": "Parent item",
     "Prerequisite item": "Prerequisite item",
+    "Previous item": "Previous item",
     "Current status": "Current status",
     "Awaiting": "Awaiting",
     "In progress": "In progress",
@@ -243,7 +244,7 @@
     "interlinkers-success-catalogue": "Success Cases Catalogue",
     "organizations-title": "Organizations",
     "Organizations and teams present in the platform": "Organizations and teams present in the platform",
-    "Here you can find the different organizations that are working on the platform": "Here you can find the different organizations that are working on the platform. In each organization teams are created to group the users.",
+    "Here you can find the different organizations that are working on the platform": "Here you have the different organizations defined in the platform. Within each organization, several teams may be defined corresponding to groups of people associated to a role, e.g. citizen, public servant, for-profit or non-profit member of an organization",
     "Create new organization": "Create new organization",
     "settings": "settings",
     "Settings of the collaborative environment": "Settings of the collaborative environment",
@@ -419,5 +420,11 @@
     "Show process startup guide": "Show process startup guide",
     "This option will show the process startup guide to all users": "This option will show the process startup guide to all users",
     "Check the complexity of the task before closing it.": "Check the complexity of the task before closing it.",
-    "The link has been copied to the clipboard": "The link has been copied to the clipboard"
+    "The link has been copied to the clipboard": "The link has been copied to the clipboard",
+    "No coproduction processes found": "No coproduction processes found",
+    "No assets found": "No assets found",
+    "No tags": "No tags",
+    "This task does not have a complexity defined." : "This task does not have a complexity defined.",
+    "Load users from csv file": "Load users from csv file",
+    "Task added to the incentivisation game successfully": "Task added to the incentivisation game successfully"
 }

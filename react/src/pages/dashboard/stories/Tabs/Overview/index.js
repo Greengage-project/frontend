@@ -177,7 +177,7 @@ export default function OverviewStory({}) {
                 <Tab value="showcase" label={t("Showcase")} />
                 {/* )} */}
 
-                {/* <Tab value="reviews" label={t("Reviews")} /> */}
+                <Tab value="reviews" label={t("Reviews")} />
               </Tabs>
             </Paper>
           }

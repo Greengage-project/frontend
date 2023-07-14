@@ -54,6 +54,9 @@ const StoryResults = ({
   const loadServerRows = async (page, loadedRows) => {
     setLoading(true);
     try {
+      //alert(JSON.stringify(filters, null, 2))
+      //console.log(JSON.stringify(filters, null, 2))
+
       storiesApi
         .getMulti({ page: page + 1, size, ...filters }, language)
         .then((res) => {

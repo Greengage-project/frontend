@@ -9,6 +9,7 @@ import {
   teamsApi,
 } from "__api__";
 import {
+  Alert,
   IconButton,
   Box,
   Button,
@@ -19,11 +20,10 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  DialogActions,
   TextField,
   Typography,
+  Snackbar,
   Grid,
-  FormControl,
   FormControlLabel,
   FormGroup,
   Checkbox,
@@ -34,29 +34,37 @@ import ConfirmationButton from "components/ConfirmationButton";
 import { LoadingButton } from "@mui/lab";
 import UserSearch from "../coproductionprocesses/UserSearch";
 import {
-  Delete,
-  Edit,
   Save,
   Close,
   ViewList,
   Download,
 } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import ContributionCard from "./ContributionCard";
 import Papa from "papaparse";
 import { ExportToCsv } from "export-to-csv";
+import { getContributions, setContributionsListLevels } from "slices/general";
+import { useMatomo } from "@datapunt/matomo-tracker-react";
+import { is } from "date-fns/locale";
+import { claimsApi } from "__api__/coproduction/claimsApi";
 
-const ContributionsTabs = ({ contributions, setContributions }) => {
+const ContributionsTabs = () => {
+
+  const { trackEvent } = useMatomo();
+  const { contributions, contributionslistlevels } = useSelector(
+    (state) => state.general
+  );
+  const dispatch = useDispatch();
+
   // Data for new contributions
   const [rows, setRows] = useState([]);
   const [contributor, setContributor] = useState(null);
   const [closedTask, setClosedTask] = useState(false);
   const [listTeams, setListTeams] = useState([]);
   const [listUsers, setListUsers] = useState([]);
-
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [alertNoComplexity, setAlertNoComplexity] = useState(false);
 
   const [claimDialogOpen, setClaimDialogOpen] = useState(false);
 
@@ -92,7 +100,86 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
       .replace(/'/g, "&#39;");
   }
 
-  const createContributionUser = (
+  //Function to create a claim from a list
+  const createClaims_by_users =(
+    values,
+    user_ids
+    )=>{
+
+    const claimData = {
+      users_id: user_ids,
+      asset_id: values.asset.id,
+      task_id: selectedTreeItem.id,
+      coproductionprocess_id: process.id,
+      title: values.title,
+      description: values.description,
+      state: false,
+      claim_type: "Development",
+    };
+
+      claimsApi
+      .createClaimsForUsers(claimData)
+      .then((res) => {
+        const responseData = JSON.parse(res.data);
+        console.log(responseData);
+
+        if (responseData["excluded"].length > 0) {
+          alert(
+            t("We couldn't include") +
+              ": [" +
+              responseData["excluded"] +
+              "] " +
+              t(
+                "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+              )
+          );
+        }
+
+      })
+  }
+
+  //Function to create a claims from a team
+  const createClaims_by_teams =(
+    values,
+    team_ids
+    )=>{
+
+      const claimData = {
+        teams_id: team_ids,
+        asset_id: values.asset.id,
+        task_id: selectedTreeItem.id,
+        coproductionprocess_id: process.id,
+        title: values.title,
+        description: values.description,
+        state: false,
+        claim_type: "Development",
+      };
+  
+        claimsApi
+        .createClaimsForTeams(claimData)
+        .then((res) => {
+          const responseData = JSON.parse(res.data);
+          console.log(responseData);
+  
+          if (responseData["excluded"].length > 0) {
+            alert(
+              t("We couldn't include") +
+                ": [" +
+                responseData["excluded"] +
+                "] " +
+                t(
+                  "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+                )
+            );
+          }
+  
+        })
+  
+  }
+
+
+
+  const createNotificationsProcess = (
     values,
     user,
     isListUsers = false,
@@ -101,6 +188,8 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
     setStatus,
     setSubmitting
   ) => {
+
+
     const selectedAsset = values.asset;
     //Defino el link del asset
     let selectedAssetLink = "";
@@ -110,7 +199,13 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
     if (selectedAsset.type == "externalasset") {
       //Is external
       selectedAssetLink = selectedAsset.uri;
-      selectedAssetIcon = selectedAsset.icon_path;
+
+      if (selectedAsset.icon_path) {
+        selectedAssetIcon = selectedAsset.icon_path;
+      } else {
+        selectedAssetIcon = "/static/graphics/external_link.svg";
+      }
+
       selectedShowIcon = "";
       selectedShowLink = "hidden";
     } else {
@@ -143,8 +238,10 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
     const paramListJson = JSON.stringify(parametersList);
 
     let dataToSend = {};
+    let listUsuarios=[];
     if (!isListUsers) {
       //Solamente guardo info de 1 usuario
+      listUsuarios=[user.id];
       dataToSend = {
         coproductionprocess_id: process.id,
         notification_event: "add_contribution_asset",
@@ -156,7 +253,8 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
       };
     } else {
       //En el caso que sea una lista de usuarios:
-      const listUsuarios = user.join(",");
+      listUsuarios = user.join(",");
+      
       dataToSend = {
         coproductionprocess_id: process.id,
         notification_event: "add_contribution_asset",
@@ -176,9 +274,13 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
 
         if (responseData["excluded"].length > 0) {
           alert(
-            "We couldn't include " +
-              responseData["excluded"].length +
-              " users because is not part of a team with permissions over this task. Please check the list of users and try again."
+            t("We couldn't include") +
+              ": [" +
+              responseData["excluded"] +
+              "] " +
+              t(
+                "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+              )
           );
         }
 
@@ -186,6 +288,58 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
         setSubmitting(false);
         // getAssets();
         handleCloseDialog();
+
+        //Register an event in matomo
+        async function getRoles(user_id, isTeamsSelected = false) {
+          if (isTeamsSelected) {
+           
+            const team_temp = await teamsApi.get(user_id);
+            const listOfUsers = team_temp.user_ids;
+            for (user of listOfUsers) {
+              getRoles(user_id,false);
+            }
+          } else {
+
+            const user_temp = await usersApi.get(user_id);
+            let listofRoles = [];
+    
+            for (let i = 0; i < user_temp.teams_ids.length; i++) {
+              const listAllowedTeams=selectedTreeItem.teams;
+              for (let j = 0; j < listAllowedTeams.length; j++) {
+                if (user_temp.teams_ids[i] === listAllowedTeams[j].id) {
+                  const user_team = await teamsApi.get(user_temp.teams_ids[i]);
+                  if (!listofRoles.includes(user_team.type)){
+                    listofRoles.push(user_team.type);
+                  }
+                }
+              }
+            }
+
+            let action_role_value = "";
+            if (listofRoles.length > 0) {
+              action_role_value = listofRoles[0].type;
+
+              //Register an event in matomo
+              trackEvent({
+                category: process.name,
+                action: "claim-contribution",
+                name: selectedAsset.id,
+                customDimensions: [
+                  {
+                    id: 1,
+                    value: action_role_value,
+                  },
+                ],
+              });
+            }
+
+           
+          }
+        }
+
+        for (const user_id of listUsuarios) {
+          getRoles(user_id,isTeams);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -196,12 +350,9 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
   };
 
   //Obtain the contributions data
+  // TODO: use this method as the default one to get the contributions
   const getContributionsData = () => {
-    tasksApi.getAssetsAndContributions(selectedTreeItem.id).then((res) => {
-      if (res) {
-        setContributions(res.assetsWithContribution);
-      }
-    });
+    dispatch(getContributions(selectedTreeItem.id));
   };
 
   const parseFile = (evt) => {
@@ -294,8 +445,8 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
   };
 
   const handleCloseTask = async () => {
+    console.log("Closing task", rows);
     for (let row of rows) {
-      console.log(row);
       await gamesApi.addClaim(
         process.id,
         selectedTreeItem.id,
@@ -304,84 +455,109 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
         CONTRIBUTION_LEVELS[row.contribution]
       );
     }
+    console.log("Claims done ")
+    
     gamesApi.completeTask(process.id, selectedTreeItem.id).then((res) => {
       console.log(res);
       setClosedTask(true);
     });
+
     tasksApi.update(selectedTreeItem.id, { status: "finished" }).then((res) => {
       console.log(res);
     });
+
+    //Remove temporal list of contributions levels
+    dispatch(setContributionsListLevels([]));
   };
 
-  useEffect(async () => {
-    console.log("contributions", contributions);
-    let task;
-
-    try {
-      task = await gamesApi.getTask(process.id, selectedTreeItem.id);
-    } catch (e) {
-      console.error(e);
+  useEffect(() => {
+    let isSubscribed = true;
+    //console.log("contributions", contributions);
+    //alert("Recarga el listado de contribuciones");
+    if (isSubscribed) {
+    setRows([]);
     }
-    console.log("contributions", contributions);
-    console.log("task", task);
-    if (typeof task !== "undefined" && task.completed) {
-      setRows([]);
-      setClosedTask(task.completed);
-      console.log("tasks dentro de closed task", task);
-      let r = [];
-      for (let player of task.players) {
-        r.push({
-          id: player.id,
-          name: player.name,
-          contribution: Object.keys(CONTRIBUTION_LEVELS).find(
-            (key) => CONTRIBUTION_LEVELS[key] === player.development
-          ),
-          contrib_value: player.development,
-        });
-      }
-      setRows(r);
-    } else {
-      if (contributions.length === 0) {
-        console.log("NO CONTRIBUTIONS");
-        setRows([]);
+
+    // declare the data fetching function
+    const fetchData = async () => {
+      let task = await gamesApi.getTask(process.id, selectedTreeItem.id);
+      
+      if (typeof task !== "undefined" && task.completed) {
+   
         setClosedTask(task.completed);
-        return;
-      }
-      let total_contribs = 0;
-      let contribs = {};
-      for (let i = 0; i < contributions.length; i++) {
-        for (let j = 0; j < contributions[i].contributors.length; j++) {
-          if (!contribs[contributions[i].contributors[j].user_id]) {
-            contribs[contributions[i].contributors[j].user_id] = 1;
-          } else {
-            contribs[contributions[i].contributors[j].user_id] += 1;
-          }
-          total_contribs += 1;
-        }
-      }
-
-      setRows([]);
-      for (let id in contribs) {
-        usersApi
-          .get(id)
-          .then((res) => {
-            setRows((rows) => [
-              ...rows,
-              {
-                id: id,
-                name: res.full_name,
-                contribution: mapContributions(total_contribs, contribs[id]),
-                contrib_value: contribs[id],
-              },
-            ]);
-          })
-          .catch((err) => {
-            console.log(err);
+        console.log("tasks dentro de closed task", task);
+        let r = [];
+        for (let player of task.players) {
+          r.push({
+            id: player.id,
+            name: player.name,
+            contribution: Object.keys(CONTRIBUTION_LEVELS).find(
+              (key) => CONTRIBUTION_LEVELS[key] === player.development
+            ),
+            contrib_value: player.development,
           });
+        }
+        if (isSubscribed) {
+        setRows(r);
+        }
+      } else {
+        if (contributions.length === 0) {
+          console.log("NO CONTRIBUTIONS");
+          setClosedTask(task.completed);
+          return;
+        }
+        let total_contribs = 0;
+        let contribs = {};
+        for (let i = 0; i < contributions.length; i++) {
+          for (let j = 0; j < contributions[i].contributors.length; j++) {
+            if (!contribs[contributions[i].contributors[j].user_id]) {
+              contribs[contributions[i].contributors[j].user_id] = 1;
+            } else {
+              contribs[contributions[i].contributors[j].user_id] += 1;
+            }
+            total_contribs += 1;
+          }
+        }
+  
+       
+        let tempListRows=[];
+        for (let id in contribs) {
+
+          const userTemp=await usersApi.get(id);
+
+          tempListRows.push({
+            id: id,
+              name: userTemp.full_name+' ('+contribs[id]+')',
+              contribution: mapContributions(total_contribs, contribs[id]),
+              contrib_value: contribs[id],});
+
+        }
+
+        if (isSubscribed) {
+        setRows(tempListRows);
+        }
+        setClosedTask(task.completed);
       }
-      setClosedTask(task.completed);
     }
+
+    // call the function
+    fetchData()
+    // make sure to catch any error
+    .catch(console.error);
+
+    // cancel any future `setData`
+    return () => isSubscribed = false;
+
   }, [contributions]);
+
+  useEffect(() => {
+    console.log("selectedTreeItem", selectedTreeItem)
+    if (selectedTreeItem.development === 0) {
+      setAlertNoComplexity(true);
+    } else {
+      setAlertNoComplexity(false);
+    }
+  }, [selectedTreeItem]);
 
   return (
     <>
@@ -413,11 +589,7 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
             ) : null}
           </Grid>
           {/* Table */}
-          <ContributionsTable
-            rows={rows}
-            assets={contributions}
-            closedTask={closedTask}
-          />
+          <ContributionsTable rows={rows} closedTask={closedTask} />
           {/* Button for closing the task and giving the points */}
           {process.game_id ? (
             <Box sx={{ p: 2, float: "right" }}>
@@ -428,7 +600,7 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                     // disabled={!isAdministrator}
                     color="warning"
                     onClick={onClick}
-                    startIcon={<Delete />}
+                    startIcon={<Save />}
                   >
                     {t("Award points")}
                   </Button>
@@ -505,7 +677,12 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                   if (userSelected || fileSelected || teamsSelected) {
                     if (userSelected) {
                       //alert("You have selected a user:" + values.user.id);
-                      createContributionUser(
+
+                      // Create a Claim for the user:
+                      createClaims_by_users(values, [values.user.id]);
+
+                      // Create a Notification per user:
+                      createNotificationsProcess(
                         values,
                         values.user,
                         false,
@@ -523,9 +700,14 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                         const usuario = await usersApi.search(listUsers[i]);
                         if (usuario[0] === undefined) {
                           alert(
-                            "The user " +
-                              listUsers[i] +
-                              " haven't registered yet in the platform. Please, ask him to register and try again."
+                            t("The user") +
+                            " " +
+                            listUsers[i] +
+                            " " +
+                            t(
+                              "haven't registered yet in the platform. Please, ask him to register and try again"
+                            ) +
+                            "."
                           );
                           return false;
                         } else {
@@ -533,7 +715,12 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                         }
                       }
                       //alert("You have selected a file:" + listUsersIds)
-                      createContributionUser(
+
+                      // Create a claims for the users:
+                      createClaims_by_users(values, listUsersIds);
+                      
+                      // Create a Notification per user:
+                      createNotificationsProcess(
                         values,
                         listUsersIds,
                         true,
@@ -546,8 +733,12 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                       getContributionsData();
                     }
                     if (teamsSelected) {
+
+                      // Create a claims for a list of teams:
+                      createClaims_by_teams(values, checkboxValues);
+
                       //alert("You have selected a team:" + checkboxValues);
-                      createContributionUser(
+                      createNotificationsProcess(
                         values,
                         checkboxValues,
                         true,
@@ -557,8 +748,8 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                         setSubmitting
                       );
                       //Refresh the list of contributions
-                      getContributionsData();
                     }
+                    getContributionsData();
                   } else {
                     setStatus({ success: false });
                     setErrors({ submit: err });
@@ -581,8 +772,8 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                   <form onSubmit={handleSubmit}>
                     <Box sx={{ mt: 0 }}>
                       {!contributor &&
-                      listUsers.length == 0 &&
-                      checkboxValues.length == 0 ? (
+                        listUsers.length == 0 &&
+                        checkboxValues.length == 0 ? (
                         //Show all Options
                         <Box sx={{ mt: 0 }}>
                           <Typography
@@ -666,7 +857,7 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                               {"3.- " +
                                 t(
                                   "Add contribution from multiple users included in a file" +
-                                    "."
+                                  "."
                                 )}
                             </InputLabel>
                             <Stack direction="row" sx={{ mt: 2 }} spacing={0}>
@@ -683,7 +874,7 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
                                   textAlign: "center",
                                 }}
                               >
-                                {t("Cargar users from csv file")}
+                                {t("Load users from csv file")}
                                 <input
                                   type="file"
                                   accept=".csv"
@@ -952,6 +1143,13 @@ const ContributionsTabs = ({ contributions, setContributions }) => {
               </Formik>
             </DialogContent>
           </Dialog>
+          {alertNoComplexity && <Alert
+
+            severity="warning"
+            sx={{ m: 1.35, float: "right", alignItems: "center" }}
+          >{t("This task does not have a complexity defined.")}
+          </Alert>
+          }
         </>
       ) : (
         <>

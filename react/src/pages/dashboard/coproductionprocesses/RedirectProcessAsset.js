@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 import { useParams } from "react-router-dom";
 import useMounted from "../../../hooks/useMounted";
 
-
-import { assetsApi } from "__api__";
+import { assetsApi, teamsApi } from "__api__";
+import useAuth from "hooks/useAuth";
 
 const RedirectProcessAsset = () => {
   const dispatch = useDispatch();
@@ -16,37 +16,48 @@ const RedirectProcessAsset = () => {
   const navigate = useNavigate();
   const t = useCustomTranslation(process && process.language);
   const { processId, assetId } = useParams();
+  const { user } = useAuth();
 
   useEffect(() => {
-    //dispatch(getProcess(processId, false));
+    const fetchAsset = async () => {
+      try {
+        const res = await assetsApi.get(assetId);
 
-    assetsApi.get(assetId).then((res) => {
-      if (mounted.current) {
-        console.log(res);
-        const selectedAsset = res;
+        if (mounted.current) {
+          const selectedAsset = res;
+          let redirectLink = "";
 
-        let redirectLink='';
-
-        let completelinktoAsset = "";
-         if (selectedAsset.type === "internalasset") {
-        //   const backend = selectedAsset["software_response"]["backend"];
-        //   const linktoAsset =
-        //     backend + "/" + selectedAsset["external_asset_id"];
-
-        //   //alert(`${linktoAsset}/view`);
-
-        //   completelinktoAsset = `${linktoAsset}/view`;
-          redirectLink=selectedAsset.link+'/view';
-         } else {
-        //   //alert(asset.uri);
-        //   completelinktoAsset = selectedAsset.uri;
-          redirectLink=selectedAsset.uri;
-         }
-        // alert("Navegate to: " + completelinktoAsset);
-        //navigate(selectedAsset.link);
-        window.location.replace(redirectLink);
+          if (selectedAsset.type === "internalasset") {
+            redirectLink = selectedAsset.link + "/view";
+          } else {
+            redirectLink = selectedAsset.uri;
+          }
+          window.location.replace(redirectLink);
+        }
+      } catch (error) {
+        if (error.response.status == 403) {
+          //Add user to observers
+          //alert('Agrego a observadores');
+         
+          try {
+            const res = await teamsApi.addObservers({
+              users_ids: [user.id],
+              coproduction_process_id: processId,
+              asset_id: assetId,
+            });
+            if (mounted.current) {
+              //Try again to load resource
+              //alert('Intento de nuevo acceder');
+              fetchAsset();
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
       }
-    });
+    };
+
+    fetchAsset();
   }, []);
 
   return (
@@ -54,6 +65,7 @@ const RedirectProcessAsset = () => {
       <Helmet>
         <title>{t("dashboard-title")}</title>
       </Helmet>
+
     </>
   );
 };

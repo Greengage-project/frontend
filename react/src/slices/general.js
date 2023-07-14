@@ -1,6 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { assetsApi,storiesApi,coproductionProcessesApi, organizationsApi, usernotificationsApi, coproductionprocessnotificationsApi, teamsApi, tasksApi } from '../__api__';
-import { subDays, subHours } from 'date-fns';
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  assetsApi,
+  storiesApi,
+  tagsApi,
+  coproductionProcessesApi,
+  organizationsApi,
+  usernotificationsApi,
+  participationrequestsApi,
+  assignmentsApi,
+  coproductionprocessnotificationsApi,
+  teamsApi,
+  tasksApi,
+} from "../__api__";
+import { subDays, subHours } from "date-fns";
+import { set } from "store";
 
 const now = new Date();
 const initialState = {
@@ -12,28 +25,49 @@ const initialState = {
 
   organizations: [],
   loadingOrganizations: false,
-  
-  usernotifications:[],
+
+  usernotifications: [],
   loadingUserNotifications: false,
 
-  coproductionprocessnotifications:[],
+  participationrequests: [],
+  loadingParticipationRequests: false,
+
+  assignments: [],
+  loadingAssignments: false,
+
+  coproductionprocessnotifications: [],
   loadingCoproductionProcessNotifications: false,
 
-  unseenusernotifications:[],
+  contributions: [],
+  loadingContributions: false,
+
+  contributionslistlevels: [],
+  loadingContributionsListLevels: false,
+
+  datatempsave: [],
+  loadingDataTempSave: false,
+
+  unseenusernotifications: [],
   loadingUnseenUserNotifications: false,
 
-  selectedStory:null,
+  selectedStory: null,
   loadingSelectedStory: false,
 
-  assetsList:[],
-  loadingAssetsList:false,
+  selectedPubliccoproduction: null,
+  loadingSelectedPubliccoproduction: false,
 
-  userActivities:[],
+  assetsList: [],
+  loadingAssetsList: false,
+
+  userActivities: [],
   loadingUserActivities: false,
+
+  tags: [],
+  loadingTags: false,
 };
 
 const slice = createSlice({
-  name: 'process',
+  name: "process",
   initialState,
   reducers: {
     setProcesses(state, action) {
@@ -60,6 +94,18 @@ const slice = createSlice({
     setLoadingUserNotifications(state, action) {
       state.loadingUserNotifications = action.payload;
     },
+    setAssignments(state, action) {
+      state.assignments = action.payload;
+    },
+    setLoadingAssignments(state, action) {
+      state.loadingAssignments = action.payload;
+    },
+    setParticipationsRequests(state, action) {
+      state.participationrequests = action.payload;
+    },
+    setLoadingParticipationsRequests(state, action) {
+      state.loadingParticipationRequests = action.payload;
+    },
     setCoproductionProcessNotifications(state, action) {
       state.coproductionprocessnotifications = action.payload;
     },
@@ -72,6 +118,13 @@ const slice = createSlice({
     setLoadingSelectedStory(state, action) {
       state.loadingSelectedStory = action.payload;
     },
+    setSelectedPubliccoproduction(state, action) {
+      state.selectedPubliccoproduction = action.payload;
+    },
+    setLoadingSelectedPubliccoproduction(state, action) {
+      state.loadingSelectedPubliccoproduction = action.payload;
+    },
+
     setAssetsList(state, action) {
       state.assetsList = action.payload;
     },
@@ -90,7 +143,32 @@ const slice = createSlice({
     setLoadingUserActivities(state, action) {
       state.loadingUserActivities = action.payload;
     },
-  }
+    setTags(state, action) {
+      state.tags = action.payload;
+    },
+    setLoadingTags(state, action) {
+      state.loadingTags = action.payload;
+    },
+    setContributions(state, action) {
+      state.contributions = action.payload;
+    },
+    setLoadingContributions(state, action) {
+      state.loadingContributions = action.payload;
+    },
+    setContributionsListLevels(state, action) {
+      state.contributionslistlevels = action.payload;
+    },
+    setLoadingContributionsListLevels(state, action) {
+      state.loadingContributionsListLevels = action.payload;
+    },
+    setDataTempSave(state, action) {
+      state.datatempsave = action.payload;
+    },
+    setLoadingDataTempSave(state, action) {
+      state.loadingDataTempSave = action.payload;
+    }    
+
+  },
 });
 
 export const { reducer } = slice;
@@ -109,27 +187,118 @@ export const getOrganizations = (search) => async (dispatch) => {
   dispatch(slice.actions.setLoadingOrganizations(false));
 };
 
+export const getContributions = (selectTreeItemId) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingContributions(true));
+  const contributions_data = await tasksApi.getAssetsAndContributions(
+    selectTreeItemId
+  );
+  dispatch(
+    slice.actions.setContributions(contributions_data.assetsWithContribution)
+  );
+  dispatch(slice.actions.setLoadingContributions(false));
+};
+
 export const getUserNotifications = (search) => async (dispatch) => {
   dispatch(slice.actions.setLoadingUserNotifications(true));
-  const usernotifications_data = await usernotificationsApi.getUserNotifications({ search });
+  const usernotifications_data =
+    await usernotificationsApi.getUserNotifications({ search });
+  dispatch(slice.actions.setUserNotifications(usernotifications_data));
+  dispatch(slice.actions.setLoadingUserNotifications(false));
+};
+
+export const getUserAplicationsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingUserNotifications(true));
+  const usernotifications_data =
+    await usernotificationsApi.getUserAplicationsbyCoproId({ search });
+  dispatch(slice.actions.setUserNotifications(usernotifications_data));
+  dispatch(slice.actions.setLoadingUserNotifications(false));
+};
+
+export const getInProgressParticipationsRequestsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingParticipationsRequests(true));
+  const participationrequests_data =
+    await participationrequestsApi.getInProgressParticipationRequestsbyCoproId({ search });
+  dispatch(slice.actions.setParticipationsRequests(participationrequests_data));
+  dispatch(slice.actions.setLoadingParticipationsRequests(false));
+};
+
+export const getFullParticipationsRequestsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingParticipationsRequests(true));
+  const participationrequests_data =
+    await participationrequestsApi.getFullParticipationRequestsbyCoproId({ search });
+  dispatch(slice.actions.setParticipationsRequests(participationrequests_data));
+  dispatch(slice.actions.setLoadingParticipationsRequests(false));
+};
+
+export const getInPendingAssignmentsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getInPendingAssignmentsbyCoproId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getFullAssignmentsbyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getFullAssignmentsbyCoproId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getFullAssignmentsbyCoproIdUserId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getFullAssignmentsbyCoproIdUserId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+export const getInPendingAssignmentsbyCoproIdUserId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingAssignments(true));
+  const assignments_data =
+    await assignmentsApi.getInPendingAssignmentsbyCoproIdUserId({ search });
+  dispatch(slice.actions.setAssignments(assignments_data));
+  dispatch(slice.actions.setLoadingAssignments(false));
+};
+
+
+
+
+
+export const getUserAplicationsHistorybyCoproId = (search) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingUserNotifications(true));
+  const usernotifications_data =
+    await usernotificationsApi.getUserAplicationsHistorybyCoproId({ search });
   dispatch(slice.actions.setUserNotifications(usernotifications_data));
   dispatch(slice.actions.setLoadingUserNotifications(false));
 };
 
 export const getUnseenUserNotifications = (search) => async (dispatch) => {
   dispatch(slice.actions.setLoadingUnseenUserNotifications(true));
-  const unseenusernotifications_data = await usernotificationsApi.getUnseenUserNotifications({ search });
-  dispatch(slice.actions.setUnseenUserNotifications(unseenusernotifications_data));
+  const unseenusernotifications_data =
+    await usernotificationsApi.getUnseenUserNotifications({ search });
+  dispatch(
+    slice.actions.setUnseenUserNotifications(unseenusernotifications_data)
+  );
   dispatch(slice.actions.setLoadingUnseenUserNotifications(false));
 };
 
-export const getCoproductionProcessNotifications = (search) => async (dispatch) => {
-  dispatch(slice.actions.setLoadingCoproductionProcessNotifications(true));
-  const coproductionprocessnotifications_data = await coproductionprocessnotificationsApi.getCoproductionProcessNotifications({ search });
-  //console.log(coproductionprocessnotifications_data);
-  dispatch(slice.actions.setCoproductionProcessNotifications(coproductionprocessnotifications_data));
-  dispatch(slice.actions.setLoadingCoproductionProcessNotifications(false));
-};
+export const getCoproductionProcessNotifications =
+  (search) => async (dispatch) => {
+    dispatch(slice.actions.setLoadingCoproductionProcessNotifications(true));
+    const coproductionprocessnotifications_data =
+      await coproductionprocessnotificationsApi.getCoproductionProcessNotifications(
+        { search }
+      );
+    //console.log(coproductionprocessnotifications_data);
+    dispatch(
+      slice.actions.setCoproductionProcessNotifications(
+        coproductionprocessnotifications_data
+      )
+    );
+    dispatch(slice.actions.setLoadingCoproductionProcessNotifications(false));
+  };
 
 export const getSelectedStory = (id) => async (dispatch) => {
   dispatch(slice.actions.setLoadingSelectedStory(true));
@@ -138,9 +307,18 @@ export const getSelectedStory = (id) => async (dispatch) => {
   dispatch(slice.actions.setLoadingSelectedStory(false));
 };
 
+export const getSelectedPubliccoproduction = (id) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingSelectedPubliccoproduction(true));
+  const selectedPubliccoproduction_data = await coproductionProcessesApi.getPublicbyId(id);
+  dispatch(slice.actions.setSelectedPubliccoproduction(selectedPubliccoproduction_data));
+  dispatch(slice.actions.setLoadingSelectedPubliccoproduction(false));
+};
+
 export const getAssetsList_byTask = (task_id) => async (dispatch) => {
   dispatch(slice.actions.setLoadingAssetsList(true));
-  const selectedAssetsList_data = await assetsApi.getListAssetswithInternalInfo({'task_id':task_id});
+  const selectedAssetsList_data = await assetsApi.getListAssetswithInternalInfo(
+    { task_id: task_id }
+  );
   dispatch(slice.actions.setAssetsList(selectedAssetsList_data));
   dispatch(slice.actions.setLoadingAssetsList(false));
   // console.log('Los Assets son:');
@@ -149,7 +327,9 @@ export const getAssetsList_byTask = (task_id) => async (dispatch) => {
 
 export const getAssetsList_byCopro = (copro_id) => async (dispatch) => {
   dispatch(slice.actions.setLoadingAssetsList(true));
-  const selectedAssetsList_data = await coproductionProcessesApi.getAssets(copro_id);
+  const selectedAssetsList_data = await coproductionProcessesApi.getAssets(
+    copro_id
+  );
   dispatch(slice.actions.setAssetsList(selectedAssetsList_data));
   dispatch(slice.actions.setLoadingAssetsList(false));
   // console.log('Los Assets son:');
@@ -157,20 +337,53 @@ export const getAssetsList_byCopro = (copro_id) => async (dispatch) => {
 };
 
 export const getUserActivities = (params) => async (dispatch) => {
-  let callback = notification => notification.user_id === params.user_id;
+  let callback = (notification) => notification.user_id === params.user_id;
   let activity = [];
   dispatch(slice.actions.setLoadingUserActivities(true));
-  
-  for (let i=0; i<params.assets.length; i++){
-    let search = { 'coproductionprocess_id': params.coproductionprocess_id,'asset_id': params.assets[i].id} ;
-    const coproductionprocessnotifications_data = await coproductionprocessnotificationsApi.getCoproductionProcessNotifications({ search });
+
+  for (let i = 0; i < params.assets.length; i++) {
+    let search = {
+      coproductionprocess_id: params.coproductionprocess_id,
+      asset_id: params.assets[i].id,
+    };
+    const coproductionprocessnotifications_data =
+      await coproductionprocessnotificationsApi.getCoproductionProcessNotifications(
+        { search }
+      );
     // console.log(coproductionprocessnotifications_data);
     // const filtered = (coproductionprocessnotifications_data.filter(callback));
-    activity = activity.concat(coproductionprocessnotifications_data.filter(callback))
+    activity = activity.concat(
+      coproductionprocessnotifications_data.filter(callback)
+    );
   }
   //console.log(activity);
   dispatch(slice.actions.setUserActivities(activity));
   dispatch(slice.actions.setLoadingUserActivities(false));
 };
+
+export const getTags = () => async (dispatch) => {
+  dispatch(slice.actions.setLoadingTags(true));
+  const tags_data = await tagsApi.getMulti();
+  dispatch(slice.actions.setTags(tags_data));
+  dispatch(slice.actions.setLoadingTags(false));
+};
+
+//Temporal list of contributions levels
+export const setContributionsListLevels =
+  (contributionLevels) => async (dispatch) => {
+    dispatch(slice.actions.setLoadingContributionsListLevels(true));
+    dispatch(slice.actions.setContributionsListLevels(contributionLevels));
+    dispatch(slice.actions.setLoadingContributionsListLevels(false));
+  };
+
+//Save data in temp
+export const setDataTempSave = (data) => async (dispatch) => {
+  dispatch(slice.actions.setLoadingDataTempSave(true));
+  dispatch(slice.actions.setDataTempSave(data));
+  dispatch(slice.actions.setLoadingDataTempSave(false));
+};
+   
+  
+
 
 export default slice;

@@ -52,19 +52,19 @@ const SuccessCatalogue = () => {
               xs={12}
             >
               <Grid item>
-                <Typography
-                  color="textSecondary"
-                  variant="overline"
-                  data-cy="catalogue-title"
-                >
-                  {t("Catalogue")}
-                </Typography>
+                
                 <Typography
                   color="textPrimary"
                   variant="h5"
                   data-cy="interlinkers-success-catalogue"
                 >
-                  {t("interlinkers-success-catalogue")}
+                  {t("success stories catalogue").toUpperCase()}
+                </Typography>
+
+                <Typography color="textSecondary" variant="h6" sx={{m:1}}>
+                {t(
+                    "Here you have a selection of success cases in co-production, which could be used as inspiration for your co-production needs"
+                  )+'.'}
                 </Typography>
               </Grid>
               <Grid item />
