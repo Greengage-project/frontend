@@ -19,7 +19,6 @@ import routes from "./routes/index";
 import "./translations/i18n";
 import { useDispatch, useSelector } from "react-redux";
 import { getProcess, getTree } from "slices/process";
-import getAssets from "./components/dashboard/coproductionprocesses/RightSide";
 import { getCoproductionProcesses } from "slices/general";
 import { getOrganizations } from "slices/general";
 import { getUnseenUserNotifications } from "slices/general";
@@ -208,7 +207,7 @@ const App = () => {
           event.includes("coproductionprocess") ||
           event.includes("permission")
         ) {
-          dispatch(getProcess(process.id, false, selectedTreeItem.id));
+          dispatch(getProcess(process.id, false, selectedTreeItem?.id));
         } else if (event.includes("asset")) {
           const datosTemp = JSON.parse(message.data);
           // console.log(datosTemp)
