@@ -163,7 +163,7 @@ const HelpPopover = () => {
             variant="text"
             onClick={() =>
               setOpenDialog({
-                url: `https://docs.google.com/forms/d/e/1FAIpQLSdUnVLnP_OB9_ITUZavoaJc_Z4JGBAdd1A_-3b9RMyVTJKLAQ/viewform?embedded=true&entry.1527029454=${
+                url: `https://docs.google.com/forms/d/e/1FAIpQLSdGGRUhx7IVkL88WPcpEsNhE1_j0wJQ0E3xLhccEW5gJ906Nw/viewform?usp=sf_link&entry.1527029454=${
                   ENVIRONMENTS[window.location.host]
                 }`,
                 title: t("Feedback form"),
