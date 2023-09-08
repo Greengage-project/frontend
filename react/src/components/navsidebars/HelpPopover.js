@@ -181,7 +181,7 @@ const HelpPopover = () => {
             variant="text"
             onClick={() =>
               window.open(
-                `https://docs.google.com/forms/d/e/1FAIpQLScCTd6PaaryBFllDuc4Y389UkLai5YHAm55ClezXW466C89WA/viewform?usp=pp_url&entry.1527029454=${
+                `https://docs.google.com/forms/d/e/1FAIpQLScTjgXDimcDtJ0qRI3erDOkXTq002-G-zI2QYVTLTMiugjCGw/viewform?usp=pp_url&entry.1527029454=${
                   ENVIRONMENTS[window.location.host]
                 }`,
                 "_blank"
