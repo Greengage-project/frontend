@@ -45,11 +45,7 @@ const HelpPopover = () => {
   const [openDialog, setOpenDialog] = useState(null);
 
   const ENVIRONMENTS = {
-    "mef.interlink-project.eu": "MEF",
-    "zgz.interlink-project.eu": "ZARAGOZA",
-    "varam.interlink-project.eu": "VARAM",
-    "dev.interlink-project.eu": "OTHER",
-    "demo.interlink-project.eu": "OTHER",
+    "demo.greengage-project.eu": "OTHER",
     localhost: "OTHER",
   };
 

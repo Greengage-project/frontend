@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Interlink</title>
+        <title>Greengage</title>
       </Helmet>
       <div>
         <Fade in>

@@ -3,23 +3,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/interlink-project/frontend">
+  <a href="https://github.com/greengage-project/frontend">
     <img src="images/logo.png" alt="Logo" width="172" height="80">
   </a>
 
-  <h3 align="center">Interlink collaborative environment frontend</h3>
+  <h3 align="center">Greengage collaborative environment frontend</h3>
 
   <p align="center">
     React frontend that integrates and orchestrates all components related to the project
     <br />
-    <a href="https://interlink-project.eu/"><strong>View Interlink project »</strong></a>
+    <a href="https://greengage-project.eu/"><strong>View Greengage project »</strong></a>
     <br />
     <br />
-    <img src="https://github.com/interlink-project/frontend/actions/workflows/build-and-publish-docker.yml/badge.svg" alt="Docker build and publish status"></img>
+    <img src="https://github.com/greengage-project/frontend/actions/workflows/build-and-publish-docker.yml/badge.svg" alt="Docker build and publish status"></img>
     <br />
-    <a href="https://github.com/interlink-project/frontend/issues">Report Bug</a>
+    <a href="https://github.com/greengage-project/frontend/issues">Report Bug</a>
     ·
-    <a href="https://github.com/interlink-project/frontend/issues">Request Feature</a>
+    <a href="https://github.com/greengage-project/frontend/issues">Request Feature</a>
   </p>
 </div>
 
@@ -74,8 +74,8 @@ To get a local copy up and running follow these simple example steps.
 
 ## Customizations
 
-<a href="http://demo.interlink-project.eu/weblate/engage/interlink/">
-<img src="http://demo.interlink-project.eu/weblate/widgets/interlink/-/frontend/multi-auto.svg" alt="Translations status" />
+<a href="http://demo.greengage-project.eu/weblate/engage/greengage/">
+<img src="http://demo.greengage-project.eu/weblate/widgets/greengage/-/frontend/multi-auto.svg" alt="Translations status" />
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -115,10 +115,10 @@ First in all, you should define de the secrets `.secrets` used to do the testing
 If you want to see a graphical interface, you can use the following command
 **For Localhost**
 `npm run cypress:open:localhost`
-**For https://dev.interlink-project.eu**
+**For https://dev.greengage-project.eu**
 `npm run cypress:open:dev`
 
-**For https://demo.interlink-project.eu**
+**For https://demo.greengage-project.eu**
 `npm run cypress:open:demo`
 
 #### Via Terminal
@@ -126,10 +126,10 @@ If you want to see a graphical interface, you can use the following command
 **For Localhost**
 `npm run cypress:run:localhost`
 
-**For https://dev.interlink-project.eu**
+**For https://dev.greengage-project.eu**
 `npm run cypress:run:dev`
 
-**For https://demo.interlink-project.eu**
+**For https://demo.greengage-project.eu**
 `npm run cypress:run:demo`
 
 <p align="right"><sub><sup>Source: https://docs.cypress.io/guides/getting-started/installing-cypress</sup></sub></p>

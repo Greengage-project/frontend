@@ -31,7 +31,7 @@ FROM golang:1.17.3-alpine3.15 as go-downloader
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh
 ENV GO111MODULE=on
-RUN go get github.com/interlink-project/runtime-js-env
+RUN go get github.com/greengage-project/runtime-js-env
 
 
 FROM nginx:stable-alpine AS prod

@@ -11,11 +11,11 @@
     "eject": "react-scripts eject",
     "translations": "i18next --fail-on-warnings",
     "cypress:open:localhost": "cypress open --browser chrome --config baseUrl='http://localhost'",
-    "cypress:open:dev": "cypress open --browser chrome --config baseUrl='https://dev.interlink-project.eu'",
-    "cypress:open:demo": "cypress open --browser chrome --config baseUrl='https://demo.interlink-project.eu'",
+    "cypress:open:dev": "cypress open --browser chrome --config baseUrl='https://dev.greengage-project.eu'",
+    "cypress:open:demo": "cypress open --browser chrome --config baseUrl='https://demo.greengage-project.eu'",
     "cypress:run:localhost": "cypress run --browser chrome --e2e --headless --config baseUrl='http://localhost'",
-    "cypress:run:dev": "cypress run --browser chrome --e2e --headless --config baseUrl='https://dev.interlink-project.eu'",
-    "cypress:run:demo": "cypress run --browser chrome --e2e --headless --config baseUrl='https://demo.interlink-project.eu'"
+    "cypress:run:dev": "cypress run --browser chrome --e2e --headless --config baseUrl='https://dev.greengage-project.eu'",
+    "cypress:run:demo": "cypress run --browser chrome --e2e --headless --config baseUrl='https://demo.greengage-project.eu'"
   },
   "eslintConfig": {
     "extends": [

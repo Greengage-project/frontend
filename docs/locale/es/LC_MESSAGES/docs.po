@@ -23,7 +23,7 @@ msgstr ""
 
 #: ../../catalogue-interlinkers.md:2
 msgid ""
-"The [INTERLINKER catalogue](https://demo.interlink-project.eu/catal) "
+"The [INTERLINKER catalogue](https://demo.greengage-project.eu/catal) "
 "provides a one-stop-shop for know-how enabling co-production. It has been"
 " populated with knowledge and software INTERLINKERs leveraging resources "
 "generated in previous EU projects, social innovation initiatives, and "
