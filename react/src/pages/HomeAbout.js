@@ -113,14 +113,14 @@ const HomeAbout = () => {
                 {t("home-about-1")}
               </Typography>
 
-              <Typography variant="body1" sx={{ fontSize: "1.5rem" }}>
+              <Typography variant="body1">
                 <FormattedText text={t("home-about-1-1")} />
               </Typography>
 
-              <Typography variant="body1" sx={{ mt: 2, fontSize: "1.5rem" }}>
+              <Typography variant="body1" sx={{ mt: 2 }}>
                 <FormattedText text={t("home-about-1-2")} />
               </Typography>
-              <Typography variant="body1" sx={{ mt: 2, fontSize: "1.5rem" }}>
+              <Typography variant="body1" sx={{ mt: 2 }}>
                 <FormattedText text={t("home-about-1-3")} />
               </Typography>
             </Grid>
@@ -147,18 +147,10 @@ const HomeAbout = () => {
         </Box>
 
         <Container maxWidth="lg" sx={{ mt: 4 }}>
-          <Typography
-            variant="body1"
-            sx={{ mb: 3, fontSize: "1.5rem" }}
-            data-cy="home-about-2-1"
-          >
+          <Typography variant="body1" sx={{ mb: 3 }} data-cy="home-about-2-1">
             <FormattedText text={t("home-about-2-1")} />
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{ mb: 3, fontSize: "1.5rem" }}
-            data-cy="home-about-2-1"
-          >
+          <Typography variant="body1" sx={{ mb: 3 }} data-cy="home-about-2-1">
             <FormattedText text={t("home-about-2-2")} />
           </Typography>
 
@@ -180,7 +172,7 @@ const HomeAbout = () => {
                 window.open("https://www.greengage-project.eu/", "_blank")
               }
               size="large"
-              sx={{ fontSize: "2rem", mt: 3, mb: 3 }}
+              sx={{ fontSize: "1.5rem", mt: 3, mb: 3 }}
               variant="outlined"
             >
               {t("button-find-out-more-about-greengage")}
