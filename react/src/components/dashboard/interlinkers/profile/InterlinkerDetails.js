@@ -12,8 +12,7 @@ import InterlinkerResults from '../browse/InterlinkerResults';
 
 const InterlinkerDetails = ({ language, interlinker }) => {
   const [currentTab, setCurrentTab] = useState('overview');
-
-  const { link, description, tags, name, problemprofiles, softwareinterlinker, snapshots_links } = interlinker;
+  const { link, description, tags, name, problemprofiles, softwareinterlinker, snapshots_links, authors, citizen_science_description, theme } = interlinker;
   const t = useCustomTranslation(language);
 
   const handleTabsChange = (event, value) => {
@@ -124,8 +123,28 @@ const InterlinkerDetails = ({ language, interlinker }) => {
                     >
                       {t('Creator')}
                     </Typography>
-                    <OfficialityChip t={t} />
-
+                    {authors.map((author) => (
+                        <Chip
+                          key={author}
+                          label={author}
+                          sx={{ mt: 1, ml: 1 }}
+                          variant='outlined'
+                        />
+                      ))}
+                    <Typography
+                      color='textSecondary'
+                      variant='overline'
+                    >
+                      {t('Theme')}
+                    </Typography>
+                    <Box>
+                    <Chip
+                          key={theme ? theme : "No theme"}
+                          label={theme ? theme : "No theme"}
+                          sx={{ mt: 1, ml: 1 }}
+                          variant='outlined'
+                        />
+                    </Box>
                     <Typography
                       color='textSecondary'
                       variant='overline'
@@ -187,6 +206,17 @@ const InterlinkerDetails = ({ language, interlinker }) => {
                           {interlinker.uri || <Alert severity='warning'>{t('Not available')}</Alert>}
                         </Link>
                       </Box>
+                      <Typography
+                        color='textSecondary'
+                        variant='overline'
+                      >
+                        {t('DOI')}
+                      </Typography>
+                      <Box sx={{ mt: 1 }}>
+                        <Link onClick={() => window.open(interlinker.uri)}>
+                          {interlinker.doi || <Alert severity='warning'>{t('Not available')}</Alert>}
+                        </Link>
+                      </Box>
                     </>
                     )}
                   </Stack>
@@ -205,6 +235,15 @@ const InterlinkerDetails = ({ language, interlinker }) => {
               {t('Description')}
             </Typography>
             <SafeHTMLElement data={description} />
+
+            <Typography
+              color='textSecondary'
+              variant='overline'
+            >
+              {t('Citizen Science related description')}
+            </Typography>
+            <SafeHTMLElement data={citizen_science_description ? citizen_science_description : "No description available"} />
+
             <Typography
               color='textSecondary'
               variant='overline'
