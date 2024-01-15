@@ -12,7 +12,7 @@ import InterlinkerResults from '../browse/InterlinkerResults';
 
 const InterlinkerDetails = ({ language, interlinker }) => {
   const [currentTab, setCurrentTab] = useState('overview');
-  const { link, description, tags, name, problemprofiles, softwareinterlinker, snapshots_links, authors, citizen_science_description, theme } = interlinker;
+  const { link, description, tags, name, problemprofiles, softwareinterlinker, snapshots_links, authors, citizen_science_description } = interlinker;
   const t = useCustomTranslation(language);
 
   const handleTabsChange = (event, value) => {
@@ -139,8 +139,8 @@ const InterlinkerDetails = ({ language, interlinker }) => {
                     </Typography>
                     <Box>
                     <Chip
-                          key={theme ? theme : "No theme"}
-                          label={theme ? theme : "No theme"}
+                          key={interlinker.themes ? interlinker.themes : "No theme"}
+                          label={interlinker.themes ? interlinker.themes : "No theme"}
                           sx={{ mt: 1, ml: 1 }}
                           variant='outlined'
                         />
