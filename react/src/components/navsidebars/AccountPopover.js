@@ -82,6 +82,17 @@ const AccountPopover = () => {
             {user.full_name}
           </Typography>
         </Box>
+        <Box sx={{ p: 2 }}>
+          <Typography
+            color="textSecondary"
+            variant="body2"
+            data-cy="account-my-settings"
+          >
+            <a href="https://auth1.demo.greengage-project.eu/auth/realms/greengage/account/">
+              {t("My Settings")}
+            </a>
+          </Typography>
+        </Box>
         <Divider />
         {/* <Box sx={{ mt: 2 }}>
           <MenuItem
