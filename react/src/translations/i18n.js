@@ -6,7 +6,7 @@ import TRANSLATIONS_ES from './es';
 import TRANSLATIONS_LV from './lv';
 import TRANSLATIONS_IT from './it';
 import TRANSLATIONS_NL from './nl';
-import TRANSLATIONS_DK from './dk';
+import TRANSLATIONS_DA from './da';
 import { ALLOWED_LANGUAGES, DEFAULT_LANGUAGE } from '../configuration';
 
 export const LANGUAGES = [
@@ -40,10 +40,10 @@ export const LANGUAGES = [
       value: 'nl',
     }
   ] : [],
-  ...ALLOWED_LANGUAGES.includes('dk') ? [
+  ...ALLOWED_LANGUAGES.includes('da') ? [
     {
       label: 'Danish',
-      value: 'dk',
+      value: 'da',
     }
   ] : [],
 ];
@@ -82,8 +82,8 @@ i18n
       nl: {
         translation: TRANSLATIONS_NL,
       },
-      dk: {
-        translation: TRANSLATIONS_DK,
+      da: {
+        translation: TRANSLATIONS_DA,
       },
     },
     lng: getLanguage(), // if you're using a language detector, do not define the lng option
