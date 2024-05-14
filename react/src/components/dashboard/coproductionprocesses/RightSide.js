@@ -374,7 +374,7 @@ const RightSide = ({ softwareInterlinkers }) => {
           handleShare(asset);
           closeMenuItem();
         },
-        text: t("Assign/Share"),
+        text: t("assign share"),
         icon: <CoPresent fontSize="small" />,
       });
 
@@ -571,7 +571,10 @@ const RightSide = ({ softwareInterlinkers }) => {
                 onChange={handleTabChange}
                 aria-label="guide-right-side-tabs"
                 sx={{ mb: 2 }}
-                centered
+                
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
               >
                 <Tab
                   wrapped

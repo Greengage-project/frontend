@@ -29,6 +29,10 @@ import { getOrganizations } from "slices/general";
 import { getUnseenUserNotifications } from "slices/general";
 import { getContributions } from "slices/general";
 
+import CookieConsentContext from "CookieConsentContext";
+import CookieConsentForm from "pages/dashboard/workspace/CookieConsentForm";
+import Cookies from 'js-cookie';
+
 export const RemoveTrailingSlash = ({ ...rest }) => {
   const location = useLocation();
 
@@ -60,6 +64,10 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const getUuid = require("uuid-by-string");
+
+  const [cookieConsent, setCookieConsent] = useState({ essentialsOnly: true });
+
+
 
   useScrollReset();
 
@@ -253,6 +261,19 @@ const App = () => {
   const { enableLinkTracking, trackPageView, pushInstruction } = useMatomo();
   enableLinkTracking();
   useEffect(() => {
+
+    const storedPopupValue = Cookies.get('cookiePreference');
+    
+    if (storedPopupValue=="accept-all") {
+        // If there's a value in the cookie, don't show the popup
+        setCookieConsent({ essentialsOnly: false });
+    }else{
+        setCookieConsent({ essentialsOnly: true });
+    }
+
+    //This will initialice the matomo tracking system.
+    if (!cookieConsent.essentialsOnly) {
+  
     //If the user is logged in, send the user data to Matomo
     if (
       auth.isInitialized &&
@@ -271,25 +292,34 @@ const App = () => {
     } else {
       trackPageView();
     }
+  }
+    
   }, [window.location.href]);
 
   return settings.loaded ? (
-    <ThemeProvider theme={settings.themeData}>
-      <RTL direction={settings.direction}>
-        <CssBaseline />
-        <Toaster position="top-center" />
-        <Helmet>
-          {PRODUCTION_MODE && (
-            <meta
-              httpEquiv="Content-Security-Policy"
-              content="upgrade-insecure-requests"
-            />
-          )}
-        </Helmet>
-        <RemoveTrailingSlash />
-        {auth.isInitialized ? content : <SplashScreen />}
-      </RTL>
-    </ThemeProvider>
+    <CookieConsentContext.Provider value={{ cookieConsent, setCookieConsent }}>
+      <ThemeProvider theme={settings.themeData}>
+        <RTL direction={settings.direction}>
+          <CssBaseline />
+          <Toaster position="top-center" />
+          <Helmet>
+            {PRODUCTION_MODE && (
+              <meta
+                httpEquiv="Content-Security-Policy"
+                content="upgrade-insecure-requests"
+              />
+            )}
+          </Helmet>
+          <RemoveTrailingSlash />
+          {auth.isInitialized ? content : <SplashScreen />}
+
+          
+
+          
+    
+        </RTL>
+      </ThemeProvider>
+    </CookieConsentContext.Provider>
   ) : (
     <SplashScreen />
   );

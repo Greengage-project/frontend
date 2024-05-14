@@ -53,7 +53,7 @@ export const ClaimDialog = ({
   afterRefreshEvent=null
 
 }) => {
-    console.log("selectedAssignment",selectedAssignment);
+    //console.log("selectedAssignment",selectedAssignment);
     const { process, isAdministrator, selectedTreeItem } = useSelector(
         (state) => state.process
     );
@@ -241,7 +241,8 @@ export const ClaimDialog = ({
                     .replace(/"/g, "&quot;")
                     .replace(/'/g, "&#39;");
                 }
-
+                //console.log(res.data);
+                //alert("Claim created successfully"+res.data.id);
                 const parametersList = {
                   assetId: selectedAsset.id,
                   assetName: "{assetid:" + selectedAsset.id + "}",
@@ -254,6 +255,7 @@ export const ClaimDialog = ({
                   copro_id: process.id,
                   showIcon: selectedShowIcon,
                   showLink: selectedShowLink,
+                  claim_id: res.data.id,
                 };
 
                 const paramListJson = JSON.stringify(parametersList);
@@ -328,14 +330,14 @@ export const ClaimDialog = ({
             <form onSubmit={handleSubmit}>
               <Box sx={{ mt: 3 }}>
                 <Typography variant="h6" component="h2">
-                  Introduce the details of your contribution:
+                {t("Introduce the details of your contribution")+":"}
                 </Typography>
                 <TextField
                   required
                   error={Boolean(touched.title && errors.title)}
                   fullWidth
                   helperText={touched.title && errors.title}
-                  label="Title"
+                  label={t("Title")}
                   name="title"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -352,7 +354,7 @@ export const ClaimDialog = ({
                   error={Boolean(touched.description && errors.description)}
                   fullWidth
                   helperText={touched.description && errors.description}
-                  label="Description"
+                  label={t("Description")}
                   name="description"
                   onBlur={handleBlur}
                   onChange={handleChange}

@@ -13,6 +13,8 @@ import {
 import { cleanProcess } from "slices/process";
 import useAuth from "../../../hooks/useAuth";
 import CoproductionprocessCreate from "./CoproductionProcessCreate";
+import CookieConsentForm from "./CookieConsentForm";
+import { usersApi } from "__api__";
 
 const MyWorkspace = () => {
   const [coproductionProcessCreatorOpen, setCoproductionProcessCreatorOpen] =
@@ -259,6 +261,7 @@ const MyWorkspace = () => {
                 </Grid>
               </Grid>
             </Grid>
+            <CookieConsentForm/>
           </AuthGuardSkeleton>
         </Container>
         <CoproductionprocessCreate
@@ -269,6 +272,7 @@ const MyWorkspace = () => {
           onCreate={onProcessCreate}
         />
       </Box>
+      
     </>
   );
 };
