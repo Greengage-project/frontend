@@ -70,269 +70,100 @@ const CookiePolicy = () => {
 
             <div>
               <Typography variant="h4" gutterBottom>
-                Cookie Policy of interlink-project.eu
+              Privacy Notice for Research Participants 
               </Typography>
               <br />
 
+              <Typography variant="h6" gutterBottom>
+              Purpose of the Privacy Notice 
+              </Typography>
               <Typography variant="body1" paragraph>
-                In accordance with Article 13 of Regulation (EU) 2016/679 (GDPR)
-                and the Provision of the Italian Data Protection Authority
-                “Simplified Arrangements to Provide Information and Obtain
-                Consent Regarding Cookies – 8 May 2014 no. 229”, Dedagroup
-                S.p.A. (“Dedagroup” or “We”, “us”, “our”) undertakes a duty to
-                provide a detailed information notice relating to the cookies
-                installed on the website www.interlink-project.eu .
+              This privacy notice explains how the University of the West of England, Bristol (UWE Bristol) collects, manages and uses your personal data before, during and after you participate in GEENGAGE – Engaging Citizens – Mobilizing Technology – Delivering Green Deal. ‘Personal data’ means any information relating to an identified or identifiable natural person (the data subject). 
+
+              This privacy notice adheres to the General Data Protection Regulation (GDPR) principle of transparency. This means it gives information about: 
+
+              - How and why your data will be used for the research; 
+              - What your rights are under GDPR; and 
+              - How to contact UWE Bristol and the project lead in relation to questions, concerns or exercising your rights regarding the use of your personal data. 
+
+              This Privacy Notice should be read in conjunction with the Participant Information Sheet and Ethical Consent Form provided to you before you agree to take part in the research. 
               </Typography>
 
+              <Typography variant="h6" gutterBottom>
+              Why are we processing your personal data? 
+              </Typography>
               <Typography variant="body1" paragraph>
-                This document informs Users about the technologies that help the
-                Interlink website to achieve the purposes described below. Such
-                technologies allow us to access and store information (for
-                example by using a Cookie) or use resources (for example by
-                running a script) on a User’s device as they interact with this
-                website.
+              UWE Bristol and its research partners undertake research under its public function to provide research for the benefit of society. As a data controller we are committed to protecting the privacy and security of your personal data in accordance with the (EU) 2016/679 the General Data Protection Regulation (GDPR), the Data Protection Act 2018 (or any successor legislation) and any other legislation directly relating to privacy laws that apply (together “the Data Protection Legislation”). General information on Data Protection law is available from the Information Commissioner’s Office (https://ico.org.uk/).
               </Typography>
 
               <Typography variant="h6" paragraph>
-                What kind of technologies do we use?
+              How do we use your personal data? 
               </Typography>
               <Typography variant="body1" paragraph>
-                For simplicity, all such technologies are defined as “trackers”
-                within this document – unless there is a reason to
-                differentiate. For example, while cookies can be used on both
-                web and mobile browsers, it would be inaccurate to talk about
-                cookies in the context of mobile apps as they are a
-                browser-based tracker. For this reason, within this document,
-                the term cookies is only used where it is specifically meant to
-                indicate that particular type of tracker.
-              </Typography>
+              We will only process your personal data when the law allows us to. In addition, we will always comply with UWE Bristol’s policies and procedures in processing your personal data. Our lawful basis for using your personal data for research purposes is fulfilling tasks in the public interest, and for archiving purposes in the public interest, for scientific or historical research purposes.  
 
-              <Typography variant="body1" paragraph>
-                Some of the purposes for which trackers are used may also
-                require the User’s consent. Whenever consent is given, it can be
-                freely withdrawn at any time following the instructions provided
-                in this document.
-              </Typography>
+              We will always tell you about the information we wish to collect from you and how we will use it. We will not use your personal data for automated decision making about you or for profiling purposes.  
 
-              <Typography variant="body1" paragraph>
-                This website uses trackers managed directly by us (so-called
-                “first-party” trackers). The validity and expiration periods of
-                cookies and other similar trackers may vary depending on the
-                lifetime set by us. Some of them expire upon termination of the
-                User’s browsing session. In addition to what’s specified in the
-                descriptions within each of the categories below, Users may find
-                more precise and updated information regarding lifetime
-                specifications as well as any other relevant information – such
-                as the presence of other trackers – in the linked privacy
-                policies or by contacting Dedagroup S.p.A. at
-                info@interlink-project.eu.
-              </Typography>
+              Our research is governed by robust policies and procedures and, where human participants are involved, is subject to ethical approval from either UWE Bristol’s Faculty or University Research Ethics Committees. This pilot study has been reviewed and approved by the Faculty of Engineering and Technology of the University of West of England and the University’s Research Ethics Committee. Any comments, questions, or complaints about the ethical conduct of this study can be addressed to the Research Ethics Committee at the University of the West of England at:  researchethics@uwe.ac.uk .  
 
-              <Typography variant="body1" paragraph>
-                Activities strictly necessary for the operation of this website
-                and delivery of the Service This website uses so-called
-                “technical” cookies and other similar tackers to carry out
-                activities that are strictly necessary for the operation or
-                delivery of the service.
+              The research team adhere to the principles of the General Data Protection Regulation (GDPR).  
+
+              For more information about UWE Bristol’s research ethics approval process please see our Research Ethics webpages at www1.uwe.ac.uk/research/researchethics 
               </Typography>
 
               <Typography variant="h6" paragraph>
-                Other activities involving the use of trackers
+              What data do we collect?  
               </Typography>
               <Typography variant="body1" paragraph>
-                Measurement – This website uses trackers to measure traffic and
-                analyze user behavior with the goal of improving the service. We
-                use cookies in a range of ways to improve your experience on our
-                site, including understanding how a user navigates the website.
-              </Typography>
-
-              <Typography variant="body1" paragraph>
-                Anonymized analytics services: The services contained in this
-                section allow the Owner, through the use of third-party
-                trackers, to collect and manage analytics in an anonymized form.
-                Google Analytics with anonymized IP Google Analytics is a web
-                analysis service provided by Google LLC or by Google Ireland
-                Limited, depending on the location this Website is accessed
-                from, (“Google”). Google utilizes the Data collected to track
-                and examine the use of this Website, prepare reports on its
-                activities and share them with other Google services. Google may
-                use the Data collected to contextualize and personalize the ads
-                of its own advertising network. This integration of Google
-                Analytics anonymizes your IP address. It works by shortening
-                Users’ IP addresses within member states of the European Union
-                or in other contracting states to the Agreement on the European
-                Economic Area. Only in exceptional cases will the complete IP
-                address be sent to a Google server and shortened within the US.
-                Personal Data processed: Tracker and Usage Data. Place of
-                processing: United States – Privacy Policy – Opt Out; Ireland –
-                Privacy Policy – Opt Out.
-              </Typography>
-
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell className={classes.headerCell}>
-                      CATEGORY
-                    </TableCell>
-                    <TableCell className={classes.headerCell}>NAME</TableCell>
-                    <TableCell className={classes.headerCell}>
-                      SUPPLIER
-                    </TableCell>
-                    <TableCell className={classes.headerCell}>
-                      DEADLINE
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {[
-                    ["Necessary", "elementor", "Elementor", "Persistent"],
-                    ["Statistical", "_ga", "Google", "2 years"],
-                    ["Statistical", "_gat", "Google", "1 day"],
-                    ["Statistical", "_gid", "Google", "1 day"],
-                  ].map((row, rowIndex) => (
-                    <TableRow key={rowIndex}>
-                      {row.map((cell, cellIndex) => (
-                        <TableCell
-                          key={cellIndex}
-                          className={
-                            cellIndex === 0
-                              ? `${classes.firstColumnCell} ${classes.tableCell}`
-                              : `${classes.tableCell}`
-                          }
-                        >
-                          {cell}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-
-              <Typography variant="h4" gutterBottom>
-                How to manage preferences and provide or withdraw consent?
+              The data we collect will vary from project to project.  Researchers will only collect data that is essential for their project. The specific categories of research data processed are described in the Participant Information Sheet provided to you with this Privacy Notice.  
               </Typography>
 
               <Typography variant="h6" paragraph>
-                There are various ways to manage tracker related preferences and
-                to provide and withdraw consent, where relevant:
+              Who do we share your data with?   
               </Typography>
               <Typography variant="body1" paragraph>
-                Users can manage preferences related to trackers directly within
-                their own device settings, for example, by preventing the use or
-                storage of trackers.
-              </Typography>
-              <Typography variant="body1" paragraph>
-                Additionally, whenever the use of trackers is based on consent,
-                Users can provide or withdraw such consent by setting their
-                preferences within the cookie notice or by updating such
-                preferences accordingly via the relevant consent-preferences
-                widget.
-              </Typography>
-              <Typography variant="body1" paragraph>
-                It is also possible, via relevant browser or device features, to
-                delete previously stored trackers, including those used to
-                remember the User’s initial consent.
-              </Typography>
-              <Typography variant="body1" paragraph>
-                Other trackers in the browser’s local memory may be cleared by
-                deleting the browsing history.
+              We aim to not collect personal data and anonymised research data will only be shared in accordance with the attached Participant Information Sheet.  
               </Typography>
 
               <Typography variant="h6" paragraph>
-                Locating Tracker Settings
+              How do we keep your data secure?    
               </Typography>
               <Typography variant="body1" paragraph>
-                Users can, for example, find information about how to manage
-                cookies in the most commonly used browsers at the following
-                addresses:
-              </Typography>
+              We take a robust approach to protecting the information with secure electronic and physical storage areas for research data with controlled access. Access to project data is strictly controlled on a need to know basis and data is stored and transmitted securely using methods such as encryption and access controls for physical records where appropriate. 
 
-              <ul>
-                <li>
-                  <Typography variant="body1">Google Chrome</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Mozilla Firefox</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Apple Safari</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">
-                    Microsoft Internet Explorer
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Microsoft Edge</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Brave</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Opera</Typography>
-                </li>
-              </ul>
+              Alongside these technical measures there are comprehensive and effective policies and processes in place to ensure that those who process you’re the study information (such as researchers, relevant University administrators and/or third-party processors) are aware of their obligations and responsibilities for the data they have access to.  
 
-              <Typography variant="body1" paragraph>
-                Users may also manage certain categories of trackers used on
-                mobile apps by opting out through relevant device settings such
-                as the device advertising settings for mobile devices, or
-                tracking settings in general (Users may open the device settings
-                and look for the relevant setting).
+              By default, people are only granted access to the information they require to perform their duties. Mandatory data protection and information security training is provided to staff and expert advice available if needed.   
               </Typography>
 
               <Typography variant="h6" paragraph>
-                Data Controller
+              How long do we keep your data for?     
               </Typography>
+              <Typography variant="body1" paragraph>
+              Your research data will only be retained for as long as is necessary to fulfil the cited purpose of the research. The length of time we keep the data will depend on several factors including the significance of the data, funder requirements, and the nature of the study. Specific details are provided in the attached Participant Information Sheet.  
 
-              <Box>
-                <Typography variant="body1">Dedagroup S.p.A.</Typography>
-                <Typography variant="body1">Via di Spini, 50</Typography>
-                <Typography variant="body1">
-                  38121 - Località Produttiva I TN
-                </Typography>
-                <Typography variant="body1">Italy</Typography>
-              </Box>
+              Anonymised data that falls outside the scope of data protection legislation as it contains no identifying or identifiable information may be stored in UWE Bristol’s research data archive or another carefully selected appropriate data archive.    
+              </Typography>
 
               <Typography variant="h6" paragraph>
-                Data Protection Officer (DPO)
+              Your Rights and how to exercise them 
               </Typography>
-
-              <Box>
-                <Typography variant="body1">
-                  Mrs. Monica Perego: dpo@dedagroup.it
-                </Typography>
-              </Box>
-
-              <Typography variant="h6" paragraph>
-                Data Processor
-              </Typography>
-
-              <Box>
-                <Typography variant="body1">
-                  Smart Community Lab, FBK
-                </Typography>
-                <Typography variant="body1">via Sommarive 18</Typography>
-                <Typography variant="body1">
-                  38123 Povo (Trento), Italy
-                </Typography>
-                <Typography variant="body1">
-                  Controller contact email: info@interlink-project.eu
-                </Typography>
-              </Box>
-
               <Typography variant="body1" paragraph>
-                Given the objective complexity surrounding tracking
-                technologies, Users are encouraged to contact Dedagroup S.p.A.
-                at info@interlink-project.eu should they wish to receive any
-                further information on the use of such technologies by this
-                website.
-              </Typography>
+              Under the Data Protection legislation, you have the following qualified rights: 
 
-              <Typography variant="body1" paragraph>
-                This project has received funding from the European Union’s
-                Horizon 2020 research and Innovation programme under Grant
-                Agreement 959201
+              1) The right to access research data held by or on behalf of the University; 
+              2) The right to rectification if the information is inaccurate or incomplete; 
+              3) The right to restrict processing and/or erasure of the research data; 
+              4) The right to data portability; 
+              5) The right to object to processing; 
+              6) The right to object to automated decision making and profiling; 
+              7) The right to complain to the Information Commissioner’s Office (ICO). 
+
+              We will always respond to concerns or queries you may have. If you wish to exercise your rights or have any other general data protection queries, please contact UWE Bristol’s Data Protection Officer (dataprotection@uwe.ac.uk).   
+              
+              If you have any complaints or queries relating to the research in which you are taking part please contact either the research project lead, whose details are in the attached Participant Information Sheet or UWE Bristol’s research governance manager (researchgovernance@uwe.ac.uk.). 
+
+              v.2: This template Privacy Notice was last amended in November 2020 and will be subject to regular review/update.   
               </Typography>
             </div>
           </Paper>
