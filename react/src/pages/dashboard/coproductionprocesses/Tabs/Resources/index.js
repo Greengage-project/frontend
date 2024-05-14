@@ -75,7 +75,7 @@ export default function Resources({}) {
   );
   const [loading, setLoading] = React.useState(true);
   //const [assets, setAssets] = React.useState([]);
-  const { assetsList, assignments, assignments } = useSelector((state) => state.general);
+  const { assetsList, assignments } = useSelector((state) => state.general);
   const mounted = useMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
