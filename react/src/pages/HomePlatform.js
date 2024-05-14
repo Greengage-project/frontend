@@ -29,7 +29,11 @@ const HomePlatform = () => {
                 sx={{ my: 3, textAlign: "justify" }}
                 variant="subtitle1"
               >
-                {t("home-platform-1-1")}
+                {t("home-platform-1-1-1")}
+                <a href="https://interlink-project.eu/">INTERLINK</a>
+                {t("home-platform-1-1-2")}
+                <a href="https://www.greengage-project.eu/">GREENGAGE</a>
+                {t("home-platform-1-1-3")}
               </Typography>
               <Button
                 onClick={() => navigate("/dashboard")}
@@ -78,7 +82,9 @@ const HomePlatform = () => {
                 sx={{ my: 3, textAlign: "justify" }}
                 variant="subtitle1"
               >
-                {t("home-platform-3-1")}
+                {t("home-platform-3-1-1")}
+                <a href="https://www.greengage-project.eu/">GREENGAGE</a>
+                {t("home-platform-3-1-2")}
               </Typography>
             </div>
           }
@@ -114,7 +120,7 @@ const HomePlatform = () => {
             <Button
               onClick={() =>
                 window.open(
-                  "https://greengage-project.github.io/interlink-project/testing/acceptance-tests/index.html",
+                  "https://demo.greengage-project.eu/docs/en/",
                   "_blank"
                 )
               }

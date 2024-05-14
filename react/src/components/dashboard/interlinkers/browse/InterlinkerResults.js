@@ -55,6 +55,7 @@ const InterlinkerResults = ({
       interlinkersApi
         .getMulti({ page: page + 1, size, ...filters }, language)
         .then((res) => {
+          console.log(res);
           if (mounted.current) {
             setLoading(false);
             setPage(page + 1);

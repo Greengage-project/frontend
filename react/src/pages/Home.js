@@ -153,7 +153,9 @@ const Home = () => {
                 variant="subtitle1"
                 data-cy="home-4-2"
               >
-                {t("home-4-2")}
+                {t("home-4-2-1")}
+                <a href="https://interlink-project.eu/">INTERLINK</a>
+                {t("home-4-2-2")}
               </Typography>
               <Box
                 sx={{
@@ -194,7 +196,13 @@ const Home = () => {
                 variant="subtitle1"
                 data-cy="home-5-2"
               >
-                {t("home-5-2")}
+                {t("home-5-2-1")}
+                <a href="https://www.greengage-project.eu/">GREENGAGE</a>
+                {t("home-5-2-2")}
+                <a href="https://demo.greengage-project.eu/platform">
+                  GREENGAGE’s Collaborative Environment
+                </a>
+                {t("home-5-2-3")}
               </Typography>
 
               <Box

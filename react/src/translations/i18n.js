@@ -5,6 +5,8 @@ import TRANSLATIONS_EN from './en';
 import TRANSLATIONS_ES from './es';
 import TRANSLATIONS_LV from './lv';
 import TRANSLATIONS_IT from './it';
+import TRANSLATIONS_NL from './nl';
+import TRANSLATIONS_DA from './da';
 import { ALLOWED_LANGUAGES, DEFAULT_LANGUAGE } from '../configuration';
 
 export const LANGUAGES = [
@@ -30,6 +32,18 @@ export const LANGUAGES = [
     {
       label: 'Italiano',
       value: 'it',
+    }
+  ] : [],
+  ...ALLOWED_LANGUAGES.includes('nl') ? [
+    {
+      label: 'Dutch',
+      value: 'nl',
+    }
+  ] : [],
+  ...ALLOWED_LANGUAGES.includes('da') ? [
+    {
+      label: 'Danish',
+      value: 'da',
     }
   ] : [],
 ];
@@ -64,6 +78,12 @@ i18n
       },
       lv: {
         translation: TRANSLATIONS_LV,
+      },
+      nl: {
+        translation: TRANSLATIONS_NL,
+      },
+      da: {
+        translation: TRANSLATIONS_DA,
       },
     },
     lng: getLanguage(), // if you're using a language detector, do not define the lng option

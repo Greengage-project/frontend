@@ -62,7 +62,7 @@ const GridMode = ({ publiccoproduction, t, linkProps }) => (
               variant="subtitle2"
               title="teamname"
             >
-              {t("Interlink platform")}
+              {t("Greengage platform")}
             </Link>
           </Typography>
           <Typography color="textSecondary" variant="body2">

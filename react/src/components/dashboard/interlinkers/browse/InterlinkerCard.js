@@ -63,7 +63,7 @@ const GridMode = ({ interlinker, t, linkProps }) => (
               variant="subtitle2"
               title="teamname"
             >
-              {t("Interlink platform")}
+              {t("Greengage platform")}
             </Link>
           </Typography>
           <Typography color="textSecondary" variant="body2">
@@ -244,7 +244,7 @@ const ListMode = ({ interlinker, t, linkProps }) => (
                   title="teamname"
                   data-cy={`interlinker-teamname-${slugify(interlinker.name)}`}
                 >
-                  {t("Interlink platform")}
+                  {t("Greengage platform")}
                 </Link>
               </Typography>
               <Typography color="textSecondary" variant="body2">
