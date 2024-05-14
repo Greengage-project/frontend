@@ -437,10 +437,6 @@
     "No coproduction processes found": "No se han encontrado procesos de coproducción",
     "No tags": "Sin tag",
     "Load users from csv file": "Cargar usaurios desde archivo CSV",
-<<<<<<< HEAD
-    "This task does not have a complexity defined.": "Esta tarea no tiene una complejidad definida."
-}
-=======
     "This task does not have a complexity defined": "Esta tarea no tiene una complejidad definida",
     "Award points": "Otorgar puntos",
     "No contribution": "Ninguna contribución",
@@ -678,4 +674,3 @@
 
 
 }
->>>>>>> 4b18622c25ac1ebdb050b0cf2baae3d23622237d
