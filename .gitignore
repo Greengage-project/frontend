@@ -29,3 +29,5 @@ node_modules
 /react/cypress/screenshots
 .secrets
 *Zone.Identifier
+/docs/images/aac-login-window.png
+/docs/images/dashboard-loginrequired.png
