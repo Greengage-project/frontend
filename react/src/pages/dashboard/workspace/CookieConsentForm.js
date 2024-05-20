@@ -172,7 +172,7 @@ const CookieConsentForm = () => {
               <Typography variant="body2">
                 For a full and detailed understanding of the terms and
                 conditions that govern the use of this platform, please{" "}
-                <Link href="/dashboard/privacy" underline="always">
+                <Link href="/privacy" underline="always">
                   click here
                 </Link>
                 .

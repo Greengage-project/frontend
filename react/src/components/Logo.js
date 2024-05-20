@@ -2,7 +2,9 @@ import useSettings from "hooks/useSettings";
 import { THEMES } from "../constants";
 
 const Logo = ({ src, style = { height: "40px" }, datacy = null }) => (
+  <a href="/">
   <img src={src} style={style} data-cy={datacy} />
+  </a>
 );
 
 export default Logo;
@@ -18,6 +20,7 @@ export function DashboardNavbarLogo({ style = { height: "40px" } }) {
           : settings.logos.dashboard_navbar_dark
       }`}
       datacy="dashboard-navbar-logo"
+      
     />
   );
 }

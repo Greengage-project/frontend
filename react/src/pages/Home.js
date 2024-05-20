@@ -366,7 +366,7 @@ const Home = () => {
               <p>
                 This project has received funding from the European Union’s
                 Horizon 2020 research and Innovation programme under Grant
-                Agreement 959201
+                Agreement 101086530
               </p>
             </Box>
           }

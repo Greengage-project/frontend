@@ -63,225 +63,138 @@ const CookiePolicy = () => {
         }}
       >
         <Container maxWidth="lg">
-        <Paper elevation={3} style={{ padding: '20px' }}>
-        <HomeLogo style={{ width: "30%", height: "auto" }} />
-        <br/>
-        <br/>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <HomeLogo style={{ width: "30%", height: "auto" }} />
+            <br />
+            <br />
 
-          <div>
-            <Typography variant="h4" gutterBottom>
-              INTERLINK PROJECT PRIVACY NOTICE
-            </Typography>
-            <br/>
+            <div>
+              <Typography variant="h4" gutterBottom>
+                Privacy Notice for Research Participants
+              </Typography>
+              <br />
 
-            <Typography variant="body1" paragraph>
-              Welcome to https://interlink-project.eu/, the website of the
-              Interlink project (the “Project”). The website is managed by
-              Dedagroup, S.p.A. (“Dedagroup” or “We”, “us”, “our”) and is hosted
-              by FBK, both partners to the Project. FBK is the processor and we
-              are the controller of the Personal Data processed in relation to
-              the website and we are responsible for compliance with EU Data
-              Protection Law.
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                Purpose of the Privacy Notice
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                This privacy notice explains how the University of the West of England, Bristol (UWE Bristol) collects, manages and uses your personal data before, during and after you participate in GEENGAGE – Engaging Citizens – Mobilizing Technology – Delivering Green Deal. ‘Personal data’ means any information relating to an identified or identifiable natural person (the data subject).
 
-            <Typography variant="body1" paragraph>
-              This Privacy Notice describes how we use the Personal Data of
-              visitors of the website, individuals registering to our
-              newsletters and or reaching out to us in relation to the Project
-              (“You”, “your”).
-            </Typography>
+                This privacy notice adheres to the General Data Protection Regulation (GDPR) principle of transparency. This means it gives information about:
+              </Typography>
 
-            <Typography variant="h6" paragraph>
-              1. What Personal Data do We collect about You?
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Depending on who You are and on how You engage with us, We collect
-              Personal Data about You, for different reasons and based upon a
-              specific legal basis.
-            </Typography>
-
-            <ul style={{ listStyleType: "disc" }}>
-              <li>
-                <strong>Visitors of the website</strong> – When You visit our
-                Website, We collect information about You or your device. This
-                includes technical information, such as the Internet protocol
-                (IP) address used to connect your device to the Internet, as
-                well as information about your visit, including the dates and
-                times You use our website, length of visits to certain pages,
-                etc. This information may be considered Personal Data either in
-                itself or when combined with other information about You. We use
-                cookies and other tracking technologies to do so. You can learn
-                more about such technologies by reading the Cookies Notice
-                available on our website.
-              </li>
-              <li>
-                <strong>Newsletter’s subscribers</strong> – When You sign up to
-                receive our newsletters, We ask your e-mail address. We use this
-                Personal Data to keep You informed about our Project and its
-                related activities. We do so with your consent.
-              </li>
-              <li>
-                <strong>When You reach out to us </strong> – When You send us an
-                email message, We may process your Personal Data such as your
-                email, name and any Personal Data You include in your message.
-                We process your Personal Data based on our legitimate interest,
-                as We do so to be able to respond to your query and communicate
-                with You. When We process your Personal Data on the basis of
-                legitimate interest, we considered the impact of our activities
-                on your rights and freedoms as a Data Subject, as well as your
-                expectations. You can learn more on our legitimate interest
-                assessment by contacting us at info@interlink-project.eu.
-              </li>
-            </ul>
-
-            <Typography variant="h6" paragraph>
-              2. Do We Change the purpose of the processing?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            We will only use your Personal Data for the purposes for which We collected them, unless We reasonably consider that We need to use them for another reason and this is compatible with the original purpose. If We need to use your Personal Data for an unrelated purpose, We will notify You and We will explain the legal basis that allows us to do so.
-            </Typography>
-
-            <Typography variant="h6" paragraph>
-             3. Which third-parties process your Personal Data? Do We Share, Disclose or Transfer Personal Data?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            In limited cases, We may share or disclose your Personal Data with third parties, including third-party service providers.
-            </Typography>
-            <Typography variant="body1" paragraph>
-            We share your Personal Data with:
-            </Typography>
-
-            <ul style={{ listStyleType: "disc" }}>
-              <li>
-                <strong>Our newsletter service provider</strong> SendinBlue (https://www.sendinblue.com/)
-              </li>
-              <li>
-                <strong>Our website developer and manager</strong> , Fondazione Bruno Kessler (“FBK”), one of the partners to the Project.
-              </li>
-              <li>
-                <strong>Other Partners of the Project </strong>, a list of which is available on our website, to which we disclose Personal Data on a strictly need-to-know basis.
-              </li>
-            </ul>
+              <ul style={{ listStyleType: "disc" }}>
+                <li>
+                  How and why your data will be used for the research;
+                </li>
+                <li>
+                  What your rights are under GDPR; and
+                </li>
+                <li>
+                  How to contact UWE Bristol and the project lead in relation to questions, concerns or exercising your rights regarding the use of your personal data.
+                </li>
+              </ul>
 
 
-            <Typography variant="body1" paragraph>
-            We do not use other third-parties to process your Personal Data or otherwise transfer Personal Data outside of the EEA and/or disclose your Personal Data to other recipients than those identified in this Privacy Notice. If We were to do so, We will comply with EU Data Protection Law.
-            </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                This Privacy Notice should be read in conjunction with the Participant Information Sheet and Ethical Consent Form provided to you before you agree to take part in the research.
+              </Typography>
 
-            <Typography variant="h6" paragraph>
-            4. How do we protect your Personal Data?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            Your Personal Data are treated as confidential.
-            We never pass on your contact details to third-parties for commercial purposes.
-            We have put in place appropriate administrative, physical and technical measures. We update and test our security technology on an ongoing basis. We restrict access to your Personal Data to those employees and staff who need to know that information to provide benefits or services to You. In addition, We train our staff about the importance of confidentiality and maintaining the privacy and security of your information. We commit to taking appropriate disciplinary measures to enforce our staff’ privacy responsibilities.
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                Why are we processing your personal data?
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                UWE Bristol and its research partners undertake research under its public function to provide research for the benefit of society. As a data controller we are committed to protecting the privacy and security of your personal data in accordance with the (EU) 2016/679 the General Data Protection Regulation (GDPR), the Data Protection Act 2018 (or any successor legislation) and any other legislation directly relating to privacy laws that apply (together “the Data Protection Legislation”). General information on Data Protection law is available from the Information Commissioner’s Office (https://ico.org.uk/).
+              </Typography>
 
-            <Typography variant="h6" paragraph>
-            5. How do we protect your Personal Data?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            We store your Personal Data until the end of the Project (expected December 31, 2023). We might delete Personal Data before the end of the Project if We achieve the purpose for which We collected them.
-            When We process your Personal Data based on your consent (e.g., when You subscribe to our newsletters), You have the right to withdraw your consent at any time (see section 6 below). In this case, Your Personal Data will be deleted.
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                How do we use your personal data?
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                We will only process your personal data when the law allows us to. In addition, we will always comply with UWE Bristol’s policies and procedures in processing your personal data. Our lawful basis for using your personal data for research purposes is fulfilling tasks in the public interest, and for archiving purposes in the public interest, for scientific or historical research purposes.
 
-            <Typography variant="h6" paragraph>
-            6. What rights do You have in connection with your Personal Data?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            Under certain circumstances, under EU Data Protection Law, You have the right to:
-            </Typography>
+                We will always tell you about the information we wish to collect from you and how we will use it. We will not use your personal data for automated decision making about you or for profiling purposes.
 
-            <ul style={{ listStyleType: "disc" }}>
-              <li>
-                <strong>Request access</strong> to your Personal Data. This enables You to receive a copy of the Personal Data We hold about You and to check that We are lawfully Processing it.
-              </li>
-              <li>
-                <strong>Request correction</strong>  of the Personal Data that We hold about You. This enables You to have any incomplete or inaccurate information We hold about You corrected.
-              </li>
-              <li>
-                <strong>Request erasure </strong>of your Personal Data. This enables You to ask us to delete or remove Personal Data where there is no good reason for us continuing to process it. You also have the right to ask us to delete or remove your Personal Data where You have exercised your right to object to Processing (see below).
-              </li>
-              <li>
-                <strong>Request the restriction </strong> of Processing of your Personal Data. This enables You to ask us to suspend the Processing of Personal Data about You, for example if You want us to establish its accuracy or the reason for Processing it.
-              </li>
-              <li>
-                <strong>Request the transfer </strong> of your Personal Data to another party (right to data portability).
-              </li>
-            </ul>
+                Our research is governed by robust policies and procedures and, where human participants are involved, is subject to ethical approval from either UWE Bristol’s Faculty or University Research Ethics Committees. This pilot study has been reviewed and approved by the Faculty of Engineering and Technology of the University of West of England and the University’s Research Ethics Committee. Any comments, questions, or complaints about the ethical conduct of this study can be addressed to the Research Ethics Committee at the University of the West of England at:  researchethics@uwe.ac.uk .
 
+                The research team adhere to the principles of the General Data Protection Regulation (GDPR).
 
+                For more information about UWE Bristol’s research ethics approval process please see our Research Ethics webpages at www1.uwe.ac.uk/research/researchethics
+              </Typography>
 
-            <Typography variant="body1" paragraph>
-            To exercise your rights as Data Subject, make queries or complaints, please contact info@interlink-project.eu.
-            When You provide your consent to the Processing your Personal Data for a specific purpose, You have the right to withdraw your consent at any time. You can unsubscribe from our newsletter by clicking on the unsubscribe button at the bottom of our emails.
-            When We process your Personal Data based on our legitimate interest You have the right to object to such Processing. To object to the Processing, please contact info@interlink-project.eu.
-            If You are dissatisfied with any aspect of our handling of your Personal Data, You have the right to make a complaint at any time to the relevant Supervisory Authority.
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                What data do we collect?
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                The data we collect will vary from project to project.  Researchers will only collect data that is essential for their project. The specific categories of research data processed are described in the Participant Information Sheet provided to you with this Privacy Notice.
+              </Typography>
 
-            <Typography variant="h6" paragraph>
-            7. How will we update the Privacy Notice?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            We may revise this Privacy Notice from time to time and any revisions will be made available to You via our website.
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                Who do we share your data with?
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                We aim to not collect personal data and anonymised research data will only be shared in accordance with the attached Participant Information Sheet.
+              </Typography>
 
-            <Typography variant="h6" paragraph>
-            8. How can You contact us?
-            </Typography>
-            <Typography variant="body1" paragraph>
-            If You have any queries concerning the processing of your Personal Data, You may address them by email at info@interlink-project.eu or You can contact our DPO at dpo@dedagroup.it.
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                How do we keep your data secure?
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                We take a robust approach to protecting the information with secure electronic and physical storage areas for research data with controlled access. Access to project data is strictly controlled on a need to know basis and data is stored and transmitted securely using methods such as encryption and access controls for physical records where appropriate.
 
-            <Typography variant="h6" paragraph>
-            9. Our Details
-            </Typography>
+                Alongside these technical measures there are comprehensive and effective policies and processes in place to ensure that those who process you’re the study information (such as researchers, relevant University administrators and/or third-party processors) are aware of their obligations and responsibilities for the data they have access to.
 
-            <ul>
-              <li>
-                <Typography variant="body1">Dedagroup Public Services s.r.l.</Typography>
-              </li>
-              <li>
-                <Typography variant="body1">Via di Spini, 50,</Typography>
-              </li>
-              <li>
-                <Typography variant="body1">38121 Località Produttiva I TN,</Typography>
-              </li>
-              <li>
-                <Typography variant="body1">
-                Italy
-                </Typography>
-              </li>
-              
-            </ul>
-           
+                By default, people are only granted access to the information they require to perform their duties. Mandatory data protection and information security training is provided to staff and expert advice available if needed.
+              </Typography>
 
-            <Typography variant="h6" paragraph>
-            10. Glossary
-            </Typography>
-            <Typography variant="body1" paragraph>
-            In this Notice:
-            </Typography>
+              <Typography variant="h6" gutterBottom>
+                How long do we keep your data for?
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                Your research data will only be retained for as long as is necessary to fulfil the cited purpose of the research. The length of time we keep the data will depend on several factors including the significance of the data, funder requirements, and the nature of the study. Specific details are provided in the attached Participant Information Sheet.
 
-            <ul>
-              <li>
-                <Typography variant="body1"><strong>“EU Data Protection Law”</strong> means the General Data Protection Regulation 2016/679 (“GDPR“) and the national privacy laws, as amended from time to time.</Typography>
-              </li>
-              <li>
-              <Typography variant="body1"><strong>“EU”</strong> refers to “European Union”.</Typography>
-              </li>
-              <li>
-                <Typography variant="body1"><strong>“EEA”</strong> refers to the “European Economic Area” which consists of all the EU Member States and Iceland, Norway and Liechtenstein.</Typography>
-              </li>
-              <li>
-                <Typography variant="body1">
-                Italy
-                </Typography>
-              </li>
-              
-            </ul>
+                Anonymised data that falls outside the scope of data protection legislation as it contains no identifying or identifiable information may be stored in UWE Bristol’s research data archive or another carefully selected appropriate data archive.
+              </Typography>
 
-          </div>
+              <Typography variant="h6" gutterBottom>
+                Your Rights and how to exercise them
+              </Typography>
+              <Typography variant="body1" paragraph align='justify'>
+                Under the Data Protection legislation, you have the following qualified rights:
+              </Typography>
+
+              <ul style={{ listStyleType: "decimal" }}>
+                <li>
+                  The right to access research data held by or on behalf of the University;
+                </li>
+                <li>
+                  The right to rectification if the information is inaccurate or incomplete;
+                </li>
+                <li>
+                  The right to restrict processing and/or erasure of the research data;
+                </li>
+                <li>
+                  The right to data portability;
+                </li>
+                <li>
+                  The right to object to processing;
+                </li>
+                <li>
+                  The right to object to automated decision making and profiling;
+                </li>
+                <li>
+                  The right to complain to the Information Commissioner’s Office (ICO).
+                </li>
+              </ul>
+
+              <Typography variant="body1" paragraph align='justify'>
+                We will always respond to concerns or queries you may have. If you wish to exercise your rights or have any other general data protection queries, please contact UWE Bristol’s Data Protection Officer (dataprotection@uwe.ac.uk).
+
+                If you have any complaints or queries relating to the research in which you are taking part please contact either the research project lead, whose details are in the attached Participant Information Sheet or UWE Bristol’s research governance manager (researchgovernance@uwe.ac.uk.).
+
+                v.2: This template Privacy Notice was last amended in November 2020 and will be subject to regular review/update.
+              </Typography>
+            </div>
           </Paper>
         </Container>
       </Box>

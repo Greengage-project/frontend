@@ -43,8 +43,8 @@ const TermsAndPrivacy = () => {
               <Typography variant="body1" paragraph>
                 {t("Youcancontactusby")}
                 
-                <a href="mailto:info@interlink-project.eu">
-                  info@interlink-project.eu
+                <a href="mailto:info@greengage-project.eu">
+                  info@greengage-project.eu
                 </a>
               </Typography>
 
