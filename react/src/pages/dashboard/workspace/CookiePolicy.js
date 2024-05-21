@@ -70,7 +70,7 @@ const CookiePolicy = () => {
 
             <div>
               <Typography variant="h4" gutterBottom>
-                Cookie Policy of interlink-project.eu
+                Cookie Policy of GREENGAGE-project.eu
               </Typography>
               <br />
 
@@ -86,7 +86,7 @@ const CookiePolicy = () => {
 
               <Typography variant="body1" paragraph>
                 This document informs Users about the technologies that help the
-                Interlink website to achieve the purposes described below. Such
+                Collaborative Environment to achieve the purposes described below. Such
                 technologies allow us to access and store information (for
                 example by using a Cookie) or use resources (for example by
                 running a script) on a User’s device as they interact with this
