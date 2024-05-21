@@ -78,7 +78,7 @@ const CookiePolicy = () => {
                 Purpose of the Privacy Notice
               </Typography>
               <Typography variant="body1" paragraph align='justify'>
-                This privacy notice explains how the University of the West of England, Bristol (UWE Bristol) collects, manages and uses your personal data before, during and after you participate in GEENGAGE – Engaging Citizens – Mobilizing Technology – Delivering Green Deal. ‘Personal data’ means any information relating to an identified or identifiable natural person (the data subject).
+                This privacy notice explains how the University of the West of England, Bristol (UWE Bristol) collects, manages and uses your personal data before, during and after you participate in GREENGAGE – Engaging Citizens – Mobilizing Technology – Delivering Green Deal. ‘Personal data’ means any information relating to an identified or identifiable natural person (the data subject).
 
                 This privacy notice adheres to the General Data Protection Regulation (GDPR) principle of transparency. This means it gives information about:
               </Typography>
