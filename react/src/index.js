@@ -28,6 +28,7 @@ if (REACT_APP_COMPLETE_DOMAIN.includes("localhost")) {
     "localhost",
     "http://localhost/auth",
     "http://localhost/coproduction",
+    "me.greengage-project.eu",
   ];
 }
 if (REACT_APP_COMPLETE_DOMAIN.includes("demo")) {
@@ -35,6 +36,7 @@ if (REACT_APP_COMPLETE_DOMAIN.includes("demo")) {
     "demo.greengage-project.eu",
     "https://demo.greengage-project.eu/auth",
     "https://demo.greengage-project.eu/coproduction",
+    "me.greengage-project.eu",
   ];
   environment = "demo";
 }

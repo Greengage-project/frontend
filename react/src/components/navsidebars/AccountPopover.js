@@ -88,9 +88,7 @@ const AccountPopover = () => {
             variant="body2"
             data-cy="account-my-settings"
           >
-            <a href="https://auth1.demo.greengage-project.eu/auth/realms/greengage/account/">
-              {t("My Settings")}
-            </a>
+            <a href="https://me.greengage-project.eu">{t("My Settings")}</a>
           </Typography>
         </Box>
         <Divider />

@@ -15,4 +15,4 @@ export const { REACT_APP_MATOMO_ID } = env;
 
 export const SENTRY_DSN =
   env.REACT_APP_SENTRY_DSN ||
-  "https://9c2c4ae5750343deb167d2bdee365657@o4504881526669312.ingest.sentry.io/4504881531256832";
+  "https://b5e0c986f5f90d9cb089460072d99614@o4504881526669312.ingest.us.sentry.io/4507299394355200";
