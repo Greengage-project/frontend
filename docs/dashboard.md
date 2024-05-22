@@ -24,7 +24,7 @@ When a user accesses one to the GREENGAGE collaborative front-end encounters a p
 
 When a user clicks on button ["Access Collaborative Environment"](https://demo.greengage-project.eu/dashboard) it will be given access to the GREENGAGE Collaborative Environment front-end.
 
-**IMPORTANT**. You may use INTERLINK's deployment at [Staging Server](https://demo.greengage-project.eu/).
+**IMPORTANT**. You may use Collaborative Environment's deployment at [Staging Server](https://demo.greengage-project.eu/).
 
 Before using the Collaborative environment, for first time, you must first login with your google credentials or create your own credentials at [https://demo.greengage-project.eu/](https://demo.greengage-project.eu/), i.e. the staging server of GREENGAGE. **IMPORTANT**: All members of an envisaged team must logged into the platform before they can be added to a team. ![Login required screen](images/dashboard-loginrequired.png) ![AAC screen](images/aac-login-window.PNG)
 

@@ -30,7 +30,7 @@ Some of the actions that you may carry out in the GUIDE view are:
   ![About to remove a task](images/guideview-removetask.png)
   ![View after removal of task](images/guideview-after-taskremoval.png)
 
-- _Remember that specific co-production trees can be defined and, hence, selected_ (e.g. [VARAM case](https://github.com/greengage-project/interlinkers-data/tree/master/schemas/servicedescriptionenhancement)) as was done before with the "Default schema" of INTERLINK
+- _Remember that specific co-production trees can be defined and, hence, selected_ (e.g. [VARAM case](https://github.com/greengage-project/interlinkers-data/tree/master/schemas/servicedescriptionenhancement)) as was done before with the "Default schema" of GRREENGAGE
 - _You may also assign durations to tasks_ by editing the task and selected its start and end date.
   ![Assigning duration to task](images/guideview-assignduration.png)
 
@@ -99,7 +99,7 @@ The orange _"Award points"_ can be pressed by a process admin to grant points to
 Once the orange "Award points" is pressed, the user is alerted that, s/he must have previously assigned the "Complexity Level" of the task and to confirm whether point distribution among contributors wants to performed or not, and is warned that the task will be closed accordingly. As result, the team members associated to a task can see how contribution distribution has been shared among those participating.
 ![Change the complexity level of a task](images/guideview-task-contributions-awarding.png)
 
-The [LEADERBOARD view](/docs/en/coproductionprocess-leaderboard.html) offers more details about how incentivization works in INTERLINK. It shows how task contribution levels are turned into awarding of points for collaborators.
+The [LEADERBOARD view](/docs/en/coproductionprocess-leaderboard.html) offers more details about how incentivization works in Collaborative Environment. It shows how task contribution levels are turned into awarding of points for collaborators.
 
 ## Overview and resources of a co-production process
 
