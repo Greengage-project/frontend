@@ -18,7 +18,7 @@ import os
 
 # -- Project information -----------------------------------------------------
 
-project = 'Interlink'
+project = 'Collaborative Environment'
 copyright = '2022, Interlink team'
 author = 'Interlink team'
 
