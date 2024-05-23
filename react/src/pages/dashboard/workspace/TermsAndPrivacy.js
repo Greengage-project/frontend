@@ -34,15 +34,14 @@ const TermsAndPrivacy = () => {
               <br />
 
               <Typography variant="h6" paragraph>
-              {t("AGREEMENTTOOURLEGALTERMS")}
+                {t("AGREEMENTTOOURLEGALTERMS")}
               </Typography>
               <Typography variant="body1" paragraph>
                 {t("WeareINTERLINKINTERLINKwe")}
-                
               </Typography>
               <Typography variant="body1" paragraph>
                 {t("Youcancontactusby")}
-                
+
                 <a href="mailto:info@greengage-project.eu">
                   info@greengage-project.eu
                 </a>
@@ -50,12 +49,10 @@ const TermsAndPrivacy = () => {
 
               <Typography variant="body1" paragraph>
                 {t("TheseLegalTermsconstitutean")}
-                
               </Typography>
 
               <Typography variant="body1" paragraph>
                 {t("Wewillprovideyouwith")}
-                
               </Typography>
 
               <Typography variant="body1" paragraph>
@@ -68,17 +65,14 @@ const TermsAndPrivacy = () => {
 
               <Typography variant="h6" paragraph>
                 {t("1OURSERVICES")}
-              
               </Typography>
 
               <Typography variant="body1" paragraph>
                 {t("Theinformationprovidedwhenusing")}
-                
               </Typography>
 
               <Typography variant="h6" paragraph>
                 {t("2INTELLECTUALPROPERTYRIGHTS")}
-                
               </Typography>
 
               <Typography variant="h6" paragraph>
@@ -86,17 +80,17 @@ const TermsAndPrivacy = () => {
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Wearetheowneror")}
+                {t("Wearetheowneror")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("InregardtoourIntellectual")}
+                {t("InregardtoourIntellectual")}
               </Typography>
 
               <ul>
                 <li>
                   <Typography variant="body1">
-                  {t("BydefaultINTERLINKssoftwarecomponents")}
+                    {t("BydefaultINTERLINKssoftwarecomponents")}
                     <a
                       href="https://www.apache.org/licenses/LICENSE-2.0"
                       target="_blank"
@@ -109,13 +103,12 @@ const TermsAndPrivacy = () => {
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Proprietarylicensesprotectsomespecific")}
+                    {t("Proprietarylicensesprotectsomespecific")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("BydefaultknowledgeINTERLINKersdeveloped")}
-
+                    {t("BydefaultknowledgeINTERLINKersdeveloped")}
                     <a
                       href="https://creativecommons.org/licenses/by-sa/4.0/"
                       target="_blank"
@@ -128,291 +121,291 @@ const TermsAndPrivacy = () => {
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("SpecificknowledgeINTERLINKersdevelopedby")}
+                    {t("SpecificknowledgeINTERLINKersdevelopedby")}
                   </Typography>
                 </li>
               </ul>
               <Typography variant="body1" paragraph>
-              {t("AnybreachoftheseIntellectual")}
+                {t("AnybreachoftheseIntellectual")}
               </Typography>
 
               <Typography variant="h6" paragraph>
                 {t("Yoursubmissionsandcontributions")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Pleasereviewthissectionand")}
+                {t("Pleasereviewthissectionand")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("Contribution")}:
+                {t("Contribution")}:
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Youareresponsibleforwhat")}
+                {t("Youareresponsibleforwhat")}
               </Typography>
 
               <ul>
                 <li>
                   <Typography variant="body1">
-                  {t("confirmthatyouhaveread")}
+                    {t("confirmthatyouhaveread")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("totheextentpermissibleby")}
+                    {t("totheextentpermissibleby")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("warrantthatanysuchSubmission")}
+                    {t("warrantthatanysuchSubmission")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("warrantandrepresentthatyour")}
+                    {t("warrantandrepresentthatyour")}
                   </Typography>
                 </li>
               </ul>
 
               <Typography variant="body1" paragraph>
-              {t("Youaresolelyresponsiblefor")}
+                {t("Youaresolelyresponsiblefor")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Wemayremoveoredit")}
-              </Typography>
-
-              <Typography variant="h6" paragraph>
-              {t("Copyrightinfringement")}
-              </Typography>
-              <Typography variant="body1" paragraph>
-              {t("Werespecttheintellectualproperty")}
+                {t("Wemayremoveoredit")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("3USERREPRESENTATIONS")}
+                {t("Copyrightinfringement")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("ByusingtheServicesyou")}
+                {t("Werespecttheintellectualproperty")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("4USERREGISTRATION")}
+                {t("3USERREPRESENTATIONS")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Youarerequiredtoregister")}
+                {t("ByusingtheServicesyou")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("5PROHIBITEDACTIVITIES")}
+                {t("4USERREGISTRATION")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Youmaynotaccessor")}
+                {t("Youarerequiredtoregister")}
+              </Typography>
+
+              <Typography variant="h6" paragraph>
+                {t("5PROHIBITEDACTIVITIES")}
+              </Typography>
+              <Typography variant="body1" paragraph>
+                {t("Youmaynotaccessor")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Asauserofthe")}
+                {t("Asauserofthe")}
               </Typography>
 
               <ul>
                 <li>
                   <Typography variant="body1">
-                  {t("Systematicallyretrievedataorother")}
+                    {t("Systematicallyretrievedataorother")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Trickdefraudormisleadus")}
+                    {t("Trickdefraudormisleadus")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Circumventdisableorotherwiseinterfere")}
+                    {t("Circumventdisableorotherwiseinterfere")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Disparagetarnishorotherwiseharm")}
+                    {t("Disparagetarnishorotherwiseharm")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Useanyinformationobtainedfrom")}
+                    {t("Useanyinformationobtainedfrom")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Makeimproperuseofour")}
+                    {t("Makeimproperuseofour")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("UsetheServicesina")}
+                    {t("UsetheServicesina")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Engageinunauthorisedframingof")}
+                    {t("Engageinunauthorisedframingof")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Uploadortransmitorattempt")}
-                  </Typography>
-                </li>
-
-                <li>
-                  <Typography variant="body1">
-                  {t("Engageinanyautomateduse")}
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">
-                  {t("Deletethecopyrightorother")}
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">
-                  {t("Attempttoimpersonateanotheruser")}
-                  </Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">
-                  {t("Uploadortransmitorattemptto")}
+                    {t("Uploadortransmitorattempt")}
                   </Typography>
                 </li>
 
                 <li>
                   <Typography variant="body1">
-                  {t("Interferewithdisruptorcreate")}
+                    {t("Engageinanyautomateduse")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Harassannoyintimidateorthreaten")}
+                    {t("Deletethecopyrightorother")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Attempttobypassanymeasures")}
+                    {t("Attempttoimpersonateanotheruser")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("CopyoradapttheServices")}
+                    {t("Uploadortransmitorattemptto")}
                   </Typography>
                 </li>
 
                 <li>
                   <Typography variant="body1">
-                  {t("Exceptaspermittedbyapplicable")}
+                    {t("Interferewithdisruptorcreate")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Exceptasmaybethe")}
+                    {t("Harassannoyintimidateorthreaten")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Makeanyunauthoriseduseof")}
+                    {t("Attempttobypassanymeasures")}
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="body1">
+                    {t("CopyoradapttheServices")}
+                  </Typography>
+                </li>
+
+                <li>
+                  <Typography variant="body1">
+                    {t("Exceptaspermittedbyapplicable")}
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="body1">
+                    {t("Exceptasmaybethe")}
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="body1">
+                    {t("Makeanyunauthoriseduseof")}
                   </Typography>
                 </li>
               </ul>
 
               <Typography variant="h6" paragraph>
-              {t("6USERGENERATEDCONTRIBUTIONS")}
+                {t("6USERGENERATEDCONTRIBUTIONS")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("TheServicesmayinviteyou")}
+                {t("TheServicesmayinviteyou")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Whenyoucreateormake")}
+                {t("Whenyoucreateormake")}
               </Typography>
 
               <ul>
                 <li>
                   <Typography variant="body1">
-                  {t("Thecreationdistributiontransmissionpublic")}
+                    {t("Thecreationdistributiontransmissionpublic")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Youarethecreatorand")}
+                    {t("Youarethecreatorand")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("Youhavethewrittenconsent")}
+                    {t("Youhavethewrittenconsent")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsarenotfalse")}
+                    {t("YourContributionsarenotfalse")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsarenotunsolicited")}
+                    {t("YourContributionsarenotunsolicited")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsarenotobscene")}
+                    {t("YourContributionsarenotobscene")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsdonotridicule")}
+                    {t("YourContributionsdonotridicule")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsarenotused")}
+                    {t("YourContributionsarenotused")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsdonotviolate")}
+                    {t("YourContributionsdonotviolate")}
                   </Typography>
                 </li>
 
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsdonotviolatethe")}
+                    {t("YourContributionsdonotviolatethe")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsdonotviolateany")}
+                    {t("YourContributionsdonotviolateany")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsdonotinclude")}
+                    {t("YourContributionsdonotinclude")}
                   </Typography>
                 </li>
                 <li>
                   <Typography variant="body1">
-                  {t("YourContributionsdonototherwise")}
+                    {t("YourContributionsdonototherwise")}
                   </Typography>
                 </li>
               </ul>
 
               <Typography variant="body1" paragraph>
-              {t("AnyuseoftheServices")}
+                {t("AnyuseoftheServices")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("7CONTRIBUTIONLICENCE")}
+                {t("7CONTRIBUTIONLICENCE")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("BydefaulttheINTERLINKersyou")}
+                {t("BydefaulttheINTERLINKersyou")}
               </Typography>
 
               <ul>
                 <li>
-                {t("For software INTERLINKers the")}
+                  {t("For software INTERLINKers the")}
                   <a
                     href="https://www.apache.org/licenses/LICENSE-2.0"
                     target="_blank"
@@ -422,7 +415,7 @@ const TermsAndPrivacy = () => {
                   </a>
                 </li>
                 <li>
-                {t("For knowledge INTERLINKers the")}
+                  {t("For knowledge INTERLINKers the")}
                   <a
                     href="https://creativecommons.org/licenses/by-sa/4.0/"
                     target="_blank"
@@ -434,40 +427,40 @@ const TermsAndPrivacy = () => {
               </ul>
 
               <Typography variant="body1" paragraph>
-              {t("Youretainthepossibilityto")}
+                {t("Youretainthepossibilityto")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("8THIRDPARTYWEBSITESANDCONTENT")}
+                {t("8THIRDPARTYWEBSITESANDCONTENT")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("TheServicesmaycontainor")}
+                {t("TheServicesmaycontainor")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Inclusionoflinkingtoor")}
+                {t("Inclusionoflinkingtoor")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Youshouldreviewtheapplicable")}
+                {t("Youshouldreviewtheapplicable")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Youagreeandacknowledgethat")}
-              </Typography>
-
-              <Typography variant="h6" paragraph>
-              {t("9SERVICESMANAGEMENT")}
-              </Typography>
-              <Typography variant="body1" paragraph>
-              {t("Wereservetherightbut")}
+                {t("Youagreeandacknowledgethat")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("10PRIVACYPOLICY")}
+                {t("9SERVICESMANAGEMENT")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Wecareaboutdataprivacy")}
+                {t("Wereservetherightbut")}
+              </Typography>
+
+              <Typography variant="h6" paragraph>
+                {t("10PRIVACYPOLICY")}
+              </Typography>
+              <Typography variant="body1" paragraph>
+                {t("Wecareaboutdataprivacy")}
                 <a
                   href="https://interlink-project.eu/privacy-policy"
                   target="_blank"
@@ -479,52 +472,52 @@ const TermsAndPrivacy = () => {
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("11COPYRIGHTINFRINGEMENTS")}
+                {t("11COPYRIGHTINFRINGEMENTS")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Werespecttheintellectualpropertyrights")}
+                {t("Werespecttheintellectualpropertyrights")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("12TERMANDTERMINATION")}
+                {t("12TERMANDTERMINATION")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("TheseLegalTermsshallremain")}
+                {t("TheseLegalTermsshallremain")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("WITHOUTLIMITINGANYOTHERPROVISION")}
+                {t("WITHOUTLIMITINGANYOTHERPROVISION")}
               </Typography>
 
               <Typography variant="body1" paragraph>
-              {t("Ifweterminateorsuspend")}
-              </Typography>
-
-              <Typography variant="h6" paragraph>
-              {t("13MODIFICATIONSANDINTERRUPTIONS")}
-              </Typography>
-              <Typography variant="body1" paragraph>
-              {t("Wereservetherightto")}
-              </Typography>
-
-              <Typography variant="body1" paragraph>
-              {t("WecannotguaranteetheServices")}
+                {t("Ifweterminateorsuspend")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("14GOVERNINGLAW")}
+                {t("13MODIFICATIONSANDINTERRUPTIONS")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("TheseLegalTermsaregoverned")}
+                {t("Wereservetherightto")}
+              </Typography>
+
+              <Typography variant="body1" paragraph>
+                {t("WecannotguaranteetheServices")}
               </Typography>
 
               <Typography variant="h6" paragraph>
-              {t("15CONTACTUS")}
+                {t("14GOVERNINGLAW")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Inordertoresolvea")}
-                <a href="mailto:info@interlink-project.eu">
-                  info@interlink-project.eu
+                {t("TheseLegalTermsaregoverned")}
+              </Typography>
+
+              <Typography variant="h6" paragraph>
+                {t("15CONTACTUS")}
+              </Typography>
+              <Typography variant="body1" paragraph>
+                {t("Inordertoresolvea")}
+                <a href="mailto:greengage.admin@deusto.es">
+                  greengage.admin@deusto.es
                 </a>
                 .
               </Typography>
