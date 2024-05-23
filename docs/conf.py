@@ -19,8 +19,8 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'Collaborative Environment'
-copyright = '2022, Interlink team'
-author = 'Interlink team'
+copyright = 'Copyright © 2024, Interlink & GREENGAGE teams'
+author = 'INTERLINK & GREENGAGE'
 
 
 # -- General configuration ---------------------------------------------------
