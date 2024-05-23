@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2022, Interlink team
+# Copyright (C) 2024, Interlink & GREENGAGE teams
 # This file is distributed under the same license as the Interlink package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
 #
