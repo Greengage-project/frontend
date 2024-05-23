@@ -76,21 +76,21 @@ const CookiePolicy = () => {
 
               <Typography variant="body1" paragraph>
                 In accordance with Article 13 of Regulation (EU) 2016/679 (GDPR)
-                and the Provision of the Italian Data Protection Authority
+                and the Provision of the Spanish Data Protection Authority
                 “Simplified Arrangements to Provide Information and Obtain
                 Consent Regarding Cookies – 8 May 2014 no. 229”, UWE Bristol
-               (“We”, “us” or “our”) undertakes a duty to
-                provide a detailed information notice relating to the cookies
-                installed on the website www.greengage-project.eu .
+                (“We”, “us” or “our”) undertakes a duty to provide a detailed
+                information notice relating to the cookies installed on the
+                website www.greengage-project.eu .
               </Typography>
 
               <Typography variant="body1" paragraph>
                 This document informs Users about the technologies that help the
-                Collaborative Environment to achieve the purposes described below. Such
-                technologies allow us to access and store information (for
-                example by using a Cookie) or use resources (for example by
-                running a script) on a User’s device as they interact with this
-                website.
+                Collaborative Environment to achieve the purposes described
+                below. Such technologies allow us to access and store
+                information (for example by using a Cookie) or use resources
+                (for example by running a script) on a User’s device as they
+                interact with this website.
               </Typography>
 
               <Typography variant="h6" paragraph>
@@ -287,10 +287,10 @@ const CookiePolicy = () => {
 
               <Box>
                 <Typography variant="body1">UWE Bristol</Typography>
-                <Typography variant="body1">Coldharbour Ln, Stoke Gifford</Typography>
                 <Typography variant="body1">
-                BS16 1QY, Bristol
+                  Coldharbour Ln, Stoke Gifford
                 </Typography>
+                <Typography variant="body1">BS16 1QY, Bristol</Typography>
                 <Typography variant="body1">United Kingdom</Typography>
               </Box>
 
@@ -323,10 +323,9 @@ const CookiePolicy = () => {
 
               <Typography variant="body1" paragraph>
                 Given the objective complexity surrounding tracking
-                technologies, Users are encouraged to contact UWE Bristol
-                at researchethics@uwe.ac.uk should they wish to receive any
-                further information on the use of such technologies by this
-                website.
+                technologies, Users are encouraged to contact UWE Bristol at
+                researchethics@uwe.ac.uk should they wish to receive any further
+                information on the use of such technologies by this website.
               </Typography>
 
               <Typography variant="body1" paragraph>
