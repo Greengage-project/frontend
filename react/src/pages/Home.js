@@ -82,7 +82,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Greengage</title>
+        <title>GREENGAGE</title>
       </Helmet>
       <div>
         <Fade in>

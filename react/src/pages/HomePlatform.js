@@ -11,7 +11,7 @@ const HomePlatform = () => {
   return (
     <>
       <Helmet>
-        <title>Interlink</title>
+        <title>GREENGAGE</title>
       </Helmet>
       <div>
         <HomeRow

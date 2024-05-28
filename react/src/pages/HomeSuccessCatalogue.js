@@ -10,7 +10,7 @@ const InterlinkerBrowse = Loadable(
 const HomeSuccessCatalogue = () => (
   <>
     <Helmet>
-      <title>Interlink: Success Catalogue</title>
+      <title>GREENGAGE: Success Catalogue</title>
     </Helmet>
     <Box sx={{ backgroundColor: 'background.default',
       minHeight: '100%',

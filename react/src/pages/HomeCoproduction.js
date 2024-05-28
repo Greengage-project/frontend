@@ -71,7 +71,7 @@ const HomeCoproduction = () => {
   return (
     <>
       <Helmet>
-        <title>Interlink</title>
+        <title>GREENGAGE</title>
       </Helmet>
       <Container
         sx={{ px: { xs: 2, lg: 20 }, py: { xs: 2, lg: 10 } }}
