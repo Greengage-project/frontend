@@ -40,7 +40,13 @@ const GridMode = ({ interlinker, t, linkProps }) => (
             {interlinker.title}
           </Avatar>
         ) : (
-          <div />
+          <Avatar
+            alt={t("Logotype")}
+            src={"https://github.com/Greengage-project/frontend/blob/fe28ea4606b5d523e1f892c482517c6201294ea8/images/documents.png?raw=true"}
+            variant="square"
+          >
+            {interlinker.title}
+          </Avatar>
         )}
         <Box sx={{ ml: 2 }}>
           <Link
@@ -213,14 +219,23 @@ const ListMode = ({ interlinker, t, linkProps }) => (
       <Grid item xs={12} md={6} lg={4} xl={4}>
         <CardHeader
           avatar={
-            <Avatar
-              alt={t("Logotype")}
-              src={interlinker.logotype_link}
-              variant="rounded"
-            >
-              {interlinker.title}
-            </Avatar>
-          }
+            interlinker.logotype_link ? (
+              <Avatar
+                alt={t("Logotype")}
+                src={interlinker.logotype_link}
+                variant="rounded"
+              >
+                {interlinker.title}
+              </Avatar>
+            ) : (
+              <Avatar
+                alt={t("Logotype")}
+                src={"https://github.com/Greengage-project/frontend/blob/fe28ea4606b5d523e1f892c482517c6201294ea8/images/documents.png?raw=true"}
+                variant="rounded"
+              >
+                {interlinker.title}
+              </Avatar>
+            )}
           title={
             <Link
               color="textPrimary"
@@ -373,19 +388,19 @@ const InterlinkerCard = ({
 
   const linkProps = onInterlinkerClick
     ? {
-        onClick: () => onInterlinkerClick(interlinker),
-      }
+      onClick: () => onInterlinkerClick(interlinker),
+    }
     : {
-        component: RouterLink,
-        onClick: onInterlinkerClick,
-        to: `/dashboard/interlinkers/${interlinker.id}`,
-      };
+      component: RouterLink,
+      onClick: onInterlinkerClick,
+      to: `/dashboard/interlinkers/${interlinker.id}`,
+    };
   return (
     <Card
       style={sameHeightCards}
       aria-haspopup="true"
-      // onMouseEnter={() => setHovered(true)}
-      // onMouseLeave={() => setHovered(false)}
+    // onMouseEnter={() => setHovered(true)}
+    // onMouseLeave={() => setHovered(false)}
     >
       {mode === "grid" && (
         <GridMode interlinker={interlinker} t={t} linkProps={linkProps} />
