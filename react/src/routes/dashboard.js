@@ -14,6 +14,7 @@ import CoproductionProcessDownload from 'pages/dashboard/coproductionprocesses/C
 import CertificateDownload from 'pages/CertificateDownload';
 
 
+
 const CoproductionProcessProfile = Loadable(
   lazy(() => import('../pages/dashboard/coproductionprocesses/CoproductionProcessProfile'))
 );
@@ -48,6 +49,7 @@ const WelcomeView = Loadable(lazy(() => import('../pages/dashboard/workspace/Pro
 const TermsAndPrivacy = Loadable(lazy(() => import('../pages/dashboard/workspace/TermsAndPrivacy')));
 const CookiePolicy = Loadable(lazy(() => import('../pages/dashboard/workspace/CookiePolicy')));
 const PrivacyPolicy = Loadable(lazy(() => import('../pages/dashboard/workspace/PrivacyPolicy')));
+const ParentalConsent = Loadable(lazy(() => import('../pages/dashboard/workspace/ParentalConsent')));
 
 export const routes = [
   {
@@ -98,8 +100,10 @@ export const routes = [
       path:'certificatedownload',
       element: <AuthGuard><CertificateDownload/></AuthGuard>
     },
-    
- 
+    {
+      path: 'parental',
+      element: <ParentalConsent />,
+    },
   {
     path: 'stories',
     element: (

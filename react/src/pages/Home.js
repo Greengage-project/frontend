@@ -481,6 +481,25 @@ const Home = () => {
                     Terms of Use
                   </Link>
                 </Typography>
+                <Typography
+                  color="textSecondary"
+                  sx={{ my: 3 }}
+                  variant="subtitle1"
+                >
+                  <Link
+                    color={
+                      location.pathname === "/parental"
+                        ? "primary"
+                        : "textSecondary"
+                    }
+                    component={RouterLink}
+                    to="/parental"
+                    underline="none"
+                    variant="body1"
+                  >
+                    Parental Consent
+                  </Link>
+                </Typography>
               </Box>
             </>
           }

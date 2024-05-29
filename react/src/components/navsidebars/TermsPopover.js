@@ -131,6 +131,16 @@ import {
               {t("Cookie Policy")}
             </Button>
           </Box>
+          <Box sx={{ my: 2, mx: 2 }}>
+            <Button
+              startIcon={<OpenInNew />}
+              fullWidth
+              variant="text"
+              onClick={() => window.open(`/parental`, "_blank")} 
+            >
+              {t("Parental Consent Form")}
+            </Button>
+          </Box>
           
         </Popover>
       </>
