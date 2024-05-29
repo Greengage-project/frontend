@@ -99,7 +99,11 @@ const ParentalConsent = () => {
             
 
             <Typography variant="h6" paragraph>
-              2. Do We Change the purpose of the processing?
+            PERSON TO BE NOTIFIED IN CASE OF AN EMERGENCY: 
+            </Typography>
+            <Typography variant="body1" paragraph>
+            Name: ___________________________ Relationship: ___________________________ <br />
+            Phone: ___________________________ 
             </Typography>
             
             <Typography variant="body1" paragraph>
