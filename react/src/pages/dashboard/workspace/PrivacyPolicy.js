@@ -108,7 +108,7 @@ const PrivacyPolicy = () => {
               </Typography>
               <Typography variant="body1" paragraph>
                 {t(
-                  "We store your Personal Data until the end of the Project (expected December 31, 2023). We might delete Personal Data before the end of the Project if We achieve the purpose for which We collected them. When We process your Personal Data based on your consent (e.g., when You subscribe to our newsletters), You have the right to withdraw your consent at any time (see section 5 below). In this case, Your Personal Data will be deleted."
+                  "We store your Personal Data until the end of the Project (expected December 31, 2025). We might delete Personal Data before the end of the Project if We achieve the purpose for which We collected them. When We process your Personal Data based on your consent (e.g., when You subscribe to our newsletters), You have the right to withdraw your consent at any time (see section 5 below). In this case, Your Personal Data will be deleted."
                 )}
               </Typography>
 
