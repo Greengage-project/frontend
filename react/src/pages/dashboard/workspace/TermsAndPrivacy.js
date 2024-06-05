@@ -41,9 +41,9 @@ const TermsAndPrivacy = () => {
               </Typography>
               <Typography variant="body1" paragraph>
                 {t("Youcancontactusby")}
-                
+
                 <a href="mailto:contact@greengage-project.eu">
-                contact@greengage-project.eu
+                  contact@greengage-project.eu
                 </a>
               </Typography>
 
@@ -405,7 +405,7 @@ const TermsAndPrivacy = () => {
 
               <ul>
                 <li>
-                  {t("For software INTERLINKers the")}
+                  {t("For software INTERLINKers the")}{" "}
                   <a
                     href="https://www.apache.org/licenses/LICENSE-2.0"
                     target="_blank"
@@ -415,7 +415,7 @@ const TermsAndPrivacy = () => {
                   </a>
                 </li>
                 <li>
-                  {t("For knowledge INTERLINKers the")}
+                  {t("For knowledge INTERLINKers the")}{" "}
                   <a
                     href="https://creativecommons.org/licenses/by-sa/4.0/"
                     target="_blank"
@@ -515,9 +515,9 @@ const TermsAndPrivacy = () => {
                 {t("15CONTACTUS")}
               </Typography>
               <Typography variant="body1" paragraph>
-              {t("Inordertoresolvea")}
+                {t("Inordertoresolvea")}
                 <a href="mailto: contact@greengage-project.eu">
-                contact@greengage-project.eu
+                  contact@greengage-project.eu
                 </a>
                 .
               </Typography>
