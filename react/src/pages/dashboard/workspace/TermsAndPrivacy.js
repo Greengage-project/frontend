@@ -516,8 +516,8 @@ const TermsAndPrivacy = () => {
               </Typography>
               <Typography variant="body1" paragraph>
                 {t("Inordertoresolvea")}
-                <a href="mailto: contact@greengage-project.eu">
-                  contact@greengage-project.eu
+                <a href="mailto: greengage.admin@deusto.es">
+                  greengage.admin@deusto.es
                 </a>
                 .
               </Typography>

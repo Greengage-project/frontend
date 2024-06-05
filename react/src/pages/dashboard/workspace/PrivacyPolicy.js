@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
                 <br />
                 {t(
                   "For more information about UWE Bristol’s research ethics approval process please see our Research Ethics webpages at"
-                )}
+                )}{" "}
                 <Link
                   href="https://www1.uwe.ac.uk/research/researchethics"
                   target="_blank"

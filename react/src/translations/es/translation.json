@@ -670,6 +670,5 @@
     "Cloning the project please wait": "Clonando el proceso por favor espere",
     "The process of creating a clone of an entire process can": "El proceso de creación de un clon de un proceso completo puede llevar mucho tiempo. Puede esperar o volver más tarde para comprobar si el proceso se ha completado",
     "GREENGAGE PROJECT PRIVACY NOTICE": "GREENGAGE PROJECT PRIVACY NOTICE",
-    "Welcome to ": "Welcome to ",
-    // Welcome to https://greengage-project.eu/, the website of the GREENGAGE project (the “Project”). The website is managed by University of Deusto, ("DEUSTO" or “We”, “us”, “our”) and is hosted by AIT, both partners to the Project. AIT is the processor and we are the controller of the Personal Data processed in relation to the website and we are responsible for compliance with EU Data Protection Law.
+    "Welcome to ": "Welcome to "
 }
