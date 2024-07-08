@@ -14,7 +14,7 @@ import { cleanProcess } from "slices/process";
 import useAuth from "../../../hooks/useAuth";
 import CoproductionprocessCreate from "./CoproductionProcessCreate";
 import CookieConsentForm from "./CookieConsentForm";
-import { usersApi } from "__api__";
+import { userActionApi } from "__api__";
 
 const MyWorkspace = () => {
   const [coproductionProcessCreatorOpen, setCoproductionProcessCreatorOpen] =
@@ -93,6 +93,18 @@ const MyWorkspace = () => {
   const onProcessCreate = (res) => {
     navigate(`/dashboard/coproductionprocesses/${res.id}/overview`);
   };
+
+  const clickOnCheckTutorials = async () => {
+    const path = window?.location?.pathname;
+
+    const res = await userActionApi.addUserAction({
+      path: path,
+      section: "main",
+      action: "click_on_check_tutorials",
+    });
+    window.open("/docs/en/", "_bank");
+  };
+
   return (
     <>
       <Helmet>
@@ -134,9 +146,7 @@ const MyWorkspace = () => {
                     align="justify"
                     data-cy="Welcome-description"
                   >
-                    {t(
-                      "Welcome to the INTERLINK platform"
-                    )+'.'}
+                    {t("Welcome to the INTERLINK platform") + "."}
                   </Typography>
 
                   <Typography
@@ -145,9 +155,7 @@ const MyWorkspace = () => {
                     sx={{ mt: 3 }}
                     data-cy="first-question-title"
                   >
-                    {'1. '+t(
-                      "Have you been invited"
-                    )+"?"}
+                    {"1. " + t("Have you been invited") + "?"}
                   </Typography>
 
                   <Typography
@@ -157,21 +165,16 @@ const MyWorkspace = () => {
                     align="justify"
                     data-cy="first-question-description"
                   >
-                    {t(
-                      "During the waiting"
-                    )+'.'}
+                    {t("During the waiting") + "."}
                   </Typography>
 
                   <Button
                     sx={{ minWidth: "200px" }}
-                    href="docs/en/"
+                    onClick={clickOnCheckTutorials}
                     variant="contained"
                     data-cy="check-tutorials"
                   >
-                    {t(
-                      "Check tutorials"
-                    )}
-                    
+                    {t("Check tutorials")}
                   </Button>
 
                   <Typography
@@ -180,9 +183,7 @@ const MyWorkspace = () => {
                     sx={{ mt: 3 }}
                     data-cy="second-question-title"
                   >
-                    {'2. '+
-                    t("Do you want to see your co")
-                    +' ?'}
+                    {"2. " + t("Do you want to see your co") + " ?"}
                   </Typography>
 
                   <Typography
@@ -203,9 +204,7 @@ const MyWorkspace = () => {
                     href="dashboard/projects"
                     data-cy="go-to-processes-list"
                   >
-                    {t(
-                    "Go to processes list"
-                    )}
+                    {t("Go to processes list")}
                   </Button>
 
                   <Typography
@@ -214,10 +213,7 @@ const MyWorkspace = () => {
                     sx={{ mt: 3 }}
                     data-cy="third-question-title"
                   >
-                    {'3. '+
-                    t("Do you want to create your own process")
-                    +' ?'}
-                  
+                    {"3. " + t("Do you want to create your own process") + " ?"}
                   </Typography>
 
                   <Typography
@@ -226,9 +222,7 @@ const MyWorkspace = () => {
                     sx={{ mt: 2, mb: 2 }}
                     data-cy="third-question-description"
                   >
-                    {t(
-                      "We will guide you helping to manage your group"
-                    )+'.'}
+                    {t("We will guide you helping to manage your group") + "."}
                   </Typography>
 
                   <Button
@@ -237,9 +231,7 @@ const MyWorkspace = () => {
                     variant="contained"
                     data-cy="start-here-your-guide"
                   >
-                    {t(
-                    "Start here your guide"
-                    )}
+                    {t("Start here your guide")}
                   </Button>
                 </Grid>
 
@@ -261,7 +253,7 @@ const MyWorkspace = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <CookieConsentForm/>
+            <CookieConsentForm />
           </AuthGuardSkeleton>
         </Container>
         <CoproductionprocessCreate
@@ -272,7 +264,6 @@ const MyWorkspace = () => {
           onCreate={onProcessCreate}
         />
       </Box>
-      
     </>
   );
 };
