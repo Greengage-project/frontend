@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import ContributionsTable from "components/dashboard/tree/ContributionsTable";
 import {
-  gamesApi,
+  oldgamesApi,
   usersApi,
   coproductionprocessnotificationsApi,
   tasksApi,
@@ -33,12 +33,7 @@ import { Link } from "react-router-dom";
 import ConfirmationButton from "components/ConfirmationButton";
 import { LoadingButton } from "@mui/lab";
 import UserSearch from "../coproductionprocesses/UserSearch";
-import {
-  Save,
-  Close,
-  ViewList,
-  Download,
-} from "@mui/icons-material";
+import { Save, Close, ViewList, Download } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -52,7 +47,6 @@ import { claimsApi } from "__api__/coproduction/claimsApi";
 import CentricCircularProgress from "components/CentricCircularProgress";
 
 const ContributionsTabs = () => {
-
   const { trackEvent } = useMatomo();
   const { contributions, contributionslistlevels } = useSelector(
     (state) => state.general
@@ -105,11 +99,7 @@ const ContributionsTabs = () => {
   }
 
   //Function to create a claim from a list
-  const createClaims_by_users = (
-    values,
-    user_ids
-  ) => {
-
+  const createClaims_by_users = (values, user_ids) => {
     const claimData = {
       users_id: user_ids,
       asset_id: values.asset.id,
@@ -121,33 +111,26 @@ const ContributionsTabs = () => {
       claim_type: "Development",
     };
 
-    claimsApi
-      .createClaimsForUsers(claimData)
-      .then((res) => {
-        const responseData = JSON.parse(res.data);
-        console.log(responseData);
+    claimsApi.createClaimsForUsers(claimData).then((res) => {
+      const responseData = JSON.parse(res.data);
+      console.log(responseData);
 
-        if (responseData["excluded"].length > 0) {
-          alert(
-            t("We couldn't include") +
+      if (responseData["excluded"].length > 0) {
+        alert(
+          t("We couldn't include") +
             ": [" +
             responseData["excluded"] +
             "] " +
             t(
               "users because are not part of a team with permissions over this task. Please check the list of users and try again"
             )
-          );
-        }
-
-      })
-  }
+        );
+      }
+    });
+  };
 
   //Function to create a claims from a team
-  const createClaims_by_teams = (
-    values,
-    team_ids
-  ) => {
-
+  const createClaims_by_teams = (values, team_ids) => {
     const claimData = {
       teams_id: team_ids,
       asset_id: values.asset.id,
@@ -159,29 +142,23 @@ const ContributionsTabs = () => {
       claim_type: "Development",
     };
 
-    claimsApi
-      .createClaimsForTeams(claimData)
-      .then((res) => {
-        const responseData = JSON.parse(res.data);
-        console.log(responseData);
+    claimsApi.createClaimsForTeams(claimData).then((res) => {
+      const responseData = JSON.parse(res.data);
+      console.log(responseData);
 
-        if (responseData["excluded"].length > 0) {
-          alert(
-            t("We couldn't include") +
+      if (responseData["excluded"].length > 0) {
+        alert(
+          t("We couldn't include") +
             ": [" +
             responseData["excluded"] +
             "] " +
             t(
               "users because are not part of a team with permissions over this task. Please check the list of users and try again"
             )
-          );
-        }
-
-      })
-
-  }
-
-
+        );
+      }
+    });
+  };
 
   const createNotificationsProcess = (
     values,
@@ -192,8 +169,6 @@ const ContributionsTabs = () => {
     setStatus,
     setSubmitting
   ) => {
-
-
     const selectedAsset = values.asset;
     //Defino el link del asset
     let selectedAssetLink = "";
@@ -279,12 +254,12 @@ const ContributionsTabs = () => {
         if (responseData["excluded"].length > 0) {
           alert(
             t("We couldn't include") +
-            ": [" +
-            responseData["excluded"] +
-            "] " +
-            t(
-              "users because are not part of a team with permissions over this task. Please check the list of users and try again"
-            )
+              ": [" +
+              responseData["excluded"] +
+              "] " +
+              t(
+                "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+              )
           );
         }
 
@@ -296,14 +271,12 @@ const ContributionsTabs = () => {
         //Register an event in matomo
         async function getRoles(user_id, isTeamsSelected = false) {
           if (isTeamsSelected) {
-
             const team_temp = await teamsApi.get(user_id);
             const listOfUsers = team_temp.user_ids;
             for (user of listOfUsers) {
               getRoles(user_id, false);
             }
           } else {
-
             const user_temp = await usersApi.get(user_id);
             let listofRoles = [];
 
@@ -336,8 +309,6 @@ const ContributionsTabs = () => {
                 ],
               });
             }
-
-
           }
         }
 
@@ -451,7 +422,7 @@ const ContributionsTabs = () => {
   // const handleCloseTask = async () => {
   //   console.log("Closing task", rows);
   //   for (let row of rows) {
-  //     await gamesApi.addClaim(
+  //     await oldgamesApi.addClaim(
   //       process.id,
   //       selectedTreeItem.id,
   //       row.id,
@@ -472,7 +443,7 @@ const ContributionsTabs = () => {
   //   }
   //   console.log("Data", data);
 
-  //   gamesApi.completeTask(process.id, selectedTreeItem.id, data).then((res) => {
+  //   oldgamesApi.completeTask(process.id, selectedTreeItem.id, data).then((res) => {
   //     console.log(res);
   //     setClosedTask(true);
   //   });
@@ -490,7 +461,7 @@ const ContributionsTabs = () => {
     try {
       console.log("Closing task", rows);
       const claimPromises = rows.map(async (row) => {
-        await gamesApi.addClaim(
+        await oldgamesApi.addClaim(
           process.id,
           selectedTreeItem.id,
           row.id,
@@ -498,10 +469,10 @@ const ContributionsTabs = () => {
           CONTRIBUTION_LEVELS[row.contribution]
         );
       });
-  
+
       await Promise.all(claimPromises);
       console.log("Claims done");
-  
+
       // Save user data and contribution in data object
       const data = {};
       const userDataPromises = rows.map(async (row) => {
@@ -509,27 +480,36 @@ const ContributionsTabs = () => {
           const user = await usersApi.get(row.id);
           data[row.id] = {
             name: user.full_name,
-            email: user.email
+            email: user.email,
           };
         } catch (userError) {
-          console.error(`Error fetching user data for row ${row.id}:`, userError);
+          console.error(
+            `Error fetching user data for row ${row.id}:`,
+            userError
+          );
           // Handle user data fetch error here
         }
       });
-  
+
       await Promise.all(userDataPromises);
       console.log("Data", data);
-  
+
       // Use await for these API calls for clarity and error handling
-      const completeTaskResponse = await gamesApi.completeTask(process.id, selectedTreeItem.id, data);
+      const completeTaskResponse = await oldgamesApi.completeTask(
+        process.id,
+        selectedTreeItem.id,
+        data
+      );
       console.log(completeTaskResponse);
       setClosedTask(true);
-  
-      const updateTaskResponse = await tasksApi.update(selectedTreeItem.id, { status: "finished" });
+
+      const updateTaskResponse = await tasksApi.update(selectedTreeItem.id, {
+        status: "finished",
+      });
       console.log(updateTaskResponse);
-  
+
       setLoadingContributions(true);
-  
+
       // Remove temporal list of contributions levels
       dispatch(setContributionsListLevels([]));
     } catch (error) {
@@ -551,10 +531,9 @@ const ContributionsTabs = () => {
 
     // declare the data fetching function
     const fetchData = async () => {
-      let task = await gamesApi.getTask(process.id, selectedTreeItem.id);
+      let task = await oldgamesApi.getTask(process.id, selectedTreeItem.id);
 
       if (typeof task !== "undefined" && task.completed) {
-
         setClosedTask(task.completed);
         console.log("tasks dentro de closed task", task);
         let r = [];
@@ -591,19 +570,16 @@ const ContributionsTabs = () => {
           }
         }
 
-
         let tempListRows = [];
         for (let id in contribs) {
-
           const userTemp = await usersApi.get(id);
 
           tempListRows.push({
             id: id,
-            name: userTemp.full_name + ' (' + contribs[id] + ')',
+            name: userTemp.full_name + " (" + contribs[id] + ")",
             contribution: mapContributions(total_contribs, contribs[id]),
             contrib_value: contribs[id],
           });
-
         }
 
         if (isSubscribed) {
@@ -612,7 +588,7 @@ const ContributionsTabs = () => {
         setClosedTask(task.completed);
       }
       setLoadingContributions(false);
-    }
+    };
 
     // call the function
     fetchData()
@@ -620,12 +596,11 @@ const ContributionsTabs = () => {
       .catch(console.error);
 
     // cancel any future `setData`
-    return () => isSubscribed = false;
-
+    return () => (isSubscribed = false);
   }, [contributions]);
 
   useEffect(() => {
-    console.log("selectedTreeItem", selectedTreeItem)
+    console.log("selectedTreeItem", selectedTreeItem);
     if (selectedTreeItem.development === 0) {
       setAlertNoComplexity(true);
     } else {
@@ -635,14 +610,12 @@ const ContributionsTabs = () => {
   }, [selectedTreeItem]);
 
   return (
-
     <>
       {loadingContributions ? (
         <>
-        <Box maxWidth="sm">
-                <CentricCircularProgress text="Loading contributions" />
+          <Box maxWidth="sm">
+            <CentricCircularProgress text="Loading contributions" />
           </Box>
-        
         </>
       ) : (
         <>
@@ -702,7 +675,9 @@ const ContributionsTabs = () => {
                       </Button>
                     )}
                     onClick={handleCloseTask}
-                    text={t("Check the complexity of the task before closing it.")}
+                    text={t(
+                      "Check the complexity of the task before closing it."
+                    )}
                   />
                 </Box>
               ) : null}
@@ -786,13 +761,13 @@ const ContributionsTabs = () => {
                             if (usuario[0] === undefined) {
                               alert(
                                 t("The user") +
-                                " " +
-                                listUsers[i] +
-                                " " +
-                                t(
-                                  "haven't registered yet in the platform. Please, ask him to register and try again"
-                                ) +
-                                "."
+                                  " " +
+                                  listUsers[i] +
+                                  " " +
+                                  t(
+                                    "haven't registered yet in the platform. Please, ask him to register and try again"
+                                  ) +
+                                  "."
                               );
                               return false;
                             } else {
@@ -818,7 +793,6 @@ const ContributionsTabs = () => {
                           getContributionsData();
                         }
                         if (teamsSelected) {
-
                           // Create a claims for a list of teams:
                           createClaims_by_teams(values, checkboxValues);
 
@@ -839,7 +813,9 @@ const ContributionsTabs = () => {
                         setStatus({ success: false });
                         setErrors({ submit: err });
                         setSubmitting(false);
-                        alert(t("You must select one of the contribution option."));
+                        alert(
+                          t("You must select one of the contribution option.")
+                        );
                       }
                     }}
                   >
@@ -857,8 +833,8 @@ const ContributionsTabs = () => {
                       <form onSubmit={handleSubmit}>
                         <Box sx={{ mt: 0 }}>
                           {!contributor &&
-                            listUsers.length == 0 &&
-                            checkboxValues.length == 0 ? (
+                          listUsers.length == 0 &&
+                          checkboxValues.length == 0 ? (
                             //Show all Options
                             <Box sx={{ mt: 0 }}>
                               <Typography
@@ -874,7 +850,9 @@ const ContributionsTabs = () => {
                                   sx={{ mt: 2, mb: -1, fontWeight: "bold" }}
                                 >
                                   {"1.- " +
-                                    t("Add contribution of a single user" + ".")}
+                                    t(
+                                      "Add contribution of a single user" + "."
+                                    )}
                                 </InputLabel>
                                 <UserSearch
                                   error={Boolean(touched.user && errors.user)}
@@ -893,7 +871,9 @@ const ContributionsTabs = () => {
                                   sx={{ mt: 2, mb: -1, fontWeight: "bold" }}
                                 >
                                   {"2.- " +
-                                    t("Add contribution of one or multiple teams") +
+                                    t(
+                                      "Add contribution of one or multiple teams"
+                                    ) +
                                     "."}
                                 </InputLabel>
                                 <FormGroup sx={{ mt: 1 }}>
@@ -902,7 +882,9 @@ const ContributionsTabs = () => {
                                       variant="body2"
                                       color="text.secondary"
                                     >
-                                      {t("There are no teams assigned to this task")}
+                                      {t(
+                                        "There are no teams assigned to this task"
+                                      )}
                                     </Typography>
                                   )}
 
@@ -940,10 +922,14 @@ const ContributionsTabs = () => {
                                   {"3.- " +
                                     t(
                                       "Add contribution from multiple users included in a file" +
-                                      "."
+                                        "."
                                     )}
                                 </InputLabel>
-                                <Stack direction="row" sx={{ mt: 2 }} spacing={0}>
+                                <Stack
+                                  direction="row"
+                                  sx={{ mt: 2 }}
+                                  spacing={0}
+                                >
                                   <LoadingButton
                                     variant="contained"
                                     //   disabled={!isAdministrator}
@@ -966,7 +952,10 @@ const ContributionsTabs = () => {
                                     />
                                   </LoadingButton>
                                   <Grid container spacing={3}>
-                                    <Typography variant="p" sx={{ mt: 3, ml: 4 }}>
+                                    <Typography
+                                      variant="p"
+                                      sx={{ mt: 3, ml: 4 }}
+                                    >
                                       {t("An example of this file") + ":"}
                                       <Link
                                         to="/static/story/ExampleFileCSV.csv"
@@ -1085,7 +1074,8 @@ const ContributionsTabs = () => {
                                                 id="outlined-disabled"
                                                 label="Teams"
                                                 value={
-                                                  checkboxValues.length + " teams"
+                                                  checkboxValues.length +
+                                                  " teams"
                                                 }
                                                 InputProps={{
                                                   readOnly: true,
@@ -1131,9 +1121,13 @@ const ContributionsTabs = () => {
 
                                                     <ul>
                                                       {team.users.length > 0 &&
-                                                        team.users.map((user) => (
-                                                          <li>{user.full_name}</li>
-                                                        ))}
+                                                        team.users.map(
+                                                          (user) => (
+                                                            <li>
+                                                              {user.full_name}
+                                                            </li>
+                                                          )
+                                                        )}
                                                     </ul>
                                                   </>
                                                 ))}
@@ -1148,7 +1142,11 @@ const ContributionsTabs = () => {
                             </>
                           )}
 
-                          <Typography variant="h6" component="h5" sx={{ mt: 2 }}>
+                          <Typography
+                            variant="h6"
+                            component="h5"
+                            sx={{ mt: 2 }}
+                          >
                             {t("Select the Resource")}
                           </Typography>
 
@@ -1175,7 +1173,11 @@ const ContributionsTabs = () => {
                             ))}
                           </Select>
 
-                          <Typography variant="h6" component="h5" sx={{ mt: 2 }}>
+                          <Typography
+                            variant="h6"
+                            component="h5"
+                            sx={{ mt: 2 }}
+                          >
                             {t("Fill in contribution information")}
                           </Typography>
                           <TextField
@@ -1201,7 +1203,9 @@ const ContributionsTabs = () => {
                               touched.description && errors.description
                             )}
                             fullWidth
-                            helperText={touched.description && errors.description}
+                            helperText={
+                              touched.description && errors.description
+                            }
                             label={t("Description")}
                             name="description"
                             onBlur={handleBlur}
@@ -1226,13 +1230,14 @@ const ContributionsTabs = () => {
                   </Formik>
                 </DialogContent>
               </Dialog>
-              {alertNoComplexity && <Alert
-
-                severity="warning"
-                sx={{ m: 1.35, float: "right", alignItems: "center" }}
-              >{t("This task does not have a complexity defined") + "."}
-              </Alert>
-              }
+              {alertNoComplexity && (
+                <Alert
+                  severity="warning"
+                  sx={{ m: 1.35, float: "right", alignItems: "center" }}
+                >
+                  {t("This task does not have a complexity defined") + "."}
+                </Alert>
+              )}
             </>
           ) : (
             <>

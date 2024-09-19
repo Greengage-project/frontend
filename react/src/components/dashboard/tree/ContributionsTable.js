@@ -18,7 +18,7 @@ import {
 } from "@mui/icons-material";
 import CoproNotifications from "components/dashboard/coproductionprocesses/CoproNotifications";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
-import { gamesApi } from "__api__";
+import { oldgamesApi } from "__api__";
 
 export default function ContributionsTable({ rows, closedTask }) {
   const { contributions, contributionslistlevels } = useSelector(
@@ -28,9 +28,9 @@ export default function ContributionsTable({ rows, closedTask }) {
   const [stateRows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(5);
   const [loading, setLoading] = useState(false);
-  
+
   const [activitiesDialogOpen, setactivitiesDialogOpen] = useState(false);
-  
+
   const dispatch = useDispatch();
   const { process, selectedTreeItem } = useSelector((state) => state.process);
   const t = useCustomTranslation(process.language);
@@ -106,7 +106,7 @@ export default function ContributionsTable({ rows, closedTask }) {
         let level = contributionslistlevels.find((obj) => obj.id === row.id);
         if (level) {
           row.contribution = t(level.contribution);
-        } else{
+        } else {
           row.contribution = t(row.contribution);
         }
         return row;

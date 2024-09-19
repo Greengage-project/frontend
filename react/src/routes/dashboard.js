@@ -1,248 +1,294 @@
-import AuthGuard from 'components/guards/AuthGuard';
-import { lazy } from 'react';
-import DashboardLayout from 'components/layouts/DashboardLayout';
-import Loadable from './Loadable';
-import OrganizationProfileSolo from 'components/dashboard/organizations/OrganizationProfileSolo';
-import StoryLayout from 'components/layouts/StoryLayout';
-import RedirectProcessAsset from 'pages/dashboard/coproductionprocesses/RedirectProcessAsset';
-import PublicCoproductionLayout from 'components/layouts/PublicCoproductionLayout';
-import PublicCoproductionCatalogue from 'pages/dashboard/publiccoproductions/PublicCoproductionCatalogue';
-import PublicCoproductionProfile from 'pages/dashboard/publiccoproductions/PublicCoproductionProfile';
-import CatalogueSelector from 'components/dashboard/CatalogueSelector';
-import SucessfullClaimRegistration from 'pages/dashboard/assignments/sucessfullClaimRegistration';
-import CoproductionProcessDownload from 'pages/dashboard/coproductionprocesses/CoproductionProcessDownload';
-import CertificateDownload from 'pages/CertificateDownload';
-
-
+import AuthGuard from "components/guards/AuthGuard";
+import { lazy } from "react";
+import DashboardLayout from "components/layouts/DashboardLayout";
+import Loadable from "./Loadable";
+import OrganizationProfileSolo from "components/dashboard/organizations/OrganizationProfileSolo";
+import StoryLayout from "components/layouts/StoryLayout";
+import RedirectProcessAsset from "pages/dashboard/coproductionprocesses/RedirectProcessAsset";
+import PublicCoproductionLayout from "components/layouts/PublicCoproductionLayout";
+import PublicCoproductionCatalogue from "pages/dashboard/publiccoproductions/PublicCoproductionCatalogue";
+import PublicCoproductionProfile from "pages/dashboard/publiccoproductions/PublicCoproductionProfile";
+import CatalogueSelector from "components/dashboard/CatalogueSelector";
+import SucessfullClaimRegistration from "pages/dashboard/assignments/sucessfullClaimRegistration";
+import CoproductionProcessDownload from "pages/dashboard/coproductionprocesses/CoproductionProcessDownload";
+import CertificateDownload from "pages/CertificateDownload";
 
 const CoproductionProcessProfile = Loadable(
-  lazy(() => import('../pages/dashboard/coproductionprocesses/CoproductionProcessProfile'))
+  lazy(() =>
+    import(
+      "../pages/dashboard/coproductionprocesses/CoproductionProcessProfile"
+    )
+  )
 );
 const StoryProfile = Loadable(
-  lazy(() => import('../pages/dashboard/stories/StoryProfile'))
+  lazy(() => import("../pages/dashboard/stories/StoryProfile"))
 );
 const Settings = Loadable(
-  lazy(() => import('../pages/dashboard/settings/index'))
+  lazy(() => import("../pages/dashboard/settings/index"))
 );
 const Catalogue = Loadable(
-  lazy(() => import('../pages/dashboard/interlinkers/Catalogue'))
+  lazy(() => import("../pages/dashboard/interlinkers/Catalogue"))
 );
 
 const SuccessCatalogue = Loadable(
-  lazy(() => import('../pages/dashboard/stories/SucessCatalogue'))
+  lazy(() => import("../pages/dashboard/stories/SucessCatalogue"))
 );
 
 const InterlinkerProfile = Loadable(
-  lazy(() => import('../components/dashboard/interlinkers/profile/InterlinkerProfile'))
+  lazy(() =>
+    import("../components/dashboard/interlinkers/profile/InterlinkerProfile")
+  )
 );
 const Organizations = Loadable(
-  lazy(() => import('../pages/dashboard/organizations/index'))
+  lazy(() => import("../pages/dashboard/organizations/index"))
 );
 const AssignmentsClaim = Loadable(
-  lazy(() => import('../pages/dashboard/assignments/newassignationclaim'))
+  lazy(() => import("../pages/dashboard/assignments/newassignationclaim"))
 );
 const OrganizationProfile = Loadable(
-  lazy(() => import('../components/dashboard/organizations/OrganizationProfile'))
+  lazy(() =>
+    import("../components/dashboard/organizations/OrganizationProfile")
+  )
 );
-const Workspace = Loadable(lazy(() => import('../pages/dashboard/workspace')));
-const WelcomeView = Loadable(lazy(() => import('../pages/dashboard/workspace/ProjectsOverview')));
-const TermsAndPrivacy = Loadable(lazy(() => import('../pages/dashboard/workspace/TermsAndPrivacy')));
-const CookiePolicy = Loadable(lazy(() => import('../pages/dashboard/workspace/CookiePolicy')));
-const PrivacyPolicy = Loadable(lazy(() => import('../pages/dashboard/workspace/PrivacyPolicy')));
-const ParentalConsent = Loadable(lazy(() => import('../pages/dashboard/workspace/ParentalConsent')));
+const Workspace = Loadable(lazy(() => import("../pages/dashboard/workspace")));
+const WelcomeView = Loadable(
+  lazy(() => import("../pages/dashboard/workspace/ProjectsOverview"))
+);
+const TermsAndPrivacy = Loadable(
+  lazy(() => import("../pages/dashboard/workspace/TermsAndPrivacy"))
+);
+const CookiePolicy = Loadable(
+  lazy(() => import("../pages/dashboard/workspace/CookiePolicy"))
+);
+const PrivacyPolicy = Loadable(
+  lazy(() => import("../pages/dashboard/workspace/PrivacyPolicy"))
+);
+const ParentalConsent = Loadable(
+  lazy(() => import("../pages/dashboard/workspace/ParentalConsent"))
+);
 
+const IframeGamification = Loadable(
+  lazy(() => import("../pages/IframeGamification"))
+);
 export const routes = [
   {
-    path: 'publiccoproductions',
-    element: (
-      <PublicCoproductionLayout />
-    ),
+    path: "publiccoproductions",
+    element: <PublicCoproductionLayout />,
     children: [
       {
-        path: '',
+        path: "",
         element: <PublicCoproductionCatalogue />,
       },
       {
-        path: ':processId',
+        path: ":processId",
         children: [
           {
-            path: '',
-            element: <PublicCoproductionProfile />
-            ,
+            path: "",
+            element: <PublicCoproductionProfile />,
           },
           {
-            path: ':tab',
-            element: <PublicCoproductionProfile />
+            path: ":tab",
+            element: <PublicCoproductionProfile />,
           },
           {
-            path: 'apply',
-            element: <AuthGuard><PublicCoproductionProfile /></AuthGuard>
+            path: "apply",
+            element: (
+              <AuthGuard>
+                <PublicCoproductionProfile />
+              </AuthGuard>
+            ),
           },
-          
-        ]
-      }
-    ]
-    },
- 
-    {
-      path: 'cookie-policy',
-      element: <CookiePolicy />,
-    },
-    {
-      path: 'terms',
-      element: <TermsAndPrivacy />,
-    },
-    {
-      path: 'privacy',
-      element: <PrivacyPolicy />,
-    },
-    {
-      path:'certificatedownload',
-      element: <AuthGuard><CertificateDownload/></AuthGuard>
-    },
-    {
-      path: 'parental',
-      element: <ParentalConsent />,
-    },
+        ],
+      },
+    ],
+  },
+
   {
-    path: 'stories',
+    path: "cookie-policy",
+    element: <CookiePolicy />,
+  },
+  {
+    path: "terms",
+    element: <TermsAndPrivacy />,
+  },
+  {
+    path: "privacy",
+    element: <PrivacyPolicy />,
+  },
+  {
+    path: "certificatedownload",
     element: (
-      <StoryLayout />
+      <AuthGuard>
+        <CertificateDownload />
+      </AuthGuard>
     ),
+  },
+  {
+    path: "parental",
+    element: <ParentalConsent />,
+  },
+  {
+    path: "stories",
+    element: <StoryLayout />,
     children: [
       {
-        path: '',
+        path: "",
         element: <SuccessCatalogue />,
       },
       {
-        path: ':processId',
+        path: ":processId",
         children: [
           {
-            path: '',
-            element: <AuthGuard><StoryProfile /></AuthGuard>
-            ,
+            path: "",
+            element: (
+              <AuthGuard>
+                <StoryProfile />
+              </AuthGuard>
+            ),
           },
           {
-            path: ':tab',
-            element: <AuthGuard><StoryProfile /></AuthGuard>
+            path: ":tab",
+            element: (
+              <AuthGuard>
+                <StoryProfile />
+              </AuthGuard>
+            ),
           },
-        ]
-      }
-    ]
-    },
+        ],
+      },
+    ],
+  },
   {
-    path: 'dashboard',
-    element: (
-      <DashboardLayout />
-    ),
+    path: "dashboard",
+    element: <DashboardLayout />,
     children: [
       {
-        path: '',
+        path: "",
         element: <Workspace />,
       },
       {
-        path: 'projects',
+        path: "projects",
         element: <WelcomeView />,
       },
       {
-        path: 'settings',
+        path: "settings",
         element: <Settings />,
       },
       {
-        path: 'coproductionprocesses/:processId',
+        path: "coproductionprocesses/:processId",
         children: [
           {
-            path: '',
-            element: <AuthGuard><CoproductionProcessProfile /></AuthGuard>
-            ,
+            path: "",
+            element: (
+              <AuthGuard>
+                <CoproductionProcessProfile />
+              </AuthGuard>
+            ),
           },
           {
-            path: ':tab',
-            element: <AuthGuard><CoproductionProcessProfile /></AuthGuard>
+            path: ":tab",
+            element: (
+              <AuthGuard>
+                <CoproductionProcessProfile />
+              </AuthGuard>
+            ),
           },
-        ]
+        ],
       },
       {
-        path: 'coproductionprocesses/:processId/download',
+        path: "coproductionprocesses/:processId/download",
         children: [
           {
-            path: '',
-            element: <AuthGuard><CoproductionProcessDownload /></AuthGuard>
-            ,
-          }
-        ]
+            path: "",
+            element: (
+              <AuthGuard>
+                <CoproductionProcessDownload />
+              </AuthGuard>
+            ),
+          },
+        ],
       },
       {
-        path: 'coproductionprocesses/:processId/:treeitemId/guide',
+        path: "coproductionprocesses/:processId/:treeitemId/guide",
         children: [
           {
-            path: '',
-            element: <AuthGuard><CoproductionProcessProfile /></AuthGuard>
-            ,
+            path: "",
+            element: (
+              <AuthGuard>
+                <CoproductionProcessProfile />
+              </AuthGuard>
+            ),
           },
           {
-            path: ':tab',
-            element: <AuthGuard><CoproductionProcessProfile /></AuthGuard>
+            path: ":tab",
+            element: (
+              <AuthGuard>
+                <CoproductionProcessProfile />
+              </AuthGuard>
+            ),
           },
-        ]
+        ],
       },
       {
-        path: 'coproductionprocesses/:processId/:assetId/view',
+        path: "coproductionprocesses/:processId/:assetId/view",
         children: [
           {
-            path: '',
-            element: <AuthGuard><RedirectProcessAsset /></AuthGuard>
-            ,
-          }
-        ]
+            path: "",
+            element: (
+              <AuthGuard>
+                <RedirectProcessAsset />
+              </AuthGuard>
+            ),
+          },
+        ],
       },
       {
-        path: 'interlinkers',
+        path: "interlinkers",
         children: [
           {
-            path: '',
+            path: "",
             element: <CatalogueSelector />,
           },
           {
-            path: ':interlinkerId',
+            path: ":interlinkerId",
             element: <InterlinkerProfile />,
           },
         ],
       },
       {
-      
-        path: 'organizations',
+        path: "organizations",
         children: [
           {
-            path: '',
+            path: "",
             element: <Organizations />,
           },
           {
-            path: ':organizationIdPage',
+            path: ":organizationIdPage",
             element: <OrganizationProfileSolo />,
           },
           {
-            path: ':organizationIdPage/:teamId',
+            path: ":organizationIdPage/:teamId",
             element: <OrganizationProfileSolo />,
-          }
+          },
         ],
       },
       {
-      
-        path: 'assignments',
+        path: "assignments",
         children: [
           {
-            path: 'success',
+            path: "success",
             element: <SucessfullClaimRegistration />,
           },
           {
-            path: 'registerclaim/:assignmentIdPage',
+            path: "registerclaim/:assignmentIdPage",
             element: <AssignmentsClaim />,
-          }
+          },
         ],
-      }
+      },
+      {
+        path: "gamification",
+        element: <IframeGamification />,
+      },
     ],
-
   },
-
 ];

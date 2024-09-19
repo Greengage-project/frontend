@@ -29,7 +29,7 @@ import {
   setUpdatingTree,
 } from "slices/process";
 import { tree_items_translations } from "utils/someCommonTranslations";
-import { gamesApi, objectivesApi, phasesApi, tasksApi } from "__api__";
+import { oldgamesApi, objectivesApi, phasesApi, tasksApi } from "__api__";
 import { AwaitingIcon, statusIcon, StatusText } from "../../Icons";
 import { assetsApi } from "__api__";
 
@@ -275,7 +275,7 @@ const TreeItemData = ({ language, processId, element, assets,setOpenSnackbar,set
       data.status = status;
       if (resetContributions) {
         //TODO: Method that removes the completion of a task in the game
-        gamesApi.revertTask(process.id, selectedTreeItem.id).then((res) => {
+        oldgamesApi.revertTask(process.id, selectedTreeItem.id).then((res) => {
           console.log(res);
         });
         setResetContributions(false);
@@ -292,9 +292,9 @@ const TreeItemData = ({ language, processId, element, assets,setOpenSnackbar,set
       data.development = parseInt(development);
       if (process.game_id) {
         // TODO: If we put the game in the slice the checking of the task status will be faster
-        gamesApi.getTask(process.id, selectedTreeItem.id).then((res) => {
+        oldgamesApi.getTask(process.id, selectedTreeItem.id).then((res) => {
           if (!res.completed) {
-            gamesApi
+            oldgamesApi
               .updateTask(process.id, selectedTreeItem.id, data.development)
               .then((res) => {
                 console.log(res);

@@ -57,7 +57,7 @@ import * as Yup from "yup";
 import {
   coproductionProcessesApi,
   storiesApi,
-  gamesApi,
+  oldgamesApi,
   tagsApi,
   tasksApi,
 } from "__api__";
@@ -291,10 +291,10 @@ const SettingsTab = () => {
     };
     if (values.incentive_and_rewards_state) {
       const taskList = prepareGameTemplate(tree);
-      let res = await gamesApi.setGame(process.id, taskList);
+      let res = await oldgamesApi.setGame(process.id, taskList);
       values["game_id"] = res.id;
     } else {
-      gamesApi.deleteGame(process.id).then((res) => {
+      oldgamesApi.deleteGame(process.id).then((res) => {
         console.log(res);
         dispatch(
           updateProcess({

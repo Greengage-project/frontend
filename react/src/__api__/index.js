@@ -18,7 +18,7 @@ import { storiesApi } from "./coproduction/storiesApi";
 import { usersApi } from "./users";
 import { problemprofilesApi } from "./catalogue/problemProfilesApi";
 import { recommenderApi } from "./coproduction/recommenderApi";
-import { gamesApi } from "./gamification/gamesApi";
+import { oldgamesApi } from "./gamification/old_gamesApi";
 import { tagsApi } from "./coproduction/tagsApi";
 import { keywordsApi } from "./coproduction/keywordsApi";
 import { ratingsApi } from "./coproduction/ratingsApi";
@@ -30,7 +30,7 @@ export {
   keywordsApi,
   problemprofilesApi,
   permissionsApi,
-  gamesApi,
+  oldgamesApi,
   organizationsApi,
   userActionApi,
   usernotificationsApi,
