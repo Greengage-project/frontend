@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from "react";
-
+import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 const IframeGamification = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [iframeFocused, setIframeFocused] = useState(false);
   const [windowFocused, setWindowFocused] = useState(true);
-  const [keyPressesInIframe, setKeyPressesInIframe] = useState(0);
-  const [scrollPositionInIframe, setScrollPositionInIframe] = useState(0);
-  const [focusSwitches, setFocusSwitches] = useState(0);
   const [idleTime, setIdleTime] = useState(0);
   const [iframeActiveTime, setIframeActiveTime] = useState(0);
   const [windowActiveTime, setWindowActiveTime] = useState(0);
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
+  const location = useLocation();
+
+  const getQueryParams = (search) => {
+    return new URLSearchParams(search);
+  };
+  const { t } = useTranslation();
+  const url = getQueryParams(location.search).get("url");
+  const taskId = getQueryParams(location.search).get("taskId");
 
   const handleKeyDown = (event) => {
     if (iframeFocused) {
-      setKeyPressesInIframe((prevCount) => prevCount + 1);
       setLastActiveTime(Date.now());
     }
   };
 
   const handleIframeEnter = () => {
     setIframeFocused(true);
-    setFocusSwitches((prevSwitches) => prevSwitches + 1);
     setLastActiveTime(Date.now());
   };
 
@@ -29,14 +32,8 @@ const IframeGamification = () => {
     setIframeFocused(false);
   };
 
-  const handleIframeScroll = (event) => {
-    const scrollPosition = event.target.scrollTop;
-    setScrollPositionInIframe(scrollPosition);
-  };
-
   useEffect(() => {
     const handleMouseMove = (event) => {
-      setMousePosition({ x: event.clientX, y: event.clientY });
       setLastActiveTime(Date.now());
     };
 
@@ -78,18 +75,22 @@ const IframeGamification = () => {
       clearInterval(idleInterval);
     };
   }, [iframeFocused, lastActiveTime, windowFocused]);
+  console.log({ url });
+  if (!url || !taskId) {
+    return (
+      <p>{t("The URL is not valid or a task ID has not been provided")}</p>
+    );
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <iframe
-        src="https://docs.google.com/presentation/d/1ma6q20H1HGWiYhH3Cex8pSEPZ0xNcYvZ/edit#slide=id.p1"
+        src={url}
         title="Gamification"
         style={{ flex: 1, width: "100%", border: "none" }}
         onMouseEnter={handleIframeEnter}
         onMouseLeave={handleIframeLeave}
-        onLoad={(e) =>
-          e.target.contentWindow.addEventListener("scroll", handleIframeScroll)
-        }
+        onLoad={(e) => {}}
       />
       <div
         style={{
