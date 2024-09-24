@@ -4,16 +4,9 @@ import {
   Box,
   Container,
   Divider,
-  Radio,
   Button,
-  Input,
 } from "@mui/material";
-import React, { useState, useRef } from "react";
-import {
-  SentimentSatisfied,
-  SentimentDissatisfied,
-  SentimentNeutral,
-} from "../../../../../icons";
+import React, { useState } from "react";
 import "./RewardSettings.css";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
