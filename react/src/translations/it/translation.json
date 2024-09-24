@@ -758,5 +758,11 @@
     "refers to “European Union”.": "si riferisce all'“Unione Europea”.",
     "“EEA”": "“SEE”",
     "refers to the “European Economic Area” which consists of all the EU Member States and Iceland, Norway and Liechtenstein.": "si riferisce allo \"Spazio Economico Europeo\" che comprende tutti gli Stati membri dell'UE e Islanda, Norvegia e Liechtenstein.",
-    "The URL is not valid or a task ID has not been provided": "L'URL non è valido o non è stato fornito un ID attività"
+    "The URL is not valid or a task ID has not been provided": "L'URL non è valido o non è stato fornito un ID attività",
+    "Reward system catalog": "Catalogo del sistema di ricompense",
+    "Here is a complete list of gamification systems and strategies for use in co-production processes": "Ecco un elenco completo di sistemi e strategie di gamification da utilizzare nei processi di co-produzione",
+    "Declarative": "Dichiarativo",
+    "Reward system based on the declaration of user contributions": "Sistema di ricompense basato sulla dichiarazione delle contribuzioni dell'utente, offrendo tre livelli di ricompense (con tre possibili punteggi) per ciascuna attività svolta. Questo schema incoraggia la partecipazione consentendo agli utenti di ricevere ricompense proporzionali alla qualità o all'impatto delle loro contribuzioni.",
+    "Behavioral": "Comportamentale",
+    "Rewards system based on user behavior, where points are awarded based on time spent": "Sistema di ricompense basato sul comportamento dell'utente, dove i punti vengono assegnati in base al tempo trascorso sulle risorse assegnate. Le ricompense considerano fattori come il tempo trascorso, le medie complessive e personali e la cronologia dell'utente. I punti di base aumentano con i bonus quando vengono superate determinate soglie, incentivando la partecipazione attiva e costante"
 }

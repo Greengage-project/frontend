@@ -682,5 +682,11 @@
     "The process of publishing a story can take a long time": "Stāsta publicēšanas process var aizņemt ilgu laiku. Jūs varat nogaidīt vai atgriezties vēlāk, lai pārbaudītu, vai process ir pabeigts",
     "Cloning the project please wait": "Klonēšanas procesu, lūdzu, pagaidiet",
     "The process of creating a clone of an entire process can": "Visa procesa klona izveides process var aizņemt ilgu laiku",
-    "The URL is not valid or a task ID has not been provided": "URL nav derīgs vai nav norādīts uzdevuma ID"
+    "The URL is not valid or a task ID has not been provided": "URL nav derīgs vai nav norādīts uzdevuma ID",
+    "Reward system catalog": "Balvu sistēmas katalogs",
+    "Here is a complete list of gamification systems and strategies for use in co-production processes": "Šeit ir pilnīgs spēļu sistēmu un stratēģiju saraksts, ko var izmantot kopražošanas procesos",
+    "Declarative": "Deklaratīvs",
+    "Reward system based on the declaration of user contributions": "Balvu sistēma, kas balstīta uz lietotāju ieguldījumu deklarāciju, piedāvājot trīs līmeņus atalgojuma (ar trim iespējamām vērtējumiem) par katru veikto uzdevumu. Šī shēma veicina dalību, ļaujot lietotājiem saņemt atalgojumu, kas proporcionāls viņu ieguldījumu kvalitātei vai ietekmei.",
+    "Behavioral": "Uzvedības",
+    "Rewards system based on user behavior, where points are awarded based on time spent": "Balvu sistēma, kas balstīta uz lietotāju uzvedību, kur punkti tiek piešķirti, pamatojoties uz laiku, kas pavadīts piešķirtajos resursos. Balvas ņem vērā faktorus, piemēram, pagājušo laiku, kopējos un personīgos vidējos rādītājus un lietotāju vēsturi. Sākumpunkti tiek palielināti ar bonusiem, kad tiek pārsniegti noteikti sliekšņi, veicinot aktīvu un pastāvīgu dalību."
 }

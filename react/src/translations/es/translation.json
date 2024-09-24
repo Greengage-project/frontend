@@ -556,7 +556,7 @@
     "Owners": "Propietarios",
     "Licenses": "Licencias",
     "Countries": "Países",
-    "View": "Ver mas",
+    "View": "Ver más",
     "More": "Detalles",
     "Rate this story": "Valora esta historia",
     "Terms and Privacy": "Terms and Privacy",
@@ -671,5 +671,11 @@
     "The process of creating a clone of an entire process can": "El proceso de creación de un clon de un proceso completo puede llevar mucho tiempo. Puede esperar o volver más tarde para comprobar si el proceso se ha completado",
     "GREENGAGE PROJECT PRIVACY NOTICE": "GREENGAGE PROJECT PRIVACY NOTICE",
     "Welcome to ": "Welcome to ",
-    "The URL is not valid or a task ID has not been provided": "La URL no es válida o no se ha proporcionado un ID de tarea"
+    "The URL is not valid or a task ID has not been provided": "La URL no es válida o no se ha proporcionado un ID de tarea",
+    "Reward system catalog": "Catálogo de sistema de recompensa",
+    "Here is a complete list of gamification systems and strategies for use in co-production processes": "Aquí tienes una lista completa de sistemas y estrategias de gamificación para usar en procesos de coproducción",
+    "Declarative": "Declarativo",
+    "Reward system based on the declaration of user contributions": "Sistema de recompensa basado en la declaración de las contribuciones del usuario, ofreciendo tres niveles de recompensa (con tres posibles puntuaciones) por cada tarea realizada. Este esquema fomenta la participación permitiendo a los usuarios recibir recompensas proporcionales a la calidad o impacto de sus contribuciones.",
+    "Behavioral": "Conductual",
+    "Rewards system based on user behavior, where points are awarded based on time spent": "Sistema de recompensas basado en el comportamiento de los usuarios, donde se otorgan puntos según el tiempo de actividad en los recursos asignados. Las recompensas consideran factores como el tiempo transcurrido, promedios globales y personales, y el historial del usuario. Los puntos base se incrementan con bonificaciones al superar ciertos umbrales, incentivando una participación activa y constante"
 }

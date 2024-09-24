@@ -24,7 +24,7 @@ import RewardSettings from "../../../pages/dashboard/coproductionprocesses/Tabs/
 import useAuth from "hooks/useAuth";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import * as React from "react";
-
+import { oldgamesApi, tasksApi } from "__api__";
 import { useNavigate } from "react-router";
 import { styled } from "@mui/material/styles";
 import StepConnector, {
@@ -47,7 +47,9 @@ import {
   AccountTree,
 } from "@mui/icons-material";
 import Organizations from "pages/dashboard/organizations";
-import OrganizationsDialog, {OganizationsDialog} from "pages/dashboard/organizations/indexDialog"
+import OrganizationsDialog, {
+  OganizationsDialog,
+} from "pages/dashboard/organizations/indexDialog";
 import { LoadingButton } from "@mui/lab";
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -163,7 +165,7 @@ export default function TimeLine({ assets }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-  const [openOrganizations,setOpenOrganizations] = React.useState(false);
+  const [openOrganizations, setOpenOrganizations] = React.useState(false);
   const [roadItemIndex, setRoadItemIndex] = React.useState("section_1");
   const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
   const [isRewardingAtivated, setIsRewardingAtivated] = React.useState(false);
@@ -275,7 +277,7 @@ export default function TimeLine({ assets }) {
   const temp_completeStates = [
     process.hasAddAnOrganization, //Has Organizations? He decide!.
     !!dataFulfilled || administratorsFulfilled,
-    process.intergovernmental_model!=null, //Did you decide the type (If has a schema it means it has a type)
+    process.intergovernmental_model != null, //Did you decide the type (If has a schema it means it has a type)
     hasSchema,
     process.incentive_and_rewards_state, //Have you active the rewards?
     permissionsFullfilled, //Have you grant permissions to a team in all process?
@@ -287,7 +289,7 @@ export default function TimeLine({ assets }) {
 
   const completeStates = [
     !!dataFulfilled || administratorsFulfilled,
-    process.intergovernmental_model!=null, //Did you decide the type (If has a schema it means it has a type)
+    process.intergovernmental_model != null, //Did you decide the type (If has a schema it means it has a type)
     hasSchema,
     process.hasAddAnOrganization, //Has Organizations? He decide!.
     process.incentive_and_rewards_state, //Have you active the rewards?
@@ -297,6 +299,83 @@ export default function TimeLine({ assets }) {
   ];
 
   const selectedStepIndex = null;
+
+  const prepareGameTemplate = (tree) => {
+    const taskList = [];
+    for (const phase of tree) {
+      for (const objective of phase.children) {
+        for (const task of objective.children) {
+          if (task.type === "task" && task.is_disabled === false) {
+            taskList.push({
+              id: task.id,
+              management: task.management,
+              development: task.development,
+              exploitation: task.exploitation,
+            });
+          }
+        }
+      }
+    }
+    return taskList;
+  };
+
+  const changeRewarding = async (status, leaderboard) => {
+    const values = {
+      incentive_and_rewards_state: status,
+      leaderboard: leaderboard,
+    };
+    if (values.incentive_and_rewards_state) {
+      const taskList = prepareGameTemplate(tree);
+      let res = await oldgamesApi.setGame(process.id, taskList);
+      values["game_id"] = res.id;
+    } else {
+      oldgamesApi.deleteGame(process.id).then((res) => {
+        console.log(res);
+        dispatch(
+          updateProcess({
+            id: process.id,
+            data: { game_id: null },
+            logotype: false,
+            onSuccess: false,
+          })
+        );
+      });
+
+      console.log("Delete game");
+      console.log(tree);
+
+      tree.forEach((phase) => {
+        phase.children.forEach((objective) => {
+          objective.children.forEach((task) => {
+            if (task.status === "finished") {
+              const updated_task = Object.assign({}, task);
+              updated_task.status = "in_progress";
+              tasksApi.update(task.id, updated_task).then((res) => {
+                console.log(res);
+              });
+            }
+          });
+        });
+      });
+    }
+
+    try {
+      dispatch(
+        updateProcess({
+          id: process.id,
+          data: values,
+          logotype,
+          onSuccess: () => {
+            if (mounted.current) {
+              console.log(process);
+            }
+          },
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -330,8 +409,6 @@ export default function TimeLine({ assets }) {
           sx={{ mx: 2, mt: 2 }}
           // connector={<ColorlibConnector />}
         >
-         
-
           {/* Step 1 */}
           {roadItemIndex == "section_1" && (
             <Step
@@ -374,7 +451,7 @@ export default function TimeLine({ assets }) {
                         {t("Go to settings section")}
                       </Button>
                     </Stack>
-                    
+
                     <IconButton
                       onClick={() => nextSect("section_2")}
                       color="primary"
@@ -441,27 +518,26 @@ export default function TimeLine({ assets }) {
                         {t("Every co-production process has particular") + "."}
                       </Typography>
 
-                      {process.intergovernmental_model!=null ? (
+                      {process.intergovernmental_model != null ? (
                         <Alert severity="success">
                           {t(
                             "You have already defined the type of co-production process"
-                          )+': '+process.intergovernmental_model}
+                          ) +
+                            ": " +
+                            process.intergovernmental_model}
                         </Alert>
                       ) : (
                         <Button
-                         onClick={() => {
-                           setSelectorTypeOpen(true);
-                         }}
-                         size="small"
-                         variant="contained"
-                         sx={{ maxWidth: "200px" }}
-                       >
-                         {t("Decide your type of co-production process")}
-                       </Button>
+                          onClick={() => {
+                            setSelectorTypeOpen(true);
+                          }}
+                          size="small"
+                          variant="contained"
+                          sx={{ maxWidth: "200px" }}
+                        >
+                          {t("Decide your type of co-production process")}
+                        </Button>
                       )}
-                      
-
-                     
                     </Stack>
                     <IconButton
                       onClick={() => nextSect("section_1")}
@@ -806,7 +882,7 @@ export default function TimeLine({ assets }) {
               </StepLabel>
             </Step>
           )}
-          
+
           {/* Step 6 */}
 
           {roadItemIndex == "section_6" && (
@@ -898,8 +974,6 @@ export default function TimeLine({ assets }) {
               </StepLabel>
             </Step>
           )}
-
-          
 
           {/* Step 7 */}
           {roadItemIndex == "section_7" && (
@@ -1060,8 +1134,8 @@ export default function TimeLine({ assets }) {
             <Lightbox onClose={handleCloseLightbox}>
               <RewardSettings
                 onClose={handleCloseLightbox}
-                activateReward={() => {
-                  setIsRewardingAtivated(true);
+                activateReward={(leaderboard) => {
+                  changeRewarding(true, leaderboard);
                 }}
               />
             </Lightbox>
@@ -1254,27 +1328,25 @@ export default function TimeLine({ assets }) {
         setLoading={setSelectorTypeLoading}
       />
 
-        <Dialog key='dialogOrg' open={openOrganizations} onClose={handleCloseOrganizations} fullWidth maxWidth="xl">
-            
+      <Dialog
+        key="dialogOrg"
+        open={openOrganizations}
+        onClose={handleCloseOrganizations}
+        fullWidth
+        maxWidth="xl"
+      >
         <DialogTitle sx={{ textAlign: "center", m: 2 }}>
           {t("Organizations")}
         </DialogTitle>
         <DialogContent dividers>
-            <Box sx={{ minHeight: "93vh" }}>
-         
-              <OrganizationsDialog />
-            </Box>
-            </DialogContent>
-            <DialogActions sx={{ justifyContent: "center" }}>
-          <Button
-         
-            onClick={handleCloseOrganizations}
-          >
-            {t("Close")}
-            
-          </Button>
+          <Box sx={{ minHeight: "93vh" }}>
+            <OrganizationsDialog />
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button onClick={handleCloseOrganizations}>{t("Close")}</Button>
         </DialogActions>
-          </Dialog> 
+      </Dialog>
     </>
   );
 }

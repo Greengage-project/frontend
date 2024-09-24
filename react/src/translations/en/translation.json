@@ -768,5 +768,11 @@
   "refers to “European Union”.": "refers to “European Union”.",
   "“EEA”": "“EEA”",
   "refers to the “European Economic Area” which consists of all the EU Member States and Iceland, Norway and Liechtenstein.": "refers to the “European Economic Area” which consists of all the EU Member States and Iceland, Norway and Liechtenstein.",
-  "The URL is not valid or a task ID has not been provided": "The URL is not valid or a task ID has not been provided"
+  "The URL is not valid or a task ID has not been provided": "The URL is not valid or a task ID has not been provided",
+  "Reward system catalog": "Reward system catalog",
+  "Here is a complete list of gamification systems and strategies for use in co-production processes": "Here is a complete list of gamification systems and strategies for use in co-production processes",
+  "Declarative": "Declarative",
+  "Reward system based on the declaration of user contributions": "Reward system based on the declaration of user contributions, offering three levels of rewards (with three possible scores) for each task performed. This scheme encourages participation by allowing users to receive rewards proportional to the quality or impact of their contributions",
+  "Behavioral": "Behavioral",
+  "Rewards system based on user behavior, where points are awarded based on time spent": "Rewards system based on user behavior, where points are awarded based on time spent on assigned resources. Rewards consider factors such as elapsed time, overall and personal averages, and user history. Base points are increased with bonuses when certain thresholds are exceeded, incentivizing active and consistent participation"
 }

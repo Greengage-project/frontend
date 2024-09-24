@@ -31,7 +31,8 @@
   width: 100;
 }
 .col-reward-left,
-.col-reward-right {
+.col-reward-right,
+.col-reward-behavioral {
   height: 300px;
   max-height: 80%;
   overflow-y: auto !important;
@@ -76,6 +77,17 @@
   bottom: 9.3%;
   padding-block: 1rem;
   width: 70%;
+  background-color: #fff;
+  left: 10%;
+  border-top: 1px solid #e5e5e5;
+  padding-inline: 1rem;
+}
+
+.footer-behavioral {
+  position: fixed;
+  bottom: 9.3%;
+  padding-block: 1rem;
+  width: 75%;
   background-color: #fff;
   left: 10%;
   border-top: 1px solid #e5e5e5;

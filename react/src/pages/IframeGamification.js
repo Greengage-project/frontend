@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { debounce } from "lodash";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 
 const GamificationPanel = ({
   windowActiveTime,
@@ -22,6 +23,8 @@ const GamificationPanel = ({
   drawerOpen,
   className,
 }) => {
+  const { t } = useTranslation();
+
   const [showSecretInfo, setShowSecretInfo] = useState(false);
   const secretCode = [
     "ArrowUp",
@@ -100,18 +103,19 @@ const GamificationPanel = ({
         }}
       >
         <Box>
-          {showSecretInfo && (
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography variant="h6">Activity Info</Typography>
-              <IconButton onClick={toggleDrawer}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          )}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h6" className="text-center">
+              {t("Rewards")}
+            </Typography>
+            <IconButton onClick={toggleDrawer}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
           {showSecretInfo && (
             <>
               <Typography>
@@ -344,7 +348,7 @@ const IframeGamification = () => {
         onClick={toggleDrawer}
         style={{ position: "fixed", bottom: 16, right: 16, zIndex: 1301 }}
       >
-        <MenuIcon />
+        <WorkspacePremiumIcon />
       </Fab>
 
       <GamificationPanel
