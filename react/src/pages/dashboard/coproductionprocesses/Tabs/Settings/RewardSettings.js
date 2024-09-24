@@ -64,7 +64,6 @@ const RewardSettings = (props) => {
               data-cy="gamification-catalogue"
               sx={{
                 margin: "0 auto",
-                // textAlign: "center",
                 textAlign: "center",
               }}
             >

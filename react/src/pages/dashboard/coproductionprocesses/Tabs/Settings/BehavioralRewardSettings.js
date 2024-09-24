@@ -89,7 +89,7 @@ const BehavioralRewardSettings = (props) => {
                 padding: 2,
                 backgroundColor: "#f5f5f5",
                 textAlign: "center",
-                height: "100%", // Altura ajustable
+                height: "100%",
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
@@ -120,7 +120,7 @@ const BehavioralRewardSettings = (props) => {
                 padding: 2,
                 backgroundColor: "#f5f5f5",
                 textAlign: "center",
-                height: "100%", // Altura ajustable
+                height: "100%",
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
@@ -154,7 +154,6 @@ const BehavioralRewardSettings = (props) => {
           },
         }}
       >
-        {/* Caso 1.1 */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -178,7 +177,6 @@ const BehavioralRewardSettings = (props) => {
           </Box>
         </Grid>
 
-        {/* Caso 1.2 */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -202,7 +200,6 @@ const BehavioralRewardSettings = (props) => {
           </Box>
         </Grid>
 
-        {/* Caso 2 */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -226,7 +223,6 @@ const BehavioralRewardSettings = (props) => {
           </Box>
         </Grid>
 
-        {/* Caso 3 */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -250,7 +246,6 @@ const BehavioralRewardSettings = (props) => {
           </Box>
         </Grid>
 
-        {/* Caso 4.1 */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -274,7 +269,6 @@ const BehavioralRewardSettings = (props) => {
           </Box>
         </Grid>
 
-        {/* Caso 4.2 */}
         <Grid item xs={12}>
           <Box
             sx={{
