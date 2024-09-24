@@ -31,11 +31,14 @@
   width: 100;
 }
 .col-reward-left,
-.col-reward-right,
-.col-reward-behavioral {
+.col-reward-right {
   height: 300px;
   max-height: 80%;
   overflow-y: auto !important;
+}
+
+.col-reward-behavioral {
+  max-height: 90%;
 }
 
 /* hide scrollbar for col-reward-left */
@@ -85,11 +88,11 @@
 
 .footer-behavioral {
   position: fixed;
-  bottom: 9.3%;
+  bottom: 9.4%;
   padding-block: 1rem;
   width: 75%;
   background-color: #fff;
-  left: 10%;
+  left: 12%;
   border-top: 1px solid #e5e5e5;
   padding-inline: 1rem;
 }

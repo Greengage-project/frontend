@@ -20,6 +20,18 @@ const DeclarativeRewardSettings = (props) => {
   const { t } = useTranslation();
   return (
     <>
+      {handleGoBack && (
+        <Link
+          href="javascript:void(0);"
+          variant="h6"
+          color="textSecondary"
+          onClick={handleGoBack}
+          sx={{ mb: "1rem", cursor: "pointer" }}
+          role="button"
+        >
+          {t("Go back")}
+        </Link>
+      )}
       <Box
         alt="Medals"
         component="img"
@@ -31,18 +43,6 @@ const DeclarativeRewardSettings = (props) => {
       <Grid container className="col-reward-setting">
         <Grid item sm={12} md={6} className="col-reward-left" ref={leftColumn}>
           <Grid container md={12}>
-            {handleGoBack && (
-              <Link
-                href="javascript:void(0);"
-                variant="h6"
-                color="textSecondary"
-                onClick={handleGoBack}
-                sx={{ mb: "1rem", cursor: "pointer" }}
-                role="button"
-              >
-                {t("Go back")}
-              </Link>
-            )}
             <Typography
               variant="h1"
               style={{ fontWeight: 700, color: "black" }}

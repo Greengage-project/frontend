@@ -11,66 +11,24 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import "./RewardSettings.css";
 
-const FooterComponent = ({ t }) => {
-  return (
-    <Grid
-      container
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        backgroundColor: "#fff", // Fondo blanco para que sea visible
-        boxShadow: "0px -2px 5px rgba(0, 0, 0, 0.1)", // Sombra para separar del contenido
-        padding: 2, // Espaciado interno
-        zIndex: 1000, // Para que quede encima del contenido
-      }}
-    >
-      <Grid item md={8} sm={12}>
-        <Typography
-          variant="body1"
-          className="footer-instruction"
-          style={{
-            color: "black",
-          }}
-        >
-          {t(
-            "If you change your mind during the process, you can disable this function in the settings"
-          )}
-        </Typography>
-      </Grid>
-      <Grid item md={2} sm={12} className="skip-reward">
-        <Link
-          href="#"
-          variant="body2"
-          color="textSecondary"
-          onClick={() => {
-            //
-          }}
-        >
-          {t("I want to skip that part")}
-        </Link>
-      </Grid>
-      <Grid item md={2} sm={12} className="skip-reward">
-        <Button
-          sx={{ minWidth: "200px", mr: 2 }}
-          variant="outlined"
-          onClick={() => {
-            //
-          }}
-        >
-          {t("Activate this function")}
-        </Button>
-      </Grid>
-    </Grid>
-  );
-};
-
 const BehavioralRewardSettings = (props) => {
-  const { handleGoBack } = props;
+  const { handleGoBack, onClose } = props;
   const { t } = useTranslation();
 
   return (
     <Container maxWidth="lg">
+      {handleGoBack && (
+        <Link
+          href="#"
+          variant="h6"
+          color="textSecondary"
+          onClick={handleGoBack}
+          role="button"
+          sx={{ display: "block", mb: 2 }}
+        >
+          {t("Go back")}
+        </Link>
+      )}
       <Grid container spacing={3}>
         <Grid
           container
@@ -81,17 +39,6 @@ const BehavioralRewardSettings = (props) => {
           xs={12}
         >
           <Grid item sx={{ margin: "0 auto" }}>
-            {handleGoBack && (
-              <Link
-                href="#"
-                variant="h6"
-                color="textSecondary"
-                onClick={handleGoBack}
-                role="button"
-              >
-                {t("Go back")}
-              </Link>
-            )}
             <Typography
               color="textPrimary"
               variant="h4"
@@ -128,8 +75,13 @@ const BehavioralRewardSettings = (props) => {
       <Divider />
 
       <Grid container spacing={2}>
-        <Grid xs={6} spacing={3} sx={{ mt: 2, p: 3 }}>
-          <Grid item xs={12}>
+        <Grid
+          item
+          xs={6}
+          spacing={3}
+          sx={{ mt: 2, p: 3, display: "flex", flexDirection: "column" }}
+        >
+          <Grid item xs={12} sx={{ flex: 1 }}>
             <Box
               sx={{
                 border: "2px solid #E0E0E0",
@@ -137,6 +89,7 @@ const BehavioralRewardSettings = (props) => {
                 padding: 2,
                 backgroundColor: "#f5f5f5",
                 textAlign: "center",
+                height: "100%", // Altura ajustable
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
@@ -153,8 +106,13 @@ const BehavioralRewardSettings = (props) => {
             </Box>
           </Grid>
         </Grid>
-        <Grid xs={6} spacing={3} sx={{ mt: 2, p: 3 }}>
-          <Grid item xs={12}>
+        <Grid
+          item
+          xs={6}
+          spacing={3}
+          sx={{ mt: 2, p: 3, display: "flex", flexDirection: "column" }}
+        >
+          <Grid item xs={12} sx={{ flex: 1 }}>
             <Box
               sx={{
                 border: "2px solid #E0E0E0",
@@ -162,6 +120,7 @@ const BehavioralRewardSettings = (props) => {
                 padding: 2,
                 backgroundColor: "#f5f5f5",
                 textAlign: "center",
+                height: "100%", // Altura ajustable
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
@@ -184,8 +143,17 @@ const BehavioralRewardSettings = (props) => {
         </Grid>
       </Grid>
 
-      {/* Casos posibles en la estrategia */}
-      <Grid container spacing={2} className="col-reward-setting">
+      <Grid
+        container
+        spacing={2}
+        className="col-reward-setting"
+        sx={{
+          pb: {
+            xs: 16,
+            lg: 10,
+          },
+        }}
+      >
         {/* Caso 1.1 */}
         <Grid item xs={12}>
           <Box
@@ -328,7 +296,57 @@ const BehavioralRewardSettings = (props) => {
           </Box>
         </Grid>
       </Grid>
-      {FooterComponent({ t })}
+      <Grid
+        container
+        className="footer-behavioral"
+        sx={{
+          margin: "0 auto",
+          textAlign: "center",
+        }}
+      >
+        <Grid item md={8} sm={12}>
+          <Typography
+            variant="body1"
+            className="footer-instruction"
+            style={{
+              color: "black",
+            }}
+          >
+            {t(
+              "If you change your mind during the process, you can disable this function in the settings"
+            )}
+          </Typography>
+        </Grid>
+        <Grid item md={2} sm={12} className="skip-reward">
+          <Link
+            href="#"
+            variant="body2"
+            color="textSecondary"
+            onClick={() => {
+              onClose();
+            }}
+          >
+            {t("I want to skip that part")}
+          </Link>
+        </Grid>
+        <Grid item md={2} sm={12} className="skip-reward">
+          <Button
+            sx={{
+              minWidth: {
+                xs: "140px",
+                lg: "190px",
+              },
+              mr: 2,
+            }}
+            variant="outlined"
+            onClick={() => {
+              //
+            }}
+          >
+            {t("Activate this function")}
+          </Button>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
