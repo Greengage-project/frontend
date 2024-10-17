@@ -116,7 +116,7 @@ import {
               startIcon={<OpenInNew />}
               fullWidth
               variant="text"
-              onClick={() => window.open(`/privacy`, "_blank")} 
+              onClick={() => window.open(`https://www.greengage-project.eu/privacy-policy/`, "_blank")} 
             >
               {t("Privacy Policy")}
             </Button>

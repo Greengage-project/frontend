@@ -447,19 +447,13 @@ const Home = () => {
                   sx={{ my: 3 }}
                   variant="subtitle1"
                 >
-                  <Link
-                    color={
-                      location.pathname === "/privacy"
-                        ? "primary"
-                        : "textSecondary"
-                    }
-                    component={RouterLink}
-                    to="/privacy"
-                    underline="none"
-                    variant="body1"
+                  <a
+                    href="https://www.greengage-project.eu/privacy-policy/"
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     Privacy Policy
-                  </Link>
+                  </a>
                 </Typography>
 
                 <Typography
