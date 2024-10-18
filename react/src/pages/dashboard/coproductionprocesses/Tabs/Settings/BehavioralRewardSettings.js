@@ -44,7 +44,7 @@ const BehavioralRewardSettings = (props) => {
               variant="h4"
               sx={{ textAlign: "center" }}
             >
-              {"Dynamic Reward System".toUpperCase()}
+              {t("Dynamic Reward System").toUpperCase()}
             </Typography>
 
             <Typography
@@ -52,9 +52,9 @@ const BehavioralRewardSettings = (props) => {
               variant="h6"
               sx={{ m: 1, textAlign: "center" }}
             >
-              {
+              {t(
                 "A strategy for calculating rewards based on user activity and time spent on tasks."
-              }
+              )}
             </Typography>
           </Grid>
         </Grid>
@@ -93,15 +93,15 @@ const BehavioralRewardSettings = (props) => {
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-                {"Legend"}
+                {t("Legend")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"m: Minutes | DP: Default Points | BP: Bonus Points"}
+                {t("m: Minutes | DP: Default Points | BP: Bonus Points")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {
+                {t(
                   "PBP: Personal Bonus Points | DPTE: Default Points Time Elapsed"
-                }
+                )}
               </Typography>
             </Box>
           </Grid>
@@ -124,19 +124,19 @@ const BehavioralRewardSettings = (props) => {
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-                {"Calculation"}
+                {t("Calculation")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"DP: Defined in the strategy"}
+                {t("DP: Defined in the strategy")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"DPTE = DP × m"}
+                {t("DPTE = DP × m")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"BP = DPTE + (DPTE / 2)"}
+                {t("BP = DPTE + (DPTE / 2)")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"PBP = DPTE + (DPTE / 4)"}
+                {t("PBP = DPTE + (DPTE / 4)")}
               </Typography>
             </Box>
           </Grid>
@@ -163,16 +163,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 1.1: Default Points"}
+              {t("Case 1.1: Default Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the last points were rewarded less than 1 minute ago, award default points."
-              }
+              {t(
+                "If the last points were rewarded less than 1 minute ago, award default points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -186,16 +186,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 1.2: Half Default Points"}
+              {t("Case 1.2: Half Default Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the last points were rewarded less than 1 minute ago, award half of the default points."
-              }
+              {t(
+                "If the last points were rewarded less than 1 minute ago, award half of the default points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -209,16 +209,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 2: Double Default Points"}
+              {t("Case 2: Double Default Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the user has no prior record for this task, award double default points."
-              }
+              {t(
+                "If the user has no prior record for this task, award double default points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -232,16 +232,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 3: Bonus Points"}
+              {t("Case 3: Bonus Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the user's time spent is greater than the global average, award bonus points."
-              }
+              {t(
+                "If the user's time spent is greater than the global average, award bonus points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -255,16 +255,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 4.1: Personal Bonus Points"}
+              {t("Case 4.1: Personal Bonus Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the user's time spent is greater than their personal average, award personal bonus points."
-              }
+              {t(
+                "If the user's time spent is greater than their personal average, award personal bonus points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -278,14 +278,14 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 4.2: Default Points Time Elapsed"}
+              {t("Case 4.2: Default Points Time Elapsed")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {"Award default points based on the time elapsed (DPTE)."}
+              {t("Award default points based on the time elapsed (DPTE)")}
             </Typography>
           </Box>
         </Grid>

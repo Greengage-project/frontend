@@ -60,8 +60,7 @@ function TwoColumnsText(props) {
         </Typography>
       ) : (
         <>
-          {(largeDevice || xlargeDevice) ? (
-            
+          {largeDevice || xlargeDevice ? (
             <Typography color="textSecondary" variant="body2" sx={{ m: 5 }}>
               <Grid container spacing={{ xs: 2, md: 3 }}>
                 <Grid item xs={6} sx={{ textAlign: "justify" }}>
@@ -72,7 +71,6 @@ function TwoColumnsText(props) {
                 </Grid>
               </Grid>
             </Typography>
-
           ) : (
             <Typography color="textSecondary" variant="body2" sx={{ m: 5 }}>
               <Grid container spacing={{ xs: 2, md: 3 }}>
@@ -92,7 +90,8 @@ function TwoColumnsText(props) {
                   )}
                 </Grid>
               </Grid>
-            </Typography>          )}
+            </Typography>
+          )}
         </>
       )}
     </>
@@ -123,13 +122,11 @@ export default function OverviewStory({}) {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = React.useState("");
 
-
   useEffect(() => {
     const id = window.location.pathname.split("/")[2];
     if (selectedStory) {
       if (selectedStory.id != id) {
         dispatch(getSelectedStory(id));
-       
       } //else{
     } else {
       dispatch(getSelectedStory(id));
@@ -143,16 +140,16 @@ export default function OverviewStory({}) {
     //}
   }, []);
 
-
   //Every time another story is selected then the data info of the process is loaded
-  useEffect(() =>{
+  useEffect(() => {
     //console.log("La STORY A CAMBIADO:")
-    if(selectedStory){
+    if (selectedStory) {
       //console.log(selectedStory.coproductionprocess_cloneforpub_id)
-      dispatch(getProcessCatalogue(selectedStory.coproductionprocess_cloneforpub_id))
+      dispatch(
+        getProcessCatalogue(selectedStory.coproductionprocess_cloneforpub_id)
+      );
     }
-    
-  },[selectedStory])
+  }, [selectedStory]);
 
   return (
     <Box sx={{ pb: 3, justifyContent: "center" }}>
@@ -208,8 +205,6 @@ export default function OverviewStory({}) {
                 </Typography>
               </Grid>
 
-             
-
               {selectedStory.data_story.tags != "" && (
                 <Grid item xs={6} md={6} lg={3} xl={3} sx={{ m: 3 }}>
                   <Typography
@@ -242,20 +237,19 @@ export default function OverviewStory({}) {
                 {selectedStory.data_story.short_description}
               </Typography>
 
-
               <Grid
                 container
                 spacing={3}
                 direction="column"
                 justifyContent="left"
                 alignItems="left"
-                sx={{ mt: 3,mb:3,ml:5 }}
+                sx={{ mt: 3, mb: 3, ml: 5 }}
               >
                 <Typography color="textSecondary" variant="subtitle2">
                   {t("Started at")}: {selectedStory.data_story.start_at}
                 </Typography>
                 <Typography color="textSecondary" variant="subtitle2">
-                {t("Ended at")}: {selectedStory.data_story.end_at}
+                  {t("Ended at")}: {selectedStory.data_story.end_at}
                 </Typography>
               </Grid>
 
@@ -332,6 +326,7 @@ export default function OverviewStory({}) {
                     color="textSecondary"
                     variant="h6"
                     sx={{ ml: 5, mt: 3 }}
+                    data-cy="incentives"
                   >
                     {t("Incentives")}
                   </Typography>
@@ -345,8 +340,12 @@ export default function OverviewStory({}) {
               )}
 
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Materials")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Materials")}
               </Typography>
 
               <Grid
@@ -375,7 +374,7 @@ export default function OverviewStory({}) {
 
                     <CardActions>
                       <Button href={material.link} size="small">
-                      {t("View")}
+                        {t("View")}
                       </Button>
                     </CardActions>
                   </Card>
@@ -383,8 +382,12 @@ export default function OverviewStory({}) {
               </Grid>
 
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Owners")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Owners")}
               </Typography>
 
               <Grid
@@ -415,21 +418,20 @@ export default function OverviewStory({}) {
                     </CardContent> */}
                     <CardActions>
                       <Button href={owner.link} size="small">
-                      {t("More")}
+                        {t("More")}
                       </Button>
                     </CardActions>
                   </Card>
                 ))}
               </Grid>
 
-
-              
-
-
-
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Licenses")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Licenses")}
               </Typography>
               <Grid
                 container
@@ -448,13 +450,13 @@ export default function OverviewStory({}) {
                 </Typography>
               </Grid>
 
-
-
-
-
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Countries")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Countries")}
               </Typography>
 
               <Grid
@@ -464,23 +466,23 @@ export default function OverviewStory({}) {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                
               >
-                {selectedStory.data_story.countries.split(',').map((country) => (
-                  <Card sx={{ minWidth: 275, m: 2 }}>
-                    
-                    <CardContent>
-                      <Typography variant="h6"  align='center' color="text.secondary">
-                        {country}
-                      </Typography>
-                    </CardContent>
-                   
-                  </Card>
-                ))}
+                {selectedStory.data_story.countries
+                  .split(",")
+                  .map((country) => (
+                    <Card sx={{ minWidth: 275, m: 2 }}>
+                      <CardContent>
+                        <Typography
+                          variant="h6"
+                          align="center"
+                          color="text.secondary"
+                        >
+                          {country}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))}
               </Grid>
-
-
-
             </Box>
           ) : (
             <></>

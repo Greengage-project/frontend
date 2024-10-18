@@ -31,7 +31,6 @@ export default class GeneralApi {
   async update(id, data) {
     if (id) {
       const res = await axiosInstance.put(`/${this.url}/${id}`, data);
-      console.log("update call", res.data);
       return res.data;
     }
   }
@@ -63,7 +62,6 @@ export default class GeneralApi {
   async delete(id) {
     if (id) {
       const res = await axiosInstance.delete(`/${this.url}/${id}`);
-      console.log("delete call", res.data);
       return res.data;
     }
   }
@@ -81,7 +79,6 @@ export default class GeneralApi {
         },
       }
     );
-    console.log("setLogotype call", res.data);
     return res;
   }
 
@@ -91,7 +88,6 @@ export default class GeneralApi {
         `/${this.url}/${object_id}/administrators`,
         { user_id }
       );
-      console.log("add administrator call", res.data);
       return res.data;
     }
   }
@@ -101,7 +97,6 @@ export default class GeneralApi {
       const res = await axiosInstance.delete(
         `/${this.url}/${object_id}/administrators/${user_id}`
       );
-      console.log("delete administrator call", res.data);
       return res.data;
     }
   }

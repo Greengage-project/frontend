@@ -15,7 +15,7 @@ import {
   Tabs,
   TextField,
   Typography,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import {
   Close,
@@ -54,7 +54,10 @@ import {
 } from "__api__";
 import NewAssetModal from "components/dashboard/coproductionprocesses/NewAssetModal";
 import { useLocation } from "react-router";
-import { getAssetsList_byTask, setContributionsListLevels } from "slices/general";
+import {
+  getAssetsList_byTask,
+  setContributionsListLevels,
+} from "slices/general";
 import { getContributions } from "slices/general";
 import useAuth from "hooks/useAuth";
 
@@ -64,14 +67,15 @@ import { set } from "store";
 import { claimsApi } from "__api__/coproduction/claimsApi";
 import { ClaimDialog } from "./ClaimDialog";
 
-
 const RightSide = ({ softwareInterlinkers }) => {
   const { process, isAdministrator, selectedTreeItem } = useSelector(
     (state) => state.process
   );
-  const [openSnackbar,setOpenSnackbar] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const { assetsList, contributions, contributionslistlevels } = useSelector((state) => state.general);
+  const { assetsList, contributions, contributionslistlevels } = useSelector(
+    (state) => state.general
+  );
   const { user } = useAuth();
   const [userRoles, setUserRoles] = useState([]);
   const [userTeams, setUserTeams] = useState([]);
@@ -108,7 +112,6 @@ const RightSide = ({ softwareInterlinkers }) => {
     }
     setOpenSnackbar(false);
   };
-
 
   useEffect(() => {
     if (isLocationCatalogue) {
@@ -313,10 +316,6 @@ const RightSide = ({ softwareInterlinkers }) => {
 
     setAnchorEl(null);
     setClaimDialogOpen(true);
-
-    
-    
-
   };
 
   const handleEdit = (asset) => {
@@ -524,19 +523,18 @@ const RightSide = ({ softwareInterlinkers }) => {
     return actions;
   };
 
-
   useEffect(() => {
     let listofRoles = [];
     setUserRoles([]);
     async function getRoles() {
       for (let i = 0; i < user.teams_ids.length; i++) {
-        const listAllowedTeams=selectedTreeItem.teams;
+        const listAllowedTeams = selectedTreeItem.teams;
         for (let j = 0; j < listAllowedTeams.length; j++) {
           if (user.teams_ids[i] === listAllowedTeams[j].id) {
             const user_team = await teamsApi.get(user.teams_ids[i]);
-        
-            if (!listofRoles.includes(user_team.type)){
-            listofRoles.push(user_team.type);
+
+            if (!listofRoles.includes(user_team.type)) {
+              listofRoles.push(user_team.type);
             }
           }
         }
@@ -544,8 +542,6 @@ const RightSide = ({ softwareInterlinkers }) => {
       setUserRoles(listofRoles);
     }
     getRoles();
-
-   
   }, [selectedTreeItem]);
 
   function escape(htmlStr) {
@@ -557,8 +553,9 @@ const RightSide = ({ softwareInterlinkers }) => {
       .replace(/'/g, "&#39;");
   }
 
-  
-  
+  console.log("**************************************");
+  console.log({ process });
+  console.log("**************************************");
 
   return (
     selectedTreeItem && (
@@ -571,7 +568,6 @@ const RightSide = ({ softwareInterlinkers }) => {
                 onChange={handleTabChange}
                 aria-label="guide-right-side-tabs"
                 sx={{ mb: 2 }}
-                
                 variant="scrollable"
                 scrollButtons="auto"
                 allowScrollButtonsMobile
@@ -605,7 +601,8 @@ const RightSide = ({ softwareInterlinkers }) => {
                   isTask &&
                   isAdministrator &&
                   !process.is_part_of_publication &&
-                  process.game_id && (
+                  process.game_id &&
+                  process?.game_gamification_engine && (
                     <Tab
                       value="contributions"
                       label={`${t("Contributions")} (${obtenerNroContributions(
@@ -842,11 +839,11 @@ const RightSide = ({ softwareInterlinkers }) => {
                     </DialogContent>
                   </Dialog>
 
-                  <ClaimDialog 
-                  claimDialogOpen={claimDialogOpen} 
-                  setClaimDialogOpen={setClaimDialogOpen} 
-                  selectedAsset={selectedAsset}
-                  afterRefreshEvent={getContributions(selectedTreeItem.id)}
+                  <ClaimDialog
+                    claimDialogOpen={claimDialogOpen}
+                    setClaimDialogOpen={setClaimDialogOpen}
+                    selectedAsset={selectedAsset}
+                    afterRefreshEvent={getContributions(selectedTreeItem.id)}
                   />
 
                   <Menu

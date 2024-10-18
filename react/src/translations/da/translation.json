@@ -98,5 +98,6 @@
     "Declarative": "Deklarativ",
     "Reward system based on the declaration of user contributions": "Belønningssystem baseret på brugerbidragets erklæring, der tilbyder tre niveauer af belønninger (med tre mulige scores) for hver udført opgave. Dette system opmuntrer til deltagelse ved at lade brugerne modtage belønninger, der er proportionale med kvaliteten eller indvirkningen af deres bidrag.",
     "Behavioral": "Adfærdsmæssig",
-    "Rewards system based on user behavior, where points are awarded based on time spent": "Belønningssystem baseret på brugeradfærd, hvor point tildeles baseret på den tid, der bruges på tildelte ressourcer. Belønninger tager højde for faktorer som forløbet tid, samlede og personlige gennemsnit og brugerhistorik. Basispoint øges med bonusser, når visse tærskler overskrides, hvilket tilskynder til aktiv og konsekvent deltagelse"
+    "Rewards system based on user behavior, where points are awarded based on time spent": "Belønningssystem baseret på brugeradfærd, hvor point tildeles baseret på den tid, der bruges på tildelte ressourcer. Belønninger tager højde for faktorer som forløbet tid, samlede og personlige gennemsnit og brugerhistorik. Basispoint øges med bonusser, når visse tærskler overskrides, hvilket tilskynder til aktiv og konsekvent deltagelse",
+    "Dynamic reward system": "Dynamisk belønningssystem"
 }

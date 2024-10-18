@@ -75,6 +75,7 @@ class GamesApi extends GeneralApi {
     const res = await axiosInstance.get(
       `/${this.url}/${processId}/leaderboard`
     );
+    console.log("getLeaderboard --->", res.data);
     return res.data;
   }
 

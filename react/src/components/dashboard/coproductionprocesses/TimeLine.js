@@ -160,6 +160,8 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
 
 export default function TimeLine({ assets }) {
   const { process, hasSchema, tree } = useSelector((state) => state.process);
+  console.log("°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
+  console.log(process);
   const { user } = useAuth();
   const t = useCustomTranslation(process.language);
   const navigate = useNavigate();
@@ -1003,15 +1005,24 @@ export default function TimeLine({ assets }) {
                           "If you want to incentivize your collaborators to do their best"
                         )}
                       </Typography>
-
-                      <Button
-                        onClick={() => handleOpenLightbox()}
-                        size="small"
-                        variant="contained"
-                        sx={{ maxWidth: "200px" }}
-                      >
-                        {t("Go to the reward system tutorial")}
-                      </Button>
+                      {!process?.game_gamification_engine && (
+                        <Button
+                          onClick={() => handleOpenLightbox()}
+                          size="small"
+                          variant="contained"
+                          sx={{ maxWidth: "200px" }}
+                          data-cy="go-to-the-reward-system-tutorial"
+                        >
+                          {t("Go to the reward system tutorial")}
+                        </Button>
+                      )}
+                      {process?.game_gamification_engine && (
+                        <Alert severity="info">
+                          {t(
+                            "You have already activated the rewarding system for this process"
+                          )}
+                        </Alert>
+                      )}
                     </Stack>
                     <IconButton
                       onClick={() => nextSect("section_6")}

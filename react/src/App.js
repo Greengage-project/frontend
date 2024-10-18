@@ -92,11 +92,8 @@ const App = () => {
       );
 
       new_socket.onopen = () => {
-        console.log("PERSONAL WebSocket Client Connected", new_socket);
       };
       new_socket.onmessage = (message) => {
-        console.log("RECEIVING MESSAGE ON PERSONAL SOCKET");
-        console.log(message);
         dispatch(getCoproductionProcesses());
         dispatch(getOrganizations(""));
         dispatch(getUnseenUserNotifications({ user_id: auth.user.id }));
@@ -115,7 +112,6 @@ const App = () => {
       ) &&
       personalSocket
     ) {
-      console.log("PERSONAL WebSocket Client Closed");
       personalSocket.close();
       setPersonalSocket(null);
     }
@@ -127,15 +123,12 @@ const App = () => {
     const process_changed = !process || process.id !== lastProcessId;
     if (process_changed) {
       if (socket) {
-        console.log("WebSocket Client Closed");
         socket.close();
         setSocket(null);
         setLastProcessId(null);
       }
 
       if (process) {
-        console.log(REACT_APP_DOMAIN);
-
         let socketProtocol = "ws:";
         if (REACT_APP_DOMAIN !== "localhost") {
           socketProtocol = "wss:";
@@ -145,11 +138,8 @@ const App = () => {
           `${socketProtocol}//${REACT_APP_DOMAIN}/coproduction/api/v1/coproductionprocesses/${process.id}/ws`
         );
         new_socket.onopen = () => {
-          console.log("WebSocket Client Connected", new_socket);
         };
         new_socket.onmessage = (message) => {
-          console.log(message);
-          // dispatch(getProcess(process.id, false, selectedTreeItem.id ))
         };
         setSocket(new_socket);
         setLastProcessId(process.id);
@@ -157,33 +147,11 @@ const App = () => {
     }
   }, [process]);
 
-  // useEffect(() => {
-  //   if (!socket && process) {
-  //     console.log(REACT_APP_DOMAIN)
-
-  //     let socketProtocol = 'ws:';
-  //     if (REACT_APP_DOMAIN !== 'localhost') {
-  //       socketProtocol = 'wss:';
-  //     }
-
-  //     const new_socket = new WebSocket(`${socketProtocol}//${REACT_APP_DOMAIN}/coproduction/api/v1/coproductionprocesses/${process.id}/ws`);
-  //     new_socket.onopen = () => {
-  //       console.log('WebSocket Client Connected', new_socket);
-  //     };
-  //     new_socket.onmessage = (message) => {
-  //       console.log(message)
-  //       // dispatch(getProcess(process.id, false, selectedTreeItem.id ))
-  //     };
-  //     setSocket(new_socket)
-  //     setLastProcessId(process.id)
-  //   }
-  // }, [socket])
 
   useEffect(() => {
     if (socket) {
       socket.onmessage = (message) => {
         const { event, name, extra } = JSON.parse(message.data);
-        console.log(event, extra, name);
 
         if (event.includes("contribution")) {
           if (selectedTreeItem.id == extra.task_id) {
@@ -231,7 +199,6 @@ const App = () => {
           event.includes("coproductionprocess") ||
           event.includes("permission")
         ) {
-          console.log(process);
           dispatch(
             getProcess(
               process.id,

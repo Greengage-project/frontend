@@ -1238,6 +1238,7 @@ const SettingsTab = () => {
                             variant="contained"
                             color={process.game_id ? "error" : "success"}
                             onClick={handleOpenLightbox}
+                            data-cy="reward-button"
                           >
                             {process.game_id ? t("Deactivate") : t("Settings")}
                           </Button>

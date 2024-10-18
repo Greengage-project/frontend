@@ -548,6 +548,7 @@ const ContributionsTabs = () => {
           });
         }
         if (isSubscribed) {
+          console.log({ r });
           setRows(r);
         }
       } else {
