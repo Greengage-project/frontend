@@ -480,7 +480,7 @@ const Home = () => {
                   sx={{ my: 3 }}
                   variant="subtitle1"
                 >
-                  <Link
+                  {/* <Link
                     color={
                       location.pathname === "/parental"
                         ? "primary"
@@ -492,7 +492,7 @@ const Home = () => {
                     variant="body1"
                   >
                     Parental Consent
-                  </Link>
+                  </Link> */}
                 </Typography>
               </Box>
             </>
