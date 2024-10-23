@@ -1257,6 +1257,7 @@ const SettingsTab = () => {
                             activateReward={(leaderboard) => {
                               changeRewarding(true, leaderboard);
                             }}
+                            coproductionProcessId={process?.id}
                           />
                         </Lightbox>
                       )}

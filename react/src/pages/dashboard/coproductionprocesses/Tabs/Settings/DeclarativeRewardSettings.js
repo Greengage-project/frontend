@@ -221,108 +221,6 @@ const DeclarativeRewardSettings = (props) => {
               </Typography>
             </Grid>
           </Grid>
-          {/* 5 step */}
-          {/* <Grid container md={12}>
-            <Grid item md={1} className="reward-left-number">
-              <Typography variant="h1" sx={{ mt: 0 }}>
-                5.
-              </Typography>
-            </Grid>
-            <Grid item md={11} sx={{ mt: 0 }}>
-              <Typography variant="body1" className="reward-left-text">
-                <strong>
-                  {t("You can decide to set two types of chart")}:
-                </strong>
-                <p>
-                  <Radio
-                    checked={individualChart}
-                    onChange={(e) => setIndividualChart(!individualChart)}
-                    value="individualChart"
-                    name="radio-buttons"
-                    inputProps={{ "aria-label": "A" }}
-                  />
-                  {t("Individual chart (reccomended for citizens involving)")}
-                </p>
-                <p>
-                  <Radio
-                    checked={!individualChart}
-                    onChange={(e) => setIndividualChart(!individualChart)}
-                    value="individualChart"
-                    name="radio-buttons"
-                  />
-                  {t("Team chart")}
-                </p>
-              </Typography>
-            </Grid>
-          </Grid> */}
-          {/* 6 step */}
-          {/* <Grid container md={12}>
-            <Grid item md={1} className="reward-left-number">
-              <Typography variant="h1" sx={{ mt: 0 }}>
-                6.
-              </Typography>
-            </Grid>
-            <Grid item md={11} sx={{ mt: 0 }}>
-              <Typography variant="body1" className="reward-left-text">
-                {t(
-                  "You can also decide beetween two styles of Leaderboard. You can incetivize the podium or you can show it like the other positions. The podium into the Leaderboard does not mean that only the first three places can recive the reward, you can decide the distribution of the rewards as you want"
-                )}
-                .
-                <p>
-                  <Radio
-                    checked={classicChart}
-                    onChange={(e) => setClassicChart(!classicChart)}
-                    value="classicChart"
-                    name="radio-buttons"
-                    inputProps={{ "aria-label": "A" }}
-                  />
-                  {t("Classic chart")}
-                  <Box
-                    className="mt-1 mb-1"
-                    alt="Reward image 4"
-                    component="img"
-                    src={`/static/reward/Reward_image_4.svg`}
-                    sx={{
-                      height: "auto",
-                      maxWidth: "100%",
-                    }}
-                  ></Box>
-                </p>
-                <p>
-                  <Radio
-                    checked={!classicChart}
-                    onChange={(e) => setClassicChart(!classicChart)}
-                    value="classicChart"
-                    name="radio-buttons"
-                  />
-                  {t("Incetive podium")}
-                  <Box
-                    className="mt-1 mb-1"
-                    alt="Reward image 3"
-                    component="img"
-                    src={`/static/reward/Reward_image_5.svg`}
-                    sx={{
-                      height: "auto",
-                      maxWidth: "100%",
-                    }}
-                  ></Box>
-                </p>
-              </Typography>
-            </Grid>
-          </Grid> */}
-          {/* 7 Step */}
-          {/* <Grid container md={12}>
-            <Grid item md={1} className="reward-left-number">
-              <Typography variant="h1" sx={{ mt: 0 }}>
-                7.
-              </Typography>
-            </Grid>
-            <Grid item md={11} sx={{ mt: 0 }}>
-              <Typography variant="body1" className="reward-left-text">
-                Once completed the project.......
-              </Typography>
-            </Grid>
-          </Grid> */}
         </Grid>
         <Grid item md={12} className="col-reward-right" ref={rightColumn}>
           <Box
@@ -381,12 +279,14 @@ DeclarativeRewardSettings.propTypes = {
   onClose: PropTypes.func,
   activateReward: PropTypes.func,
   handleGoBack: PropTypes.func,
+  coproductionProcessId: PropTypes.string,
 };
 
 DeclarativeRewardSettings.defaultProps = {
   onClose: () => {},
   activateReward: () => {},
   handleGoBack: () => {},
+  coproductionProcessId: "",
 };
 
 export default DeclarativeRewardSettings;

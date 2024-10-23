@@ -10,10 +10,54 @@ import {
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import "./RewardSettings.css";
-
+import { newGamesApi } from "__api__";
+import { useSelector } from "react-redux";
 const BehavioralRewardSettings = (props) => {
-  const { handleGoBack, onClose } = props;
+  const { handleGoBack, onClose, coproductionProcessId } = props;
+  console.log("----------------------------------");
+  console.log(coproductionProcessId);
+  const { process, hasSchema, tree } = useSelector((state) => state.process);
+  console.log({ process, hasSchema, tree });
   const { t } = useTranslation();
+
+  const prepareGameTemplate = (tree) => {
+    const taskList = [];
+    for (const phase of tree) {
+      for (const objective of phase.children) {
+        for (const task of objective.children) {
+          if (task.type === "task" && task.is_disabled === false) {
+            taskList.push({
+              id: task.id,
+              management: task.management,
+              development: task.development,
+              exploitation: task.exploitation,
+            });
+          }
+        }
+      }
+    }
+    return taskList;
+  };
+
+  console.log("1*!*!");
+  console.log("1*!*!2");
+  console.log("1*!*!");
+  console.log("1*!*!2");
+  console.log("1*!*!");
+  console.log("1*!*!2");
+
+  const taskList = prepareGameTemplate(tree);
+  console.log(taskList);
+  const handleActivate = () => {
+    newGamesApi
+      .setGame(coproductionProcessId, {
+        coproductionProcessId,
+        taskList,
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   return (
     <Container maxWidth="lg">
@@ -334,7 +378,8 @@ const BehavioralRewardSettings = (props) => {
             }}
             variant="outlined"
             onClick={() => {
-              //
+              handleActivate();
+              onClose();
             }}
           >
             {t("Activate this function")}
@@ -347,10 +392,12 @@ const BehavioralRewardSettings = (props) => {
 
 BehavioralRewardSettings.propTypes = {
   handleGoBack: PropTypes.func,
+  coproductionProcessId: PropTypes.string,
 };
 
 BehavioralRewardSettings.defaultProps = {
   handleGoBack: undefined,
+  coproductionProcessId: "",
 };
 
 export default BehavioralRewardSettings;

@@ -14,6 +14,8 @@ import DeclarativeRewardSettings from "./DeclarativeRewardSettings";
 import BehavioralRewardSettings from "./BehavioralRewardSettings";
 
 const RewardSettings = (props) => {
+  console.log("********************* RewardSettings *********************");
+  console.log(props);
   const [selectedStrategy, setSelectedStrategy] = useState(null);
   const { t } = useTranslation();
 
@@ -189,11 +191,13 @@ const RewardSettings = (props) => {
 RewardSettings.propTypes = {
   onClose: PropTypes.func,
   activateReward: PropTypes.func,
+  coproductionProcessId: PropTypes.string,
 };
 
 RewardSettings.defaultProps = {
   onClose: () => {},
   activateReward: () => {},
+  coproductionProcessId: "",
 };
 
 export default RewardSettings;

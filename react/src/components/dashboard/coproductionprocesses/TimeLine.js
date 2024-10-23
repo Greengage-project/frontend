@@ -161,7 +161,7 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
 export default function TimeLine({ assets }) {
   const { process, hasSchema, tree } = useSelector((state) => state.process);
   console.log("°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
-  console.log(process);
+  console.log(tree);
   const { user } = useAuth();
   const t = useCustomTranslation(process.language);
   const navigate = useNavigate();
@@ -1148,6 +1148,7 @@ export default function TimeLine({ assets }) {
                 activateReward={(leaderboard) => {
                   changeRewarding(true, leaderboard);
                 }}
+                coproductionProcessId={process?.id}
               />
             </Lightbox>
           )}

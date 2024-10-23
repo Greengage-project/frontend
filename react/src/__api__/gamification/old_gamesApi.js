@@ -1,6 +1,5 @@
 import axiosInstance from "axiosInstance";
 import GeneralApi from "../general";
-import axios from "axios";
 
 class GamesApi extends GeneralApi {
   constructor() {
