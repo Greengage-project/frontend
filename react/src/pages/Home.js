@@ -427,19 +427,13 @@ const Home = () => {
                   sx={{ my: 3 }}
                   variant="subtitle1"
                 >
-                  <Link
-                    color={
-                      location.pathname === "/cookie-policy"
-                        ? "primary"
-                        : "textSecondary"
-                    }
-                    component={RouterLink}
-                    to="/cookie-policy"
-                    underline="none"
-                    variant="body1"
+                  <a
+                    href="https://www.greengage-project.eu/privacy-policy/"
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     Cookie Policy
-                  </Link>
+                  </a>
                 </Typography>
 
                 <Typography
@@ -447,19 +441,13 @@ const Home = () => {
                   sx={{ my: 3 }}
                   variant="subtitle1"
                 >
-                  <Link
-                    color={
-                      location.pathname === "/privacy"
-                        ? "primary"
-                        : "textSecondary"
-                    }
-                    component={RouterLink}
-                    to="/privacy"
-                    underline="none"
-                    variant="body1"
+                  <a
+                    href="https://www.greengage-project.eu/privacy-policy/"
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     Privacy Policy
-                  </Link>
+                  </a>
                 </Typography>
 
                 <Typography
@@ -467,26 +455,20 @@ const Home = () => {
                   sx={{ my: 3 }}
                   variant="subtitle1"
                 >
-                  <Link
-                    color={
-                      location.pathname === "/terms-of-use"
-                        ? "primary"
-                        : "textSecondary"
-                    }
-                    component={RouterLink}
-                    to="/terms"
-                    underline="none"
-                    variant="body1"
+                  <a
+                    href="https://www.greengage-project.eu/terms/"
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     Terms of Use
-                  </Link>
+                  </a>
                 </Typography>
                 <Typography
                   color="textSecondary"
                   sx={{ my: 3 }}
                   variant="subtitle1"
                 >
-                  <Link
+                  {/* <Link
                     color={
                       location.pathname === "/parental"
                         ? "primary"
@@ -498,7 +480,7 @@ const Home = () => {
                     variant="body1"
                   >
                     Parental Consent
-                  </Link>
+                  </Link> */}
                 </Typography>
               </Box>
             </>

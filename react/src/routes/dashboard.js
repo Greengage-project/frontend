@@ -63,9 +63,9 @@ const CookiePolicy = Loadable(
 const PrivacyPolicy = Loadable(
   lazy(() => import("../pages/dashboard/workspace/PrivacyPolicy"))
 );
-const ParentalConsent = Loadable(
-  lazy(() => import("../pages/dashboard/workspace/ParentalConsent"))
-);
+// const ParentalConsent = Loadable(
+//   lazy(() => import("../pages/dashboard/workspace/ParentalConsent"))
+// );
 
 const IframeGamification = Loadable(
   lazy(() => import("../pages/IframeGamification"))
@@ -123,10 +123,10 @@ export const routes = [
       </AuthGuard>
     ),
   },
-  {
-    path: "parental",
-    element: <ParentalConsent />,
-  },
+  // {
+  //   path: "parental",
+  //   element: <ParentalConsent />,
+  // },
   {
     path: "stories",
     element: <StoryLayout />,
