@@ -299,7 +299,11 @@ const SettingsTab = () => {
         dispatch(
           updateProcess({
             id: process.id,
-            data: { game_id: null },
+            data: {
+              game_id: null,
+              game_gamification_engine: null,
+              game_strategy: null,
+            },
             logotype: false,
             onSuccess: false,
           })
