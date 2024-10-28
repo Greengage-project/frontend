@@ -54,17 +54,23 @@ const UserNotificationsPopover = () => {
 
   const includeParametersValues = (text, parameters) => {
     if (parameters) {
-      //Obtain all parameters of the text
       const paramsPattern = /[^{}]+(?=})/g;
       let extractParams = text.match(paramsPattern);
-      //Loop over each parameter value and replace in the text
+
+      let parsedParameters;
+      try {
+        parsedParameters = JSON.parse(parameters.replace(/'/g, '"'));
+      } catch (error) {
+        console.error("Error al parsear parameters:", error);
+        return text;
+      }
+
       if (extractParams) {
         for (let i = 0; i < extractParams.length; i++) {
-          //console.log(extractParams[i]);
-          text = text.replace(
-            "{" + extractParams[i] + "}",
-            JSON.parse(parameters.replace(/'/g, '"'))[extractParams[i]]
-          );
+          const paramValue = parsedParameters[extractParams[i]];
+          if (paramValue !== undefined) {
+            text = text.replace("{" + extractParams[i] + "}", paramValue);
+          }
         }
       }
     }
