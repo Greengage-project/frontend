@@ -314,7 +314,7 @@ export default function AssetsShare({
       if (linkOptions.includes("assignmentAsLink")) {
         assetLinkOp = assigmentList[0].link;
         //console.log(assigmentList[0].link);
-      }else if (linkOptions.includes("linktoClaim")) {
+      } else if (linkOptions.includes("linktoClaim")) {
         assetLinkOp = assigmentList[0].link_to_claim;
         //console.log(assigmentList[0].link);
       }
@@ -361,7 +361,8 @@ export default function AssetsShare({
         } else if (linkOptions.includes("shareDirectLink")) {
           assigmentDict[assigmentList[i].user_id] = assetLink;
         } else if (linkOptions.includes("linktoClaim")) {
-          assigmentDict[assigmentList[i].user_id] = assigmentList[i].link_to_claim;
+          assigmentDict[assigmentList[i].user_id] =
+            assigmentList[i].link_to_claim;
         }
       }
 
@@ -380,7 +381,6 @@ export default function AssetsShare({
         processId: process.id,
         assigmentDict: assigmentDict,
       };
-      console.log(dataToSend);
 
       //alert('You share this link: '+assetLinkOp);
 
@@ -572,7 +572,7 @@ export default function AssetsShare({
                         {listTeams.length === 0 &&
                           t(
                             "No teams assigned to this task please assign a team to it"
-                          )+"."}
+                          ) + "."}
                         {listTeams.length > 0 &&
                           listTeams.map((team) => (
                             <>
@@ -695,7 +695,7 @@ export default function AssetsShare({
                       }
                     />
 
-                <FormControlLabel
+                    <FormControlLabel
                       control={
                         <Checkbox
                           defaultChecked
@@ -706,9 +706,7 @@ export default function AssetsShare({
                         />
                       }
                       label={
-                        t(
-                          "Send a link to the claim submission form"
-                        ) + "."
+                        t("Send a link to the claim submission form") + "."
                       }
                     />
                   </FormGroup>

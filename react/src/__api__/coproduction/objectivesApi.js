@@ -9,7 +9,6 @@ class ObjectivesApi extends GeneralApi {
   async getTasks(id) {
     if (id) {
       const res = await axiosInstance.get(`/${this.url}/${id}/tasks`);
-      console.log('get tasks', res.data);
       return res.data;
     }
   }

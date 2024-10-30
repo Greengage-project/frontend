@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { oldgamesApi, usersApi } from "__api__";
+import { newGamesApi, oldgamesApi, usersApi } from "__api__";
 import { AppBar, Box, Paper, Tab, Tabs, Grid, Typography } from "@mui/material";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import OverallLeaderboard from "components/dashboard/coproductionprocesses/OverallLeaderboard";
@@ -59,15 +59,21 @@ const LeaderboardTab = ({}) => {
 
   useEffect(async () => {
     setLoading(true);
-    oldgamesApi.getLeaderboard(process.id).then((res) => {
-      handleLeaderboard(res);
-    });
 
-    let res = await oldgamesApi.getGame(process.id);
-    console.log({ res });
-    setGame(res[0]);
-    setLoading(false);
-    console.log(process.leaderboard);
+    if (process?.game_gamification_engine === "old_gamification") {
+      oldgamesApi.getLeaderboard(process.id).then((res) => {
+        handleLeaderboard(res);
+      });
+
+      let res = await oldgamesApi.getGame(process.id);
+      setGame(res[0]);
+      setLoading(false);
+    } else {
+      newGamesApi.getLeaderboard(process.id).then((res) => {
+        setGame(res);
+        setLoading(false);
+      });
+    }
   }, []);
 
   return (

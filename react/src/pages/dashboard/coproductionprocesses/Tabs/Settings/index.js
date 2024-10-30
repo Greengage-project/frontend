@@ -289,6 +289,12 @@ const SettingsTab = () => {
       incentive_and_rewards_state: status,
       leaderboard: leaderboard,
     };
+    console.log(values);
+    console.log("---------------- 2");
+    console.log("---------------- 2");
+    console.log("---------------- 2");
+    console.log("---------------- 2");
+    console.log("---------------- 2");
     if (values.incentive_and_rewards_state) {
       const taskList = prepareGameTemplate(tree);
       let res = await oldgamesApi.setGame(process.id, taskList);

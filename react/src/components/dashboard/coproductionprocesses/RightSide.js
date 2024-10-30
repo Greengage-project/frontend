@@ -553,9 +553,6 @@ const RightSide = ({ softwareInterlinkers }) => {
       .replace(/'/g, "&#39;");
   }
 
-  console.log("**************************************");
-  console.log({ process });
-  console.log("**************************************");
 
   return (
     selectedTreeItem && (

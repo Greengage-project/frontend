@@ -6,6 +6,16 @@ class TasksApi extends GeneralApi {
     super("coproduction/api/v1/tasks");
   }
 
+  async checkTaskAndResource(taskId, resourceId) {
+    if (taskId && resourceId) {
+      const res = await axiosInstance.get(
+        `/${this.url}/${taskId}/checkTaskAndResource/${resourceId}`
+      );
+      return !!res?.data;
+    }
+    return null;
+  }
+
   //http://localhost/coproduction/api/v1/tasks/ 4240e946-20e9-4f53-b83e-362a288b0d9c/listTaskAssetsContributions
   async getAssetsAndContributions(id) {
     if (id) {

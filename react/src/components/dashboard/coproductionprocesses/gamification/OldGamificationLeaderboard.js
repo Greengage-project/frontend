@@ -90,7 +90,6 @@ const OldGamificationLeaderboard = ({ user, game, place, loading }) => {
             score: task.development * player.development,
             contribution: player.development,
           };
-          console.log(tmpGame);
           let phase_id = treeitems.find((item) => item.id === task.id).phase_id;
           if (tmpPhases[phase_id] === undefined) {
             tmpPhases[phase_id] = task.development * player.development;

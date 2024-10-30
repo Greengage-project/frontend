@@ -1,5 +1,6 @@
 import React from "react";
 import OldGamificationLeaderboard from "./OldGamificationLeaderboard";
+import NewGamificationLeaderboard from "./NewGamificationLeaderboard";
 
 const PersonalLeaderboard = ({ user, game, place, loading }) => {
   const gamification_engine =
@@ -14,6 +15,12 @@ const PersonalLeaderboard = ({ user, game, place, loading }) => {
       />
     );
   }
+  if (gamification_engine === "GAME") {
+    return (
+      <NewGamificationLeaderboard user={user} game={game} loading={loading} />
+    );
+  }
+  return <div>Not implemented yet.</div>;
 };
 
 export default PersonalLeaderboard;

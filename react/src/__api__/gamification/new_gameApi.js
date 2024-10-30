@@ -12,10 +12,14 @@ class GamesApi extends GeneralApi {
   }
 
   async setGame(processId, data) {
-    const { coproductionProcessId, taskList } = data;
-    console.log("{ coproductionProcessId, taskList }");
-    console.log({ coproductionProcessId, taskList });
     const res = await axiosInstance.post(`/${this.url}/${processId}`, data);
+    return res.data;
+  }
+
+  async getLeaderboard(processId) {
+    const res = await axiosInstance.get(
+      `/${this.url}/${processId}/leaderboard`
+    );
     return res.data;
   }
 }

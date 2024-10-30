@@ -20,8 +20,8 @@ import { getLanguage, LANGUAGES } from "translations/i18n";
 import { recommenderApi } from "__api__";
 import { Done, Delete, Close, KeyboardArrowRight } from "@mui/icons-material";
 import SelectGovernanceModel from "./SelectGovernanceModel";
-import { useSelector } from 'react-redux';
-import { useCustomTranslation } from 'hooks/useDependantTranslation';
+import { useSelector } from "react-redux";
+import { useCustomTranslation } from "hooks/useDependantTranslation";
 
 export default function SelectTypeCoproProcess({
   open,
@@ -30,13 +30,13 @@ export default function SelectTypeCoproProcess({
   setLoading,
 }) {
   const { process } = useSelector((state) => state.process);
-  
+
   const t = useCustomTranslation(process.language);
 
   const [listKeywords, setListKeywords] = useState(
     t("list-tags-governance-predefined").split(",")
   );
-  const [recomendedCategories,setRecomendedCategories] = useState([]);
+  const [recomendedCategories, setRecomendedCategories] = useState([]);
   const [listSelectedKeywords, setListSelectedKeywords] = useState([]);
 
   const [openGovernanceSelector, setOpenGovernanceSelector] =
@@ -55,31 +55,29 @@ export default function SelectTypeCoproProcess({
     //Save the tags related to the process.
     //Create the training data
 
-    const listCategories = "C2C,C2G;C2G;G+G,C2G;G+G,G2C,C2G;C2G,G2C;G2C,C2G;G+G,C2C,C2G;G2C,C2C,C2G;G2C,C2C,C2G;G2C,C2G;C2C,C2G;C2C,C2G;G+G,C2C,C2G;G+G,G2C,C2G;C2C,C2G;G+G,G2C,C2G;G+G,G2C;G+G;G+G;G+G;G+G,G2C;G+G,G2C;G+G,C2G;G+G,C2G;G+G,G2C;G2C,G+G;G2C,G+G;G+G,G+G;C2C,C2G,G+G;G2C,G+G;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;C2C,C2G,G2C;C2C;C2C;C2C,C2G;C2C;C2C;C2C,C2G;C2C,G+G;C2C,G+G;C2C,G+G;C2C,C2G;C2C,C2G;G+G,C2C;G+G,C2C".split(';');
+    const listCategories =
+      "C2C,C2G;C2G;G+G,C2G;G+G,G2C,C2G;C2G,G2C;G2C,C2G;G+G,C2C,C2G;G2C,C2C,C2G;G2C,C2C,C2G;G2C,C2G;C2C,C2G;C2C,C2G;G+G,C2C,C2G;G+G,G2C,C2G;C2C,C2G;G+G,G2C,C2G;G+G,G2C;G+G;G+G;G+G;G+G,G2C;G+G,G2C;G+G,C2G;G+G,C2G;G+G,G2C;G2C,G+G;G2C,G+G;G+G,G+G;C2C,C2G,G+G;G2C,G+G;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;C2C,C2G,G2C;C2C;C2C;C2C,C2G;C2C;C2C;C2C,C2G;C2C,G+G;C2C,G+G;C2C,G+G;C2C,C2G;C2C,C2G;G+G,C2C;G+G,C2C".split(
+        ";"
+      );
 
     let trainingdata = {};
     let cont = 0;
     for (const keyword of listKeywords) {
-      trainingdata[keyword]=listCategories[cont];
+      trainingdata[keyword] = listCategories[cont];
       cont++;
     }
 
-    const sampleData=listSelectedKeywords.join(",");
-
+    const sampleData = listSelectedKeywords.join(",");
 
     recommenderApi
       .recommendGovernanceModel(sampleData, [trainingdata])
       .then((data) => {
-        console.log("data", data);
         setRecomendedCategories(data);
 
         setOpen(false);
         setLoading(false);
         setOpenGovernanceSelector(true);
       });
-      
-
-     
   };
 
   const handleClick = (keyword) => {

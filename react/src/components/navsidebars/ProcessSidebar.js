@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {
-  PersonOutline,
   SavedSearch,
   AccountTree,
   ArrowBack,
@@ -21,10 +20,8 @@ import {
   Group as GroupIcon,
   Settings,
   Timeline,
-  Resources,
   Leaderboard,
   MilitaryTech,
-  Storefront,
   Newspaper,
 } from "@mui/icons-material";
 import { StatusChip } from "components/Icons";
@@ -48,18 +45,8 @@ const ProcessSidebar = (props) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const processId = process?.id;
   const gameId = process?.game_id;
-  const gameGamificationEngine = process?.game_gamification_engine;
   const gameStrategy = process?.game_strategy;
   const [anchorElGamification, setAnchorElGamification] = useState(null);
-  console.log("-----------------------------");
-  console.log({ process });
-  console.log(" - gameId - ");
-  console.log(gameId);
-  console.log(" - gameGamificationEngine - ");
-  console.log(gameGamificationEngine);
-  console.log(" - gameStrategy - ");
-  console.log(gameStrategy);
-  console.log("-----------------------------");
 
   const { t } = useDependantTranslation();
 

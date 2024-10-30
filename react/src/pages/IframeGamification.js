@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Drawer,
@@ -7,12 +7,19 @@ import {
   Box,
   Typography,
   IconButton,
-  LinearProgress,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Button,
 } from "@mui/material";
 import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { debounce } from "lodash";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-
+import { tasksApi } from "__api__/coproduction/tasksApi";
 const GamificationPanel = ({
   windowActiveTime,
   iframeActiveTime,
@@ -40,7 +47,6 @@ const GamificationPanel = ({
   ];
   const [keySequence, setKeySequence] = useState([]);
   const [currentProgress, setCurrentProgress] = useState(0);
-  const [rewards, setRewards] = useState([]);
 
   const milestones = [0, 1, 5, 15, 30, 60];
   useEffect(() => {
@@ -214,10 +220,12 @@ const GamificationPanel = ({
     </Drawer>
   );
 };
-
+// http://localhost/dashboard/gamification?taskId=96c00d19-bbe1-4b4e-8341-5d3a0bf3ddda&url=http://localhost/googledrive/assets/1dRFob3ceRkDtVvVQArWEWzJ1Pf1tZqvX/view&assetId=73e58eaf-54a9-43e5-bed1-710e80fd24ab
 const IframeGamification = () => {
   const [iframeFocused, setIframeFocused] = useState(false);
   const [windowFocused, setWindowFocused] = useState(true);
+  const [windowStatus, setWindowStatus] = useState("validating");
+  const [openModal, setOpenModal] = useState(false);
   const [idleTime, setIdleTime] = useState(0);
   const [iframeActiveTime, setIframeActiveTime] = useState(0);
   const [windowActiveTime, setWindowActiveTime] = useState(0);
@@ -225,7 +233,13 @@ const IframeGamification = () => {
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [iframeHeight, setIframeHeight] = useState(0);
+  const [lastLocation, setLastLocation] = useState(null); // Guarda la última ubicación
   const iframeRef = useRef(null);
+  const navigate = useNavigate();
+
+  const [contributionText, setContributionText] = useState("");
+  const [rating, setRating] = useState("");
+  const unblockRef = useRef(false);
 
   const location = useLocation();
   const getQueryParams = (search) => {
@@ -234,6 +248,7 @@ const IframeGamification = () => {
   const { t } = useTranslation();
   const url = getQueryParams(location.search).get("url");
   const taskId = getQueryParams(location.search).get("taskId");
+  const assetId = getQueryParams(location.search).get("assetId");
 
   const handleKeyDown = () => {
     if (iframeFocused) {
@@ -312,6 +327,20 @@ const IframeGamification = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchTaskData = async () => {
+      const data = await tasksApi.checkTaskAndResource(taskId, assetId);
+      if (data) {
+        setWindowStatus("valid");
+      }
+      if (!data) {
+        setWindowStatus("invalid");
+      }
+    };
+
+    fetchTaskData();
+  }, [taskId]);
+
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -319,10 +348,63 @@ const IframeGamification = () => {
   const totalTime = (windowActiveTime + iframeActiveTime) / 60;
   const progress = Math.min((totalTime / 15) * 100, 100);
 
+  // Función para mostrar el modal cuando se detecta intento de salida
+  const handleAttemptToLeave = (e) => {
+    if (unblockRef.current) return;
+    e.preventDefault();
+    setOpenModal(true);
+  };
+
+  // Confirmar salida y permitir navegación
+  const confirmLeave = () => {
+    unblockRef.current = true;
+    setOpenModal(false);
+    navigate(lastLocation?.pathname || "/"); // Navega a la última ruta guardada
+  };
+
+  // Manejar la navegación interna detectando cambios en `location`
+  useEffect(() => {
+    if (
+      lastLocation &&
+      lastLocation.pathname !== location.pathname &&
+      !unblockRef.current
+    ) {
+      setOpenModal(true);
+    } else {
+      setLastLocation(location);
+    }
+  }, [location, lastLocation]);
+
+  // Manejar intento de cierre de pestaña o recarga
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleAttemptToLeave);
+    return () => {
+      window.removeEventListener("beforeunload", handleAttemptToLeave);
+    };
+  }, []);
+
+  if (windowStatus === "validating") {
+    // loading
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (windowStatus === "invalid") {
+    return <Typography>{t("Task o resource invalid")}</Typography>;
+  }
+
   if (!url || !taskId) {
     return (
       <Typography>
-        {t("The URL is not valid or a task ID has not been provided")}
+        {t("The URL is not valid, a task ID or Asset ID has not been provided")}
       </Typography>
     );
   }
@@ -342,7 +424,46 @@ const IframeGamification = () => {
         onMouseEnter={handleIframeEnter}
         onMouseLeave={handleIframeLeave}
       />
-
+      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+        <DialogTitle>{"Confirm Exit"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to leave? If you have completed your
+            contribution, please describe your work in the input below and rate
+            your contribution to the task from 1 to 5.
+            <br />
+            <br />
+            <strong>Warning:</strong> If you close this window without
+            submitting, you will lose any points that could be awarded.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Describe your contribution"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={contributionText}
+            onChange={(e) => setContributionText(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Rate your contribution (1-5)"
+            type="number"
+            inputProps={{ min: 1, max: 5 }}
+            fullWidth
+            variant="outlined"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenModal(false)}>Cancel</Button>
+          <Button onClick={confirmLeave} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Fab
         color="primary"
         onClick={toggleDrawer}
@@ -350,7 +471,6 @@ const IframeGamification = () => {
       >
         <WorkspacePremiumIcon />
       </Fab>
-
       <GamificationPanel
         windowActiveTime={windowActiveTime}
         iframeActiveTime={iframeActiveTime}

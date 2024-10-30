@@ -11,13 +11,12 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import "./RewardSettings.css";
 import { newGamesApi } from "__api__";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProcess } from "slices/process";
 const BehavioralRewardSettings = (props) => {
   const { handleGoBack, onClose, coproductionProcessId } = props;
-  console.log("----------------------------------");
-  console.log(coproductionProcessId);
-  const { process, hasSchema, tree } = useSelector((state) => state.process);
-  console.log({ process, hasSchema, tree });
+  const dispatch = useDispatch();
+  const { process, tree } = useSelector((state) => state.process);
   const { t } = useTranslation();
 
   const prepareGameTemplate = (tree) => {
@@ -39,16 +38,10 @@ const BehavioralRewardSettings = (props) => {
     return taskList;
   };
 
-  console.log("1*!*!");
-  console.log("1*!*!2");
-  console.log("1*!*!");
-  console.log("1*!*!2");
-  console.log("1*!*!");
-  console.log("1*!*!2");
-
   const taskList = prepareGameTemplate(tree);
-  console.log(taskList);
+
   const handleActivate = () => {
+    console.log("Activate this function");
     newGamesApi
       .setGame(coproductionProcessId, {
         coproductionProcessId,
@@ -56,6 +49,21 @@ const BehavioralRewardSettings = (props) => {
       })
       .then((res) => {
         console.log(res);
+        const values = {
+          incentive_and_rewards_state: true,
+          leaderboard: true,
+        };
+        dispatch(
+          updateProcess({
+            id: process.id,
+            data: values,
+            onSuccess: () => {
+              if (mounted.current) {
+                console.log(process);
+              }
+            },
+          })
+        );
       });
   };
 

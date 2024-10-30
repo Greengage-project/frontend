@@ -77,7 +77,7 @@ export default function SelectGovernanceModel({
           logotype,
           onSuccess: () => {
             if (mounted.current) {
-              console.log(process);
+              // console.log(process);
             }
           },
         })

@@ -17,7 +17,6 @@ class StoriesApi extends GeneralApi {
         logotype:'/coproduction'+process.logotype,
         coproductionprocess_cloneforpub_id:cloneId
       };
-      console.log(newStory);
 
       return axiosInstance.post(`/${this.url}/${processId}/createStory`, newStory);
   }

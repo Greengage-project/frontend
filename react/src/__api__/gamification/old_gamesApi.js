@@ -19,7 +19,6 @@ class GamesApi extends GeneralApi {
   }
 
   async updateGame(processId, task) {
-    console.log("TASK", task);
     const res = await axiosInstance.put(`/${this.url}/${processId}`, {
       task: task,
     });
@@ -28,7 +27,6 @@ class GamesApi extends GeneralApi {
 
   async deleteGame(processId) {
     const res = await axiosInstance.delete(`/${this.url}/${processId}`);
-    console.log(res);
     return res.data;
   }
 
@@ -74,7 +72,6 @@ class GamesApi extends GeneralApi {
     const res = await axiosInstance.get(
       `/${this.url}/${processId}/leaderboard`
     );
-    console.log("getLeaderboard --->", res.data);
     return res.data;
   }
 

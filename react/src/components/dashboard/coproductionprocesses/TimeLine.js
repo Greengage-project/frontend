@@ -160,8 +160,7 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
 
 export default function TimeLine({ assets }) {
   const { process, hasSchema, tree } = useSelector((state) => state.process);
-  console.log("°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
-  console.log(tree);
+
   const { user } = useAuth();
   const t = useCustomTranslation(process.language);
   const navigate = useNavigate();
@@ -332,19 +331,19 @@ export default function TimeLine({ assets }) {
       values["game_id"] = res.id;
     } else {
       oldgamesApi.deleteGame(process.id).then((res) => {
-        console.log(res);
         dispatch(
           updateProcess({
             id: process.id,
-            data: { game_id: null },
+            data: {
+              game_id: null,
+              game_gamification_engine: null,
+              game_strategy: null,
+            },
             logotype: false,
             onSuccess: false,
           })
         );
       });
-
-      console.log("Delete game");
-      console.log(tree);
 
       tree.forEach((phase) => {
         phase.children.forEach((objective) => {
@@ -352,9 +351,7 @@ export default function TimeLine({ assets }) {
             if (task.status === "finished") {
               const updated_task = Object.assign({}, task);
               updated_task.status = "in_progress";
-              tasksApi.update(task.id, updated_task).then((res) => {
-                console.log(res);
-              });
+              tasksApi.update(task.id, updated_task).then((res) => {});
             }
           });
         });
@@ -369,7 +366,7 @@ export default function TimeLine({ assets }) {
           logotype,
           onSuccess: () => {
             if (mounted.current) {
-              console.log(process);
+              // console.log(process);
             }
           },
         })

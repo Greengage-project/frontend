@@ -2,57 +2,29 @@ import {
   Button,
   Dialog,
   DialogContent,
-  Alert,
   Avatar,
   Box,
   CircularProgress,
-  Fade,
-  Grow,
   IconButton,
-  LinearProgress,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Zoom,
-  TableSortLabel,
+  Chip,
 } from "@mui/material";
-import {
-  Close,
-  CopyAll,
-  Delete,
-  RecordVoiceOver,
-  Download,
-  Edit,
-  KeyboardArrowDown,
-  OpenInNew,
-} from "@mui/icons-material";
+import { Close, MilitaryTech } from "@mui/icons-material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import {
-  Article,
-  MoreVert as MoreVertIcon,
-  ShowChart,
-} from "@mui/icons-material";
-import { visuallyHidden } from "@mui/utils";
+import { Article, MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { InterlinkerDialog } from "components/dashboard/interlinkers";
-import SearchBox from "components/SearchBox";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
-import useMounted from "hooks/useMounted";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { assetsApi } from "__api__";
 import { InterlinkerReference } from "../interlinkers";
-import PropTypes from "prop-types";
 import CoproNotifications from "components/dashboard/coproductionprocesses/CoproNotifications";
 import { useDispatch, useSelector } from "react-redux";
 import { getCoproductionProcessNotifications } from "slices/general";
 import { useLocation } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/styles";
@@ -70,12 +42,18 @@ const Assets = ({ language, loading, getActions = null }) => {
   const [activitiesDialogOpen, setactivitiesDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const [selectedRow, setSelectedRow] = useState(null);
 
   const dispatch = useDispatch();
 
   const [inputValue, setInputValue] = useState("");
   const { process } = useSelector((state) => state.process);
+  console.log("-------------------> process");
+  console.log(process);
+  console.log("-------------------> process");
+  const isGamification = process?.game_gamification_engine === "GAME";
+
   const { assetsList } = useSelector((state) => state.general);
   const [pageSize, setPageSize] = React.useState(5);
 
@@ -111,6 +89,7 @@ const Assets = ({ language, loading, getActions = null }) => {
   const isLocationCatalogue = location.pathname.startsWith("/stories/");
 
   let columns = [];
+
   if (!isLocationCatalogue) {
     if (mobileDevice) {
       columns = [
@@ -233,6 +212,15 @@ const Assets = ({ language, loading, getActions = null }) => {
                 {!params.row.icon && <Article />}
               </Avatar>
             );
+          },
+        },
+        {
+          field: "badge",
+          headerName: t("Badge"),
+          sortable: false,
+          flex: 0.2,
+          renderCell: (params) => {
+            return <MilitaryTech color="black" tooltip="This is a badge" />;
           },
         },
         {
@@ -464,23 +452,21 @@ const Assets = ({ language, loading, getActions = null }) => {
           pr: 1,
           pb: 2,
           pt: 1,
-          display: 'flex',
+          display: "flex",
         }}
       >
         <GridToolbarQuickFilter
           style={{ flex: 1 }}
-
           quickFilterParser={(searchInput) =>
             searchInput
-              .split(',')
+              .split(",")
               .map((value) => value.trim())
-              .filter((value) => value !== '')
+              .filter((value) => value !== "")
           }
           debounceMs={600}
         />
       </Box>
     );
-
   };
 
   return (
@@ -520,11 +506,21 @@ const Assets = ({ language, loading, getActions = null }) => {
               disableRowSelectionOnClick={true}
               autoHeight
               onRowClick={(params) => {
+                console.log("Clicked on row");
+                let uriToOpen = "";
+                console.log(params);
+
                 if (params.row.data.type === "internalasset") {
-                  window.open(`${params.row.dataExtra.link}/view`, "_blank");
+                  console.log("internalasset");
+                  console.log(
+                    "---------------------`${params.row.dataExtra.link}/view`"
+                  );
+                  console.log(`${params.row.dataExtra.link}/view`);
+                  uriToOpen = `${params.row.dataExtra.link}/view`;
                 } else {
-                  window.open(params.row.data.uri);
+                  uriToOpen = params.row.data.uri;
                 }
+                // navigate with params (not in uri) new=1
               }}
               localeText={{
                 noRowsLabel: t("No assets found"),

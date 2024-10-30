@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import UserAvatar from "components/UserAvatar";
 
 const ContributionCard = ({ user_id, name, contribution_level }) => {
-  console.log({ user_id, name, contribution_level });
   const { process } = useSelector((state) => state.process);
   const t = useCustomTranslation(process.language);
 

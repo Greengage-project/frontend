@@ -107,7 +107,6 @@ const UserSearch = ({
           .then((res) => {
             if (mounted.current) {
               setSearchResults(res);
-              console.log({ res, type: "........................" });
               setOpen(true);
             }
           })
@@ -308,14 +307,11 @@ const UserSearch = ({
             ) : (
               open &&
               searchResults.slice(0, 4).map((user) => {
-                console.log({ user, searchResults, include });
-
                 if (include.length > 0 && include.includes(user.id)) {
                   return null;
                 }
 
                 const alreadySelected = exclude.includes(user.id);
-                console.log({ alreadySelected });
                 return (
                   <MenuItem
                     key={user.id}
@@ -330,7 +326,6 @@ const UserSearch = ({
                     }}
                     data-cy={`add-user-${user.email}`}
                   >
-                    {console.log({ user })}
                     <Avatar
                       sx={{ mr: 2, height: 30, width: 30 }}
                       src={user.picture}
