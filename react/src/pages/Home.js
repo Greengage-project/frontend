@@ -15,9 +15,8 @@ import { HomeRow } from "components/home";
 import { HomeLogo } from "components/Logo";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import HomeBottomRow from "components/home/HomeBottomRow";
 import i18n from "translations/i18n";
 import Cookies from "js-cookie";
@@ -428,7 +427,7 @@ const Home = () => {
                   variant="subtitle1"
                 >
                   <a
-                    href="https://www.greengage-project.eu/privacy-policy/"
+                    href="https://www.greengage-project.eu/cookie-policy/"
                     target="_blank"
                     rel="noreferrer"
                   >

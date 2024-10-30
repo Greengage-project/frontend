@@ -104,7 +104,7 @@ const TermsPopover = () => {
             fullWidth
             variant="text"
             onClick={() =>
-              window.open(`https://www.greengage-project.eu/terms/`, "_blank")
+              window.open("https://www.greengage-project.eu/terms/", "_blank")
             }
           >
             {t("Terms of Use")}
@@ -117,7 +117,7 @@ const TermsPopover = () => {
             variant="text"
             onClick={() =>
               window.open(
-                `https://www.greengage-project.eu/privacy-policy/`,
+                "https://www.greengage-project.eu/privacy-policy/",
                 "_blank"
               )
             }
@@ -132,7 +132,7 @@ const TermsPopover = () => {
             variant="text"
             onClick={() =>
               window.open(
-                `https://www.greengage-project.eu/cookie-policy/`,
+                "https://www.greengage-project.eu/cookie-policy/",
                 "_blank"
               )
             }
