@@ -26,8 +26,6 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { newGamesApi } from "__api__";
-import Tooltip from "@mui/material/Tooltip";
-// http://localhost/dashboard/gamification?taskId=96c00d19-bbe1-4b4e-8341-5d3a0bf3ddda&url=http://localhost/googledrive/assets/1dRFob3ceRkDtVvVQArWEWzJ1Pf1tZqvX/view&assetId=73e58eaf-54a9-43e5-bed1-710e80fd24ab&coproductionprocessesId=05bf12d2-cbfb-4b0f-a463-6a0d1a81db02
 
 const GamificationPanel = ({
   windowActiveTime,
@@ -229,7 +227,6 @@ const GamificationPanel = ({
     </Drawer>
   );
 };
-// http://localhost/dashboard/gamification?taskId=96c00d19-bbe1-4b4e-8341-5d3a0bf3ddda&url=http://localhost/googledrive/assets/1dRFob3ceRkDtVvVQArWEWzJ1Pf1tZqvX/view&assetId=73e58eaf-54a9-43e5-bed1-710e80fd24ab
 const IframeGamification = () => {
   const [iframeFocused, setIframeFocused] = useState(false);
   const [windowFocused, setWindowFocused] = useState(true);
@@ -267,7 +264,7 @@ const IframeGamification = () => {
 
   const handleOpenModal = () => {
     setOpenModal(true);
-    setShowLightbox(true); 
+    setShowLightbox(true);
   };
 
   const handleKeyDown = () => {

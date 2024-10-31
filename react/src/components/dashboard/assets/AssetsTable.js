@@ -10,7 +10,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Chip,
+  Tooltip,
 } from "@mui/material";
 import { Close, MilitaryTech } from "@mui/icons-material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -214,15 +214,33 @@ const Assets = ({ language, loading, getActions = null }) => {
             );
           },
         },
-        {
-          field: "badge",
-          headerName: t("Badge"),
-          sortable: false,
-          flex: 0.2,
-          renderCell: (params) => {
-            return <MilitaryTech color="black" tooltip="This is a badge" />;
-          },
-        },
+        process?.game_gamification_engine === "GAME"
+          ? {
+              field: "Gamified",
+              headerName: t("Gamified"),
+              sortable: false,
+              flex: 0.2,
+              renderCell: (params) => {
+                return (
+                  <Tooltip title="This badge represents a gamified reward for your achievements!">
+                    <MilitaryTech
+                      color="black"
+                      style={{
+                        cursor: "pointer",
+                        transition: "transform 0.2s",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.2)"; // Agrandar al pasar el cursor
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                      }}
+                    />
+                  </Tooltip>
+                );
+              },
+            }
+          : undefined,
         {
           field: "name",
           headerName: t("Name"),
@@ -491,7 +509,10 @@ const Assets = ({ language, loading, getActions = null }) => {
           <Box sx={{ my: 1, mx: 2 }}>
             <DataGrid
               rows={rows}
-              columns={columns}
+              columns={
+                // delete all undefined elements in columns
+                columns.filter((column) => column)
+              }
               components={{
                 Toolbar: QuickSearchToolbar,
               }}
@@ -520,7 +541,8 @@ const Assets = ({ language, loading, getActions = null }) => {
                 } else {
                   uriToOpen = params.row.data.uri;
                 }
-                // navigate with params (not in uri) new=1
+                uriToOpen = `/dashboard/gamification?taskId=${params?.row?.data?.task_id}&url=${uriToOpen}&assetId=${params?.row?.id}&coproductionprocessesId=${process?.id}`;
+                window.open(uriToOpen, "_blank");
               }}
               localeText={{
                 noRowsLabel: t("No assets found"),
