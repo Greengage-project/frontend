@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Rating,
   TextField,
   Button,
 } from "@mui/material";
@@ -20,6 +21,13 @@ import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { debounce } from "lodash";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import { tasksApi } from "__api__/coproduction/tasksApi";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarHalfIcon from "@mui/icons-material/StarHalf";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { newGamesApi } from "__api__";
+// http://localhost/dashboard/gamification?taskId=96c00d19-bbe1-4b4e-8341-5d3a0bf3ddda&url=http://localhost/googledrive/assets/1dRFob3ceRkDtVvVQArWEWzJ1Pf1tZqvX/view&assetId=73e58eaf-54a9-43e5-bed1-710e80fd24ab&coproductionprocessesId=05bf12d2-cbfb-4b0f-a463-6a0d1a81db02
+
 const GamificationPanel = ({
   windowActiveTime,
   iframeActiveTime,
@@ -233,12 +241,14 @@ const IframeGamification = () => {
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [iframeHeight, setIframeHeight] = useState(0);
-  const [lastLocation, setLastLocation] = useState(null); // Guarda la última ubicación
+  const [lastLocation, setLastLocation] = useState(null);
+  const [userIsAllowed, setUserIsAllowed] = useState(true);
   const iframeRef = useRef(null);
   const navigate = useNavigate();
 
   const [contributionText, setContributionText] = useState("");
-  const [rating, setRating] = useState("");
+  const [rating, setRating] = useState(0);
+  const [error, setError] = useState("");
   const unblockRef = useRef(false);
 
   const location = useLocation();
@@ -249,6 +259,9 @@ const IframeGamification = () => {
   const url = getQueryParams(location.search).get("url");
   const taskId = getQueryParams(location.search).get("taskId");
   const assetId = getQueryParams(location.search).get("assetId");
+  const coproductionprocessesId = getQueryParams(location.search).get(
+    "coproductionprocessesId"
+  );
 
   const handleKeyDown = () => {
     if (iframeFocused) {
@@ -329,7 +342,11 @@ const IframeGamification = () => {
 
   useEffect(() => {
     const fetchTaskData = async () => {
-      const data = await tasksApi.checkTaskAndResource(taskId, assetId);
+      const data = await tasksApi.checkTaskAndResource(
+        taskId,
+        assetId,
+        coproductionprocessesId
+      );
       if (data) {
         setWindowStatus("valid");
       }
@@ -348,21 +365,18 @@ const IframeGamification = () => {
   const totalTime = (windowActiveTime + iframeActiveTime) / 60;
   const progress = Math.min((totalTime / 15) * 100, 100);
 
-  // Función para mostrar el modal cuando se detecta intento de salida
-  const handleAttemptToLeave = (e) => {
-    if (unblockRef.current) return;
-    e.preventDefault();
-    setOpenModal(true);
-  };
+  useEffect(() => {
+    const fetchTaskData = async () => {
+      const data = await tasksApi
+        .checkTaskAndResource(taskId, assetId, coproductionprocessesId)
+        .catch((error) => {
+          setUserIsAllowed(false);
+        });
+      setWindowStatus(data ? "valid" : "invalid");
+    };
+    fetchTaskData();
+  }, [taskId, assetId]);
 
-  // Confirmar salida y permitir navegación
-  const confirmLeave = () => {
-    unblockRef.current = true;
-    setOpenModal(false);
-    navigate(lastLocation?.pathname || "/"); // Navega a la última ruta guardada
-  };
-
-  // Manejar la navegación interna detectando cambios en `location`
   useEffect(() => {
     if (
       lastLocation &&
@@ -375,7 +389,53 @@ const IframeGamification = () => {
     }
   }, [location, lastLocation]);
 
-  // Manejar intento de cierre de pestaña o recarga
+  const handleAttemptToLeave = (e) => {
+    if (unblockRef.current) return;
+    e.preventDefault();
+    setOpenModal(true);
+  };
+
+  const confirmLeave = () => {
+    if (contributionText.length <= 3 || rating < 1 || rating > 5) {
+      setError(
+        "Please enter a contribution of more than 3 characters and rate between 1 and 5 stars."
+      );
+      return;
+    }
+
+    console.log("Contribution:", contributionText);
+    console.log("Rating:", rating);
+
+    const minutes = Math.round((windowActiveTime + iframeActiveTime) / 60);
+
+    newGamesApi
+      .rewardPoints(
+        coproductionprocessesId,
+        taskId,
+        assetId,
+        minutes,
+        contributionText,
+        rating
+      )
+      .then((res) => {
+        console.log("Reward Points Response:", res);
+      })
+      .catch((error) => {
+        console.error("Reward Points Error:", error);
+      });
+
+    unblockRef.current = true;
+    setOpenModal(false);
+    navigate(
+      `/dashboard/coproductionprocesses/${coproductionprocessesId}/guide`
+    );
+  };
+
+  const cancelLeave = () => {
+    unblockRef.current = false;
+    setOpenModal(false);
+  };
+
   useEffect(() => {
     window.addEventListener("beforeunload", handleAttemptToLeave);
     return () => {
@@ -383,8 +443,13 @@ const IframeGamification = () => {
     };
   }, []);
 
+  if (!userIsAllowed) {
+    return (
+      <Typography>{t("You are not allowed to access this task")}</Typography>
+    );
+  }
+
   if (windowStatus === "validating") {
-    // loading
     return (
       <Box
         display="flex"
@@ -444,18 +509,38 @@ const IframeGamification = () => {
             fullWidth
             variant="outlined"
             value={contributionText}
-            onChange={(e) => setContributionText(e.target.value)}
+            onChange={(e) => {
+              setContributionText(e.target.value);
+              setError("");
+            }}
           />
-          <TextField
-            margin="dense"
-            label="Rate your contribution (1-5)"
-            type="number"
-            inputProps={{ min: 1, max: 5 }}
-            fullWidth
-            variant="outlined"
+          <DialogContentText>Rate your contribution (1-5)</DialogContentText>
+          <Rating
+            name="customized-empty"
             value={rating}
-            onChange={(e) => setRating(e.target.value)}
+            precision={0.5}
+            onChange={(event, newValue) => {
+              setRating(newValue);
+              setError("");
+            }}
+            emptyIcon={<StarBorderIcon fontSize="inherit" />}
+            icon={<StarIcon fontSize="inherit" />}
+            getLabelText={(value) => `${value} Star${value !== 1 ? "s" : ""}`}
+            renderValue={(value) => (
+              <span>
+                {value >= 1 ? (
+                  <StarIcon fontSize="inherit" />
+                ) : value >= 0.5 ? (
+                  <StarHalfIcon fontSize="inherit" />
+                ) : (
+                  <StarBorderIcon fontSize="inherit" />
+                )}
+              </span>
+            )}
           />
+          {error && (
+            <DialogContentText color="error">{error}</DialogContentText>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)}>Cancel</Button>
@@ -470,6 +555,16 @@ const IframeGamification = () => {
         style={{ position: "fixed", bottom: 16, right: 16, zIndex: 1301 }}
       >
         <WorkspacePremiumIcon />
+      </Fab>
+      <Fab
+        color="success"
+        onClick={() => {
+          setOpenModal(true);
+        }}
+        style={{ position: "fixed", bottom: 76, right: 16, zIndex: 1301 }}
+        aria-label="Finalizar Tarea"
+      >
+        <CheckCircleIcon />
       </Fab>
       <GamificationPanel
         windowActiveTime={windowActiveTime}

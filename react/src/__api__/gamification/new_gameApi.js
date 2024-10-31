@@ -22,6 +22,25 @@ class GamesApi extends GeneralApi {
     );
     return res.data;
   }
+
+  async rewardPoints(
+    processId,
+    taskId,
+    userId,
+    minutes,
+    contribution,
+    contributionRating
+  ) {
+    const res = await axiosInstance.post(
+      `/${this.url}/${processId}/rewardPoints/${taskId}/${userId}`,
+      {
+        minutes,
+        contribution,
+        contributionRating,
+      }
+    );
+    return res.data;
+  }
 }
 
 export const newGamesApi = new GamesApi();
