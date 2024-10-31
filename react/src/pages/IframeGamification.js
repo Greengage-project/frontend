@@ -26,6 +26,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { newGamesApi } from "__api__";
+import Tooltip from "@mui/material/Tooltip";
 // http://localhost/dashboard/gamification?taskId=96c00d19-bbe1-4b4e-8341-5d3a0bf3ddda&url=http://localhost/googledrive/assets/1dRFob3ceRkDtVvVQArWEWzJ1Pf1tZqvX/view&assetId=73e58eaf-54a9-43e5-bed1-710e80fd24ab&coproductionprocessesId=05bf12d2-cbfb-4b0f-a463-6a0d1a81db02
 
 const GamificationPanel = ({
@@ -243,6 +244,7 @@ const IframeGamification = () => {
   const [iframeHeight, setIframeHeight] = useState(0);
   const [lastLocation, setLastLocation] = useState(null);
   const [userIsAllowed, setUserIsAllowed] = useState(true);
+  const [showLightbox, setShowLightbox] = useState(true);
   const iframeRef = useRef(null);
   const navigate = useNavigate();
 
@@ -262,6 +264,11 @@ const IframeGamification = () => {
   const coproductionprocessesId = getQueryParams(location.search).get(
     "coproductionprocessesId"
   );
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+    setShowLightbox(true); 
+  };
 
   const handleKeyDown = () => {
     if (iframeFocused) {
@@ -392,6 +399,7 @@ const IframeGamification = () => {
   const handleAttemptToLeave = (e) => {
     if (unblockRef.current) return;
     e.preventDefault();
+    e.returnValue = "";
     setOpenModal(true);
   };
 
@@ -556,16 +564,55 @@ const IframeGamification = () => {
       >
         <WorkspacePremiumIcon />
       </Fab>
-      <Fab
-        color="success"
-        onClick={() => {
-          setOpenModal(true);
-        }}
-        style={{ position: "fixed", bottom: 76, right: 16, zIndex: 1301 }}
-        aria-label="Finalizar Tarea"
-      >
-        <CheckCircleIcon />
-      </Fab>
+      <Box>
+        {showLightbox && (
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1400,
+              textAlign: "center",
+              padding: "16px",
+            }}
+            onClick={() => setShowLightbox(false)}
+          >
+            <Box>
+              <DialogTitle>{"Complete Your Task"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Click the green "Complete Task" button to finalize your work,
+                  submit your contribution, and earn points.
+                </DialogContentText>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setShowLightbox(false)}
+                  sx={{ marginTop: 2 }}
+                >
+                  Got it
+                </Button>
+              </DialogContent>
+            </Box>
+          </Box>
+        )}
+
+        <Fab
+          color="success"
+          onClick={() => setOpenModal(true)}
+          style={{ position: "fixed", bottom: 76, right: 16, zIndex: 1301 }}
+          aria-label="Complete Task"
+        >
+          <CheckCircleIcon />
+        </Fab>
+      </Box>
       <GamificationPanel
         windowActiveTime={windowActiveTime}
         iframeActiveTime={iframeActiveTime}
