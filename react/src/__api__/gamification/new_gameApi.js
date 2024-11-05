@@ -16,6 +16,16 @@ class GamesApi extends GeneralApi {
     return res.data;
   }
 
+  async checkIfProcessHasGame(processId) {
+    const res = await axiosInstance.get(`/${this.url}/${processId}/exists`);
+    return res.data;
+  }
+
+  async deleteGame(processId) {
+    const res = await axiosInstance.delete(`/${this.url}/${processId}`);
+    return res.data;
+  }
+
   async getLeaderboard(processId) {
     const res = await axiosInstance.get(
       `/${this.url}/${processId}/leaderboard`

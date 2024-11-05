@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -6,6 +7,7 @@ import {
   Button,
   Divider,
   Link,
+  Alert,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
@@ -13,11 +15,26 @@ import "./RewardSettings.css";
 import { newGamesApi } from "__api__";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProcess } from "slices/process";
+import useMounted from "hooks/useMounted";
+
 const BehavioralRewardSettings = (props) => {
   const { handleGoBack, onClose, coproductionProcessId } = props;
+  const [previousGameId, setPreviousGameId] = useState(null);
   const dispatch = useDispatch();
+  const mounted = useMounted();
   const { process, tree } = useSelector((state) => state.process);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    newGamesApi
+      .checkIfProcessHasGame(coproductionProcessId)
+      .then((res) => {
+        setPreviousGameId(res?.gameId);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [coproductionProcessId]);
 
   const prepareGameTemplate = (tree) => {
     const taskList = [];
@@ -41,14 +58,12 @@ const BehavioralRewardSettings = (props) => {
   const taskList = prepareGameTemplate(tree);
 
   const handleActivate = () => {
-    console.log("Activate this function");
     newGamesApi
       .setGame(coproductionProcessId, {
         coproductionProcessId,
         taskList,
       })
       .then((res) => {
-        console.log(res);
         const values = {
           incentive_and_rewards_state: true,
           leaderboard: true,
@@ -58,12 +73,23 @@ const BehavioralRewardSettings = (props) => {
             id: process.id,
             data: values,
             onSuccess: () => {
-              if (mounted.current) {
+              if (mounted?.current) {
                 console.log(process);
               }
             },
           })
         );
+      });
+  };
+
+  const handleDeleteAndActivate = () => {
+    newGamesApi
+      .deleteGame(previousGameId)
+      .then((res) => {
+        handleActivate();
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -98,6 +124,13 @@ const BehavioralRewardSettings = (props) => {
             >
               {t("Dynamic Reward System").toUpperCase()}
             </Typography>
+            {previousGameId && (
+              <Alert severity="warning" variant="filled" sx={{ mt: 2 }}>
+                {t(
+                  "This coproduction process has already been activated. If you activate it again, the previous game could be deleted and a new one will be created."
+                )}
+              </Alert>
+            )}
 
             <Typography
               color="textSecondary"
@@ -350,7 +383,7 @@ const BehavioralRewardSettings = (props) => {
           textAlign: "center",
         }}
       >
-        <Grid item md={8} sm={12}>
+        <Grid item md={!previousGameId ? 8 : 6} sm={12}>
           <Typography
             variant="body1"
             className="footer-instruction"
@@ -363,7 +396,7 @@ const BehavioralRewardSettings = (props) => {
             )}
           </Typography>
         </Grid>
-        <Grid item md={2} sm={12} className="skip-reward">
+        <Grid item md={!previousGameId ? 2 : 2} sm={12} className="skip-reward">
           <Link
             href="#"
             variant="body2"
@@ -371,11 +404,12 @@ const BehavioralRewardSettings = (props) => {
             onClick={() => {
               onClose();
             }}
+            data-cy="skip-that-part"
           >
             {t("I want to skip that part")}
           </Link>
         </Grid>
-        <Grid item md={2} sm={12} className="skip-reward">
+        <Grid item md={!previousGameId ? 2 : 2} sm={12} className="skip-reward">
           <Button
             sx={{
               minWidth: {
@@ -389,10 +423,40 @@ const BehavioralRewardSettings = (props) => {
               handleActivate();
               onClose();
             }}
+            data-cy="activate-this-function"
           >
-            {t("Activate this function")}
+            {previousGameId
+              ? t("Reactivate this function")
+              : t("Activate this function")}
           </Button>
         </Grid>
+        {previousGameId && (
+          <Grid
+            item
+            md={2}
+            sm={12}
+            className="skip-reward"
+            data-cy="create-a-new-game"
+          >
+            <Button
+              sx={{
+                minWidth: {
+                  xs: "140px",
+                  lg: "190px",
+                },
+                mr: 2,
+              }}
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                handleDeleteAndActivate();
+                onClose();
+              }}
+            >
+              {t("Create a new game")}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Container>
   );

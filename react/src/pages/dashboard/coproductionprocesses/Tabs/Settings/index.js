@@ -208,7 +208,6 @@ const SettingsTab = () => {
       coproductionProcessesApi
         .addAdministrator(process.id, user.id)
         .then((res) => {
-          console.log(res);
           if (mounted.current) {
             dispatch(getProcess(process.id, false));
           }
@@ -289,19 +288,12 @@ const SettingsTab = () => {
       incentive_and_rewards_state: status,
       leaderboard: leaderboard,
     };
-    console.log(values);
-    console.log("---------------- 2");
-    console.log("---------------- 2");
-    console.log("---------------- 2");
-    console.log("---------------- 2");
-    console.log("---------------- 2");
     if (values.incentive_and_rewards_state) {
       const taskList = prepareGameTemplate(tree);
       let res = await oldgamesApi.setGame(process.id, taskList);
       values["game_id"] = res.id;
     } else {
       oldgamesApi.deleteGame(process.id).then((res) => {
-        console.log(res);
         dispatch(
           updateProcess({
             id: process.id,
@@ -316,18 +308,13 @@ const SettingsTab = () => {
         );
       });
 
-      console.log("Delete game");
-      console.log(tree);
-
       tree.forEach((phase) => {
         phase.children.forEach((objective) => {
           objective.children.forEach((task) => {
             if (task.status === "finished") {
               const updated_task = Object.assign({}, task);
               updated_task.status = "in_progress";
-              tasksApi.update(task.id, updated_task).then((res) => {
-                console.log(res);
-              });
+              tasksApi.update(task.id, updated_task).then((res) => {});
             }
           });
         });
@@ -342,7 +329,6 @@ const SettingsTab = () => {
           logotype,
           onSuccess: () => {
             if (mounted.current) {
-              console.log(process);
             }
           },
         })
@@ -477,7 +463,6 @@ const SettingsTab = () => {
   }, []);
 
   const handleDeleteStory = (event, story_id) => {
-    console.log("Delete story:" + story_id);
     storiesApi.delete(story_id).then(() => {
       setStoriesList((storiesList) =>
         storiesList.filter((story) => story.id !== story_id)
