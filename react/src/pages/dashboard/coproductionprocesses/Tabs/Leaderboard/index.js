@@ -70,6 +70,11 @@ const LeaderboardTab = ({}) => {
       setLoading(false);
     } else {
       newGamesApi.getLeaderboard(process.id).then((res) => {
+        console.log(">>>>>>>>>>>>>>>>>>>>< res");
+        console.log(">>>>>>>>>>>>>>>>>>>>1 res");
+        console.log(">>>>>>>>>>>>>>>>>>>>< res");
+        console.log(">>>>>>>>>>>>>>>>>>>>2 res");
+        console.log(res);
         setGame(res);
         setLoading(false);
       });

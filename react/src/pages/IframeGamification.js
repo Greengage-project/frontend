@@ -17,6 +17,8 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import Swal from "sweetalert2";
+import Confetti from "react-confetti";
 import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { debounce } from "lodash";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
@@ -26,6 +28,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { newGamesApi } from "__api__";
+import useAuth from "hooks/useAuth";
 
 const GamificationPanel = ({
   windowActiveTime,
@@ -236,12 +239,21 @@ const IframeGamification = () => {
   const [iframeActiveTime, setIframeActiveTime] = useState(0);
   const [windowActiveTime, setWindowActiveTime] = useState(0);
   const [activeTime, setActiveTime] = useState(0);
+  const [timestampsActivity, setTimestampsActivity] = useState([]);
   const [lastActiveTime, setLastActiveTime] = useState(Date.now());
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [iframeHeight, setIframeHeight] = useState(0);
   const [lastLocation, setLastLocation] = useState(null);
   const [userIsAllowed, setUserIsAllowed] = useState(true);
   const [showLightbox, setShowLightbox] = useState(true);
+  const { user } = useAuth();
+
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
   const iframeRef = useRef(null);
   const navigate = useNavigate();
 
@@ -393,6 +405,36 @@ const IframeGamification = () => {
     }
   }, [location, lastLocation]);
 
+  useEffect(() => {
+    let lastActivityType = null;
+    let lastTimestamp = Date.now();
+
+    const updateTimestamps = (type) => {
+      const currentTimestamp = Date.now();
+
+      // Añadir nuevo registro independientemente del tipo anterior
+      setTimestampsActivity((prev) => [
+        ...prev,
+        { from: lastTimestamp, to: currentTimestamp, type },
+      ]);
+
+      lastActivityType = type;
+      lastTimestamp = currentTimestamp;
+    };
+
+    const handleActivityUpdate = () => {
+      if (iframeFocused && lastActivityType !== "activeTime") {
+        updateTimestamps("activeTime");
+      } else if (!windowFocused && lastActivityType !== "idleTime") {
+        updateTimestamps("idleTime");
+      }
+    };
+
+    const intervalId = setInterval(handleActivityUpdate, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [iframeFocused, windowFocused]);
+
   const handleAttemptToLeave = (e) => {
     if (unblockRef.current) return;
     e.preventDefault();
@@ -412,28 +454,43 @@ const IframeGamification = () => {
     console.log("Rating:", rating);
 
     const minutes = Math.round((windowActiveTime + iframeActiveTime) / 60);
+    console.log({ timestampsActivity });
 
     newGamesApi
       .rewardPoints(
         coproductionprocessesId,
         taskId,
+        user?.sub,
         assetId,
         minutes,
         contributionText,
-        rating
+        rating,
+        timestampsActivity
       )
       .then((res) => {
         console.log("Reward Points Response:", res);
+        const pointsReceived = res?.points || 0;
+
+        // Mostrar SweetAlert2 y activar Confetti
+        Swal.fire({
+          title: `You earned ${pointsReceived} points!`,
+          text: "Thank you for your contribution!",
+          icon: "success",
+          confirmButtonText: "Awesome!",
+        }).then(() => {
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 5000); // Desactivar confetti después de 5 segundos
+        });
+        unblockRef.current = true;
+        setOpenModal(false);
+        navigate(
+          `/dashboard/coproductionprocesses/${coproductionprocessesId}/guide`
+        );
       })
       .catch((error) => {
         console.error("Reward Points Error:", error);
+        setOpenModal(false);
       });
-
-    unblockRef.current = true;
-    setOpenModal(false);
-    navigate(
-      `/dashboard/coproductionprocesses/${coproductionprocessesId}/guide`
-    );
   };
 
   const cancelLeave = () => {
@@ -486,6 +543,9 @@ const IframeGamification = () => {
       height="100%"
       position="relative"
     >
+      {showConfetti && (
+        <Confetti width={windowSize.width} height={windowSize.height} />
+      )}
       <iframe
         ref={iframeRef}
         src={url}

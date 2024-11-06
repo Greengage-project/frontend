@@ -30,6 +30,7 @@ class GamesApi extends GeneralApi {
     const res = await axiosInstance.get(
       `/${this.url}/${processId}/leaderboard`
     );
+
     return res.data;
   }
 
@@ -37,16 +38,20 @@ class GamesApi extends GeneralApi {
     processId,
     taskId,
     userId,
+    assetId,
     minutes,
     contribution,
-    contributionRating
+    contributionRating,
+    timestampsActivity
   ) {
     const res = await axiosInstance.post(
       `/${this.url}/${processId}/rewardPoints/${taskId}/${userId}`,
       {
         minutes,
+        assetId,
         contribution,
         contributionRating,
+        timestampsActivity,
       }
     );
     return res.data;
