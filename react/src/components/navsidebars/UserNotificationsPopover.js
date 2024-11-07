@@ -48,6 +48,7 @@ const UserNotificationsPopover = () => {
   const includeParametersValues = (text, parameters) => {
     if (parameters) {
       const paramsPattern = /[^{}]+(?=})/g;
+
       const extractParams = text.match(paramsPattern);
 
       let parsedParameters;
