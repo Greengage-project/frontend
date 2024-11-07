@@ -28,7 +28,6 @@ import SwipeableViews from "react-swipeable-views";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import SearchIcon from "@mui/icons-material/Search";
 
-// Registra los componentes y escalas de Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -45,14 +44,13 @@ const NewGamificationLeaderboard = ({ user, game, loading }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Procesa y ordena los puntos de todos los usuarios en cada tarea
   const leaderboard = game.task
     .flatMap((task) =>
       task.points.map((point) => ({
         ...point,
-        taskId: task.externalTaskId,
-        taskName: task.name, // Añade el nombre de la tarea
-        taskStatus: task.status, // Añade el estado de la tarea
+        taskId: task?.externalTaskId,
+        taskName: task?.name,
+        taskStatus: task?.status,
       }))
     )
     .reduce((acc, point) => {
@@ -87,7 +85,7 @@ const NewGamificationLeaderboard = ({ user, game, loading }) => {
     }, [])
     .sort((a, b) => b.points - a.points);
 
-  let topThree = [];
+  const topThree = [];
   let index = 0;
   while (topThree.length < 3 && index < leaderboard.length) {
     const entry = leaderboard[index];
@@ -128,20 +126,18 @@ const NewGamificationLeaderboard = ({ user, game, loading }) => {
     setSelectedUser(entry);
   };
 
-  const generateChartData = (entry) => {
-    return {
-      labels: entry.taskPoints.map((task) => task.taskName),
-      datasets: [
-        {
-          label: "Points",
-          data: entry.taskPoints.map((task) => task.points * task.timesAwarded),
-          backgroundColor: "rgba(54, 162, 235, 0.6)",
-          borderColor: "rgba(54, 162, 235, 1)",
-          borderWidth: 1,
-        },
-      ],
-    };
-  };
+  const generateChartData = (entry) => ({
+    labels: entry.taskPoints.map((task) => task.taskName),
+    datasets: [
+      {
+        label: "Points",
+        data: entry.taskPoints.map((task) => task.points * task.timesAwarded),
+        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1,
+      },
+    ],
+  });
 
   return (
     <>
@@ -162,7 +158,6 @@ const NewGamificationLeaderboard = ({ user, game, loading }) => {
               </Typography>
             </Grid>
 
-            {/* Barra de búsqueda */}
             <Grid item xs={12} sm={6} md={4} lg={3} sx={{ mx: "auto" }}>
               <TextField
                 fullWidth
@@ -180,15 +175,15 @@ const NewGamificationLeaderboard = ({ user, game, loading }) => {
               />
             </Grid>
 
-            {/* Top 3 destacados */}
             <Grid item xs={12} mt={3}>
               <Grid container spacing={2} justifyContent="center">
                 {Array(3)
                   .fill(null)
                   .map((_, i) => {
                     const entry = topThree[i];
-                    if (!entry)
-                      return <Grid item xs={12} sm={4} key={i}></Grid>;
+                    if (!entry) {
+                      return <Grid item xs={12} sm={4} key={i} />;
+                    }
 
                     const isCurrentUser = entry.externalUserId === user.sub;
                     const medalColors = ["#FFD700", "#C0C0C0", "#CD7F32"];

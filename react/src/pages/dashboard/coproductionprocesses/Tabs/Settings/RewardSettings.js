@@ -14,8 +14,6 @@ import DeclarativeRewardSettings from "./DeclarativeRewardSettings";
 import BehavioralRewardSettings from "./BehavioralRewardSettings";
 
 const RewardSettings = (props) => {
-  console.log("********************* RewardSettings *********************");
-  console.log(props);
   const [selectedStrategy, setSelectedStrategy] = useState(null);
   const { t } = useTranslation();
 
@@ -66,9 +64,9 @@ const RewardSettings = (props) => {
             </Typography>
 
             <Typography color="textSecondary" variant="h6" sx={{ m: 1 }}>
-              {t(
+              {`${t(
                 "Here is a complete list of gamification systems and strategies for use in co-production processes"
-              ) + "."}
+              )}.`}
             </Typography>
           </Grid>
           <Grid item />
@@ -91,7 +89,7 @@ const RewardSettings = (props) => {
             <Box
               alt="Medals"
               component="img"
-              src={`/static/reward/Medals.svg`}
+              src="/static/reward/Medals.svg"
               sx={{
                 width: "50%",
                 margin: "0 auto",
@@ -144,7 +142,7 @@ const RewardSettings = (props) => {
             <Box
               alt="Medals"
               component="img"
-              src={`/static/reward/behavioral_strategy.svg`}
+              src="/static/reward/behavioral_strategy.svg"
               sx={{
                 width: "70%",
                 margin: "0 auto",

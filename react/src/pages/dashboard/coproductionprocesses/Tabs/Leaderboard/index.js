@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { newGamesApi, oldgamesApi, usersApi } from "__api__";
-import { AppBar, Box, Paper, Tab, Tabs, Grid, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Grid, Typography } from "@mui/material";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import OverallLeaderboard from "components/dashboard/coproductionprocesses/OverallLeaderboard";
 import useAuth from "hooks/useAuth";
@@ -39,8 +39,8 @@ const LeaderboardTab = ({}) => {
 
   const handleLeaderboard = async (game) => {
     const us = [];
-    for (let player of game.content) {
-      let user = await usersApi.get(player.playerId);
+    for (const player of game.content) {
+      const user = await usersApi.get(player.playerId);
       if (player.score > 0) {
         us.push({
           id: player.playerId,
@@ -65,7 +65,7 @@ const LeaderboardTab = ({}) => {
         handleLeaderboard(res);
       });
 
-      let res = await oldgamesApi.getGame(process.id);
+      const res = await oldgamesApi.getGame(process.id);
       setGame(res[0]);
       setLoading(false);
     } else {

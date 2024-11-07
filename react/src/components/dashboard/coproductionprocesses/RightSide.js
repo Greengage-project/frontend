@@ -57,8 +57,8 @@ import { useLocation } from "react-router";
 import {
   getAssetsList_byTask,
   setContributionsListLevels,
+  getContributions,
 } from "slices/general";
-import { getContributions } from "slices/general";
 import useAuth from "hooks/useAuth";
 
 import { REACT_APP_COMPLETE_DOMAIN } from "configuration";
@@ -88,7 +88,6 @@ const RightSide = ({ softwareInterlinkers }) => {
   const [assetsShareOpen, setAssetsShareOpen] = useState(false);
   const [assetsShareLoading, setAssetsShareLoading] = useState(false);
 
-  // new asset modal
   const [selectedInterlinker, setSelectedInterlinker] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [newAssetDialogOpen, setNewAssetDialogOpen] = useState(false);
@@ -98,7 +97,6 @@ const RightSide = ({ softwareInterlinkers }) => {
   const [catalogueOpen, setCatalogueOpen] = useState(false);
   const { t } = useDependantTranslation();
   const dispatch = useDispatch();
-  // const [contributions, setContributions] = useState([]);
 
   const [permissions, setPermissions] = useState(null);
 
@@ -136,7 +134,6 @@ const RightSide = ({ softwareInterlinkers }) => {
       });
       if (isTask && mounted.current) {
         getContributionsData(selectedTreeItem.id);
-        //Empty contributions list levels Temporal Memory
         dispatch(setContributionsListLevels([]));
       }
     }
@@ -144,16 +141,15 @@ const RightSide = ({ softwareInterlinkers }) => {
 
   function getContributionsData(selectTreeItemId) {
     dispatch(getContributions(selectTreeItemId));
-    //console.log("contributions", contributions);
   }
 
   function obtenerNroContributions(contributions) {
     let nroContribution = 0;
     if (contributions && contributions) {
       if (contributions.length !== 0) {
-        for (var j = 0; j < contributions.length; j++) {
-          let asset = contributions[j];
-          nroContribution = nroContribution + asset["contributors"].length;
+        for (let j = 0; j < contributions.length; j++) {
+          const asset = contributions[j];
+          nroContribution += asset.contributors.length;
         }
       }
     }
@@ -163,12 +159,6 @@ const RightSide = ({ softwareInterlinkers }) => {
 
   const getAssets = async () => {
     setLoadingAssets(true);
-    // assetsApi.getMulti({ task_id: selectedTreeItem.id }).then((assets) => {
-    //   if (mounted.current) {
-    //     setAssets(assets);
-    //     setLoadingAssets(false);
-    //   }
-    // });
     dispatch(getAssetsList_byTask(selectedTreeItem.id));
     setAssets(assetsList);
     setLoadingAssets(false);
@@ -228,14 +218,12 @@ const RightSide = ({ softwareInterlinkers }) => {
   };
 
   const handleOpen = (asset) => {
-    //console.log(asset);
     if (asset.type === "internalasset") {
-      const backend = asset["software_response"]["backend"];
-      const linktoAsset = backend + "/" + asset["external_asset_id"];
+      const { backend } = asset.software_response;
+      const linktoAsset = `${backend}/${asset.external_asset_id}`;
 
       window.open(`${linktoAsset}/view`, "_blank");
     } else {
-      //alert('external',asset.uri);
       window.open(asset.uri);
     }
     setAnchorEl(null);
@@ -255,9 +243,6 @@ const RightSide = ({ softwareInterlinkers }) => {
   const handleDelete = (asset, callback) => {
     dispatch(setUpdatingTree(true));
     setLoading("delete");
-    //Obtain the name with the id
-    // const nombreAsset = document.getElementById('bt-' + asset.id).innerHTML;
-    //console.log(asset);
     const nombreAsset = asset.internalData.name;
     localStorage.setItem("assetId", asset.id);
     const capitalizeAssetName = nombreAsset.replace(
@@ -266,28 +251,21 @@ const RightSide = ({ softwareInterlinkers }) => {
     );
     localStorage.setItem("assetName", capitalizeAssetName);
 
-    //Enviar el nombre a guardar
     assetsApi.delete(asset.id).then(() => {
       setLoading("");
       callback && callback();
       setAnchorEl(null);
       dispatch(setUpdatingTree(false));
 
-      //Update the dinamic name with a static name for the asset
-      //on the coproduction notifications
       const dataUpdateParameter = {
         asset_id: localStorage.getItem("assetId"),
         name: localStorage.getItem("assetName"),
         coproductionprocess_id: process.id,
       };
 
-      //console.log('El proceso a actualizar')
       coproductionprocessnotificationsApi
         .updateAssetNameParameter(dataUpdateParameter)
-        .then((res) => {
-          //console.log('Actualizacion Exitosa');
-          //console.log(res.data)
-        })
+        .then((res) => {})
         .catch((err) => {
           console.log(err);
         });
@@ -311,7 +289,6 @@ const RightSide = ({ softwareInterlinkers }) => {
   };
 
   const handleClaim = (asset) => {
-    //window.open(`${asset.link}/download`, '_blank');
     setSelectedAsset(asset);
 
     setAnchorEl(null);
@@ -319,41 +296,35 @@ const RightSide = ({ softwareInterlinkers }) => {
   };
 
   const handleEdit = (asset) => {
-    // const backend =asset['software_response']['backend'];
-    // const linktoAsset =backend+'/'+asset['external_asset_id'];
-
     window.open(`${linktoAsset}/edit`, "_blank");
-
     setAnchorEl(null);
   };
 
   const copyTextToClipboard = async (text) => {
     if ("clipboard" in navigator) {
       return await navigator.clipboard.writeText(text);
-    } else {
-      return document.execCommand("copy", true, text);
     }
+    return document.execCommand("copy", true, text);
   };
 
   const getAssetsActions = (asset) => {
     const actions = [];
 
-    let dataExtra = {};
+    const dataExtra = {};
 
     if (asset.type == "internalasset") {
-      dataExtra["capabilities"] = {
-        clone: asset["software_response"]["clone"],
-        view: asset["software_response"]["view"],
-        edit: asset["software_response"]["edit"],
-        delete: asset["software_response"]["delete"],
-        download: asset["software_response"]["download"],
+      dataExtra.capabilities = {
+        clone: asset.software_response.clone,
+        view: asset.software_response.view,
+        edit: asset.software_response.edit,
+        delete: asset.software_response.delete,
+        download: asset.software_response.download,
       };
     }
 
     if (asset.type === "internalasset" && dataExtra.capabilities) {
-      //const { id, capabilities } = asset;
-      const id = asset.id;
-      const capabilities = dataExtra.capabilities;
+      const { id } = asset;
+      const { capabilities } = dataExtra;
 
       actions.push({
         id: `${id}-open-action`,
@@ -441,19 +412,6 @@ const RightSide = ({ softwareInterlinkers }) => {
         text: t("Claim"),
         icon: <RecordVoiceOver fontSize="small" />,
       });
-
-      // if (capabilities.download) {
-      //   actions.push({
-      //     id: `${id}-download-action`,
-      //     loading: loading === 'download',
-      //     onClick: (closeMenuItem) => {
-      //       handleDownload(asset);
-      //       closeMenuItem();
-      //     },
-      //     text: t('Download'),
-      //     icon: <Download fontSize='small' />
-      //   });
-      // }
     }
     if (asset.type === "externalasset") {
       const { id } = asset;
@@ -524,7 +482,7 @@ const RightSide = ({ softwareInterlinkers }) => {
   };
 
   useEffect(() => {
-    let listofRoles = [];
+    const listofRoles = [];
     setUserRoles([]);
     async function getRoles() {
       for (let i = 0; i < user.teams_ids.length; i++) {
@@ -553,7 +511,6 @@ const RightSide = ({ softwareInterlinkers }) => {
       .replace(/'/g, "&#39;");
   }
 
-
   return (
     selectedTreeItem && (
       <>
@@ -577,7 +534,6 @@ const RightSide = ({ softwareInterlinkers }) => {
                 <Tab
                   value="assets"
                   disabled={!isTask}
-                  //label={t('Resources') + (isTask ? ` ${loadingAssets ? '(...)' : ''}` : '')}
                   label={
                     t("Resources") +
                     (isTask
@@ -642,7 +598,6 @@ const RightSide = ({ softwareInterlinkers }) => {
                         <AssetsTable
                           language={process.language}
                           loading={loadingAssets}
-                          //assets={assetsList}
                         />
                       </>
                     ) : (
@@ -911,20 +866,7 @@ const RightSide = ({ softwareInterlinkers }) => {
                 )}
               </>
             )}
-            {tabValue === "contributions" && (
-              <ContributionsTabs
-              //contributions={contributions}
-              //setContributions={setContributions}
-
-              // element={selectedTreeItem}
-              // your_permissions={permissions && permissions.your_permissions}
-              // your_roles={permissions && permissions.your_roles}
-              // language={process.language}
-              // processId={process.id}
-              // element={selectedTreeItem}
-              // isAdministrator={isAdministrator}
-              />
-            )}
+            {tabValue === "contributions" && <ContributionsTabs />}
           </Box>
 
           <AssetsShare

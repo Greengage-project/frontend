@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import Swal from "sweetalert2";
 import Confetti from "react-confetti";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
 import { debounce } from "lodash";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import { tasksApi } from "__api__/coproduction/tasksApi";
@@ -27,209 +27,11 @@ import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Launch from "@mui/icons-material/Launch";
 import { newGamesApi } from "__api__";
 import useAuth from "hooks/useAuth";
+import Launch from "@mui/icons-material/Launch";
 
-const GamificationPanel = ({
-  windowActiveTime,
-  iframeActiveTime,
-  activeTime,
-  idleTime,
-  iframeHeight,
-  toggleDrawer,
-  drawerOpen,
-  className,
-}) => {
-  const { t } = useTranslation();
-
-  const [showSecretInfo, setShowSecretInfo] = useState(false);
-  const secretCode = [
-    "ArrowUp",
-    "ArrowUp",
-    "ArrowDown",
-    "ArrowDown",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowLeft",
-    "ArrowRight",
-    "b",
-    "a",
-  ];
-  const [keySequence, setKeySequence] = useState([]);
-  const [currentProgress, setCurrentProgress] = useState(0);
-
-  const milestones = [0, 1, 5, 15, 30, 60];
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      setKeySequence((prevSequence) => [...prevSequence, event.key].slice(-10));
-
-      if (
-        JSON.stringify([...keySequence, event.key].slice(-10)) ===
-        JSON.stringify(secretCode)
-      ) {
-        setShowSecretInfo(true);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [keySequence, secretCode]);
-
-  useEffect(() => {
-    const maxTime = milestones[milestones.length - 1] * 60;
-    const progressValue = Math.min((activeTime / maxTime) * 100, 100);
-    setCurrentProgress(progressValue);
-  }, [activeTime, milestones]);
-
-  const getProgressColor = () => "#4caf50";
-
-  const getMilestoneColor = (milestone) =>
-    currentProgress >= (milestone / milestones[milestones.length - 1]) * 100
-      ? getProgressColor()
-      : "#e0e0e0";
-
-  const getMilestonePosition = (milestone) =>
-    (milestone / milestones[milestones.length - 1]) * 100;
-
-  return (
-    <Drawer
-      anchor="right"
-      open={drawerOpen}
-      onClose={toggleDrawer}
-      sx={{ zIndex: 1300, height: `${iframeHeight}px`, position: "absolute" }}
-      variant="persistent"
-      className={className}
-    >
-      <Box
-        sx={{
-          width: 250,
-          height: "100%",
-          padding: "16px",
-          backgroundColor: "#f4f4f4",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h6" className="text-center">
-              {t("Rewards")}
-            </Typography>
-            <IconButton onClick={toggleDrawer}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-
-          {showSecretInfo && (
-            <>
-              <Typography>
-                Active Time: {activeTime} seconds
-                <br />
-              </Typography>
-              <Typography>
-                Window Active Time: {windowActiveTime} seconds
-              </Typography>
-              <Typography>
-                Iframe Active Time: {iframeActiveTime} seconds
-              </Typography>
-              <Typography>
-                Idle Time:
-                {idleTime} seconds
-              </Typography>
-            </>
-          )}
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            mt: 2,
-            height: "calc(100vh - 150px)",
-            position: "relative",
-          }}
-        >
-          <Box
-            sx={{
-              height: "100%",
-              width: 20,
-              backgroundColor: "#e0e0e0",
-              position: "relative",
-              borderRadius: "10px",
-              overflow: "hidden",
-              marginRight: "16px",
-            }}
-          >
-            <Box
-              sx={{
-                height: `${currentProgress}%`,
-                width: "100%",
-                backgroundColor: getProgressColor(),
-                position: "absolute",
-                bottom: 0,
-              }}
-            />
-          </Box>
-
-          <Box
-            sx={{
-              position: "relative",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-            }}
-          >
-            {milestones.map((milestone, index) => (
-              <Box
-                key={index}
-                sx={{
-                  position: "absolute",
-                  bottom: `${getMilestonePosition(milestone)}%`,
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: "50%",
-                    backgroundColor: getMilestoneColor(milestone),
-                    marginRight: "8px",
-                  }}
-                />
-
-                <Typography
-                  variant="body2"
-                  color={
-                    currentProgress >=
-                    (milestone / milestones[milestones.length - 1]) * 100
-                      ? "textPrimary"
-                      : "textSecondary"
-                  }
-                  sx={{ whiteSpace: "nowrap" }}
-                >
-                  {milestone} min
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Box>
-    </Drawer>
-  );
-};
-const IframeGamification = () => {
+const IframeWithoutGamification = () => {
   const [iframeFocused, setIframeFocused] = useState(false);
   const [windowFocused, setWindowFocused] = useState(true);
   const [windowStatus, setWindowStatus] = useState("validating");
@@ -262,7 +64,9 @@ const IframeGamification = () => {
   const unblockRef = useRef(false);
 
   const location = useLocation();
-  const getQueryParams = (search) => new URLSearchParams(search);
+  const getQueryParams = (search) => {
+    return new URLSearchParams(search);
+  };
   const { t } = useTranslation();
   const url = getQueryParams(location.search).get("url");
   const taskId = getQueryParams(location.search).get("taskId");
@@ -270,6 +74,11 @@ const IframeGamification = () => {
   const coproductionprocessesId = getQueryParams(location.search).get(
     "coproductionprocessesId"
   );
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+    setShowLightbox(true);
+  };
 
   const handleKeyDown = () => {
     if (iframeFocused) {
@@ -366,10 +175,6 @@ const IframeGamification = () => {
     fetchTaskData();
   }, [taskId]);
 
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   const totalTime = (windowActiveTime + iframeActiveTime) / 60;
   const progress = Math.min((totalTime / 15) * 100, 100);
 
@@ -441,10 +246,14 @@ const IframeGamification = () => {
       return;
     }
 
+    console.log("Contribution:", contributionText);
+    console.log("Rating:", rating);
+
     const minutes = Math.round((windowActiveTime + iframeActiveTime) / 60);
+    console.log({ timestampsActivity });
 
     newGamesApi
-      .rewardPoints(
+      .addAction(
         coproductionprocessesId,
         taskId,
         user?.sub,
@@ -455,9 +264,8 @@ const IframeGamification = () => {
         timestampsActivity
       )
       .then((res) => {
-        const pointsReceived = res?.points || 0;
         Swal.fire({
-          title: `You earned ${pointsReceived} points!`,
+          title: "Success!",
           text: "Thank you for your contribution!",
           icon: "success",
           confirmButtonText: "Awesome!",
@@ -539,16 +347,13 @@ const IframeGamification = () => {
         onMouseLeave={handleIframeLeave}
       />
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-        <DialogTitle>Confirm Exit</DialogTitle>
+        <DialogTitle>{"Confirm Exit"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to leave? If you have completed your
             contribution, please describe your work in the input below and rate
             your contribution to the task from 1 to 5.
             <br />
-            <br />
-            <strong>Warning:</strong> If you close this window without
-            submitting, you will lose any points that could be awarded.
           </DialogContentText>
           <TextField
             autoFocus
@@ -598,13 +403,7 @@ const IframeGamification = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Fab
-        color="primary"
-        onClick={toggleDrawer}
-        style={{ position: "fixed", bottom: 16, right: 16, zIndex: 1301 }}
-      >
-        <WorkspacePremiumIcon />
-      </Fab>
+
       <Box>
         {showLightbox && (
           <Box
@@ -626,7 +425,7 @@ const IframeGamification = () => {
             onClick={() => setShowLightbox(false)}
           >
             <Box>
-              <DialogTitle>Complete Your Task</DialogTitle>
+              <DialogTitle>{"Complete Your Task"}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   Click the green "Complete Task" button to finalize your work,
@@ -644,7 +443,6 @@ const IframeGamification = () => {
             </Box>
           </Box>
         )}
-
         <Fab
           color="warning"
           onClick={() => {
@@ -663,34 +461,22 @@ const IframeGamification = () => {
               }
             });
           }}
-          style={{ position: "fixed", bottom: 136, right: 16, zIndex: 1301 }}
+          style={{ position: "fixed", bottom: 76, right: 16, zIndex: 1301 }}
           aria-label="Access Resource"
         >
           <Launch />
         </Fab>
-
         <Fab
           color="success"
           onClick={() => setOpenModal(true)}
-          style={{ position: "fixed", bottom: 76, right: 16, zIndex: 1301 }}
+          style={{ position: "fixed", bottom: 16, right: 16, zIndex: 1301 }}
           aria-label="Complete Task"
         >
           <CheckCircleIcon />
         </Fab>
       </Box>
-      <GamificationPanel
-        windowActiveTime={windowActiveTime}
-        iframeActiveTime={iframeActiveTime}
-        activeTime={activeTime}
-        idleTime={idleTime}
-        progress={progress}
-        iframeHeight={iframeHeight}
-        toggleDrawer={toggleDrawer}
-        drawerOpen={drawerOpen}
-        className="gamification-panel"
-      />
     </Box>
   );
 };
 
-export default IframeGamification;
+export default IframeWithoutGamification;

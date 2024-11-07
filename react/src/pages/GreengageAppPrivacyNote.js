@@ -14,12 +14,6 @@ import FormattedText from "../utils/formatText";
 
 const GreengageAppPrivacyNote = () => {
   const { t } = useTranslation();
-  /*
-Sushi Dev GmbH, Wiedner Gürtel 28/6, 1040 Vienna, Austria (manuel.pirker-ihl@sushi.dev)
-DEUSTO, Avda. Universidades, 24, Deusto, 48007 Bilbao, Bizkaia. (dpo@deusto.es)
-VRVis Zentrum für Virtual Reality und Visualisierung Forschungs-GmbH, Donau-City-Straße 11,
-1220 Vienna, Austria (wolosiuk@vrvis.at)
-*/
   return (
     <>
       <Helmet>
@@ -51,7 +45,7 @@ VRVis Zentrum für Virtual Reality und Visualisierung Forschungs-GmbH, Donau-Cit
                       <a href="mailto:manuel.pirker-ihl@sushi.dev">
                         manuel.pirker-ihl@sushi.dev
                       </a>
-                      {")"}
+                      )
                     </li>
                   </ul>
                 </Typography>

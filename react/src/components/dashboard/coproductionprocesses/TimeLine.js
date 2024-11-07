@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import CreateSchema from "components/dashboard/SchemaSelector";
 import RoadmapCustomized from "components/home/RoadmapCustomized";
-import Lightbox from "../../../components/Lightbox";
+import Lightbox from "../../Lightbox";
 import RewardSettings from "../../../pages/dashboard/coproductionprocesses/Tabs/Settings/RewardSettings";
 
 import useAuth from "hooks/useAuth";
@@ -37,7 +37,6 @@ import {
   ArrowForward,
   Groups,
   Construction,
-  Build,
   MilitaryTech,
   BusinessCenter,
   Widgets,
@@ -78,86 +77,6 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
 }));
 
-/* function MyStepSection({
-  dataFulfilled,
-  title,
-  subtitle,
-  linktoPage,
-  picturePath,
-  pictureSize,
-  sectionName,
-  nextSectName,
-}) {
-  const { process, hasSchema, tree } = useSelector((state) => state.process);
-  const t = useCustomTranslation(process.language);
-  const navigate = useNavigate();
-
-  function nextSect(nextSectName) {
-    const section = document.querySelector("#" + nextSectName);
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  return (
-    <React.Fragment>
-    <Step
-      completed={!!dataFulfilled}
-      sx={{
-        "& .MuiStepLabel-iconContainer": {
-          alignSelf: "baseline",
-        },
-        "& .MuiSvgIcon-root": {
-          fontSize: "2.5rem",
-        },
-      }}
-      id={sectionName}
-    >
-      <StepLabel>
-        <Grid container spacing={2}>
-          <Grid item xs={6} sx={{ minHeight: "55vh" }}>
-            <Stack spacing={1}>
-              <Typography variant="h6">{t(title)}</Typography>
-
-              <Typography variant="subtitle1">{t(subtitle)}</Typography>
-
-              <Button
-                onClick={() => navigate({ linktoPage })}
-                size="small"
-                variant="contained"
-                sx={{ maxWidth: "200px" }}
-              >
-                {t("Go to organizations")}
-              </Button>
-            </Stack>
-          </Grid>
-          <Grid item xs={6}>
-            <img src={picturePath} height={pictureSize} alt="" />
-          </Grid>
-
-          <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Grid item xs={12}>
-              <IconButton
-                onClick={() => nextSect(nextSectName)}
-                color="primary"
-                sx={{ border: "1px" }}
-                variant="outlined"
-              >
-                <ArrowDownwardIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Grid>
-      </StepLabel>
-    </Step>
-    </React.Fragment>
-  );
-} */
-
 export default function TimeLine({ assets }) {
   const { process, hasSchema, tree } = useSelector((state) => state.process);
 
@@ -189,7 +108,6 @@ export default function TimeLine({ assets }) {
 
   const handleClickOpen = () => {
     setOpen(true);
-    //alert("Open Schema Selector");
   };
 
   const handleClose = () => {
@@ -210,14 +128,11 @@ export default function TimeLine({ assets }) {
   const newAssetsFullfilled = assets.length >= 1;
 
   function nextSect(nextSectionNum) {
-    // const section = document.querySelector("#" + nextSectionNum);
-    // section.scrollIntoView({ behavior: "smooth", block: "start" });
     showSection(nextSectionNum);
   }
 
   function showSection(sectionNum) {
     setRoadItemIndex(sectionNum);
-    //alert("Muestra el index: " + sectionNum);
   }
 
   const setHideguidechecklist = async () => {
@@ -235,7 +150,7 @@ export default function TimeLine({ assets }) {
       } catch (err) {
         console.error(err);
       }
-      navigate("/dashboard/coproductionprocesses/" + process.id + "/profile");
+      navigate(`/dashboard/coproductionprocesses/${process.id}/profile`);
     } else {
       alert(
         "It is not possible to hide the guide before selecting the scheme."
@@ -276,27 +191,27 @@ export default function TimeLine({ assets }) {
   };
 
   const temp_completeStates = [
-    process.hasAddAnOrganization, //Has Organizations? He decide!.
+    process.hasAddAnOrganization, // Has Organizations? He decide!.
     !!dataFulfilled || administratorsFulfilled,
-    process.intergovernmental_model != null, //Did you decide the type (If has a schema it means it has a type)
+    process.intergovernmental_model != null, // Did you decide the type (If has a schema it means it has a type)
     hasSchema,
-    process.incentive_and_rewards_state, //Have you active the rewards?
-    permissionsFullfilled, //Have you grant permissions to a team in all process?
+    process.incentive_and_rewards_state, // Have you active the rewards?
+    permissionsFullfilled, // Have you grant permissions to a team in all process?
     process.skipResourcesStep || newAssetsFullfilled,
   ];
 
-  let checker = (arr) => arr.every((v) => v === true);
+  const checker = (arr) => arr.every((v) => v === true);
   const hasCompletedAll = checker(temp_completeStates);
 
   const completeStates = [
     !!dataFulfilled || administratorsFulfilled,
-    process.intergovernmental_model != null, //Did you decide the type (If has a schema it means it has a type)
+    process.intergovernmental_model != null, // Did you decide the type (If has a schema it means it has a type)
     hasSchema,
-    process.hasAddAnOrganization, //Has Organizations? He decide!.
-    process.incentive_and_rewards_state, //Have you active the rewards?
-    permissionsFullfilled, //Have you grant permissions to a team in all process?
+    process.hasAddAnOrganization, // Has Organizations? He decide!.
+    process.incentive_and_rewards_state, // Have you active the rewards?
+    permissionsFullfilled, // Have you grant permissions to a team in all process?
     process.skipResourcesStep || newAssetsFullfilled,
-    hasCompletedAll, //Has Finish
+    hasCompletedAll, // Has Finish
   ];
 
   const selectedStepIndex = null;
@@ -323,12 +238,12 @@ export default function TimeLine({ assets }) {
   const changeRewarding = async (status, leaderboard) => {
     const values = {
       incentive_and_rewards_state: status,
-      leaderboard: leaderboard,
+      leaderboard,
     };
     if (values.incentive_and_rewards_state) {
       const taskList = prepareGameTemplate(tree);
-      let res = await oldgamesApi.setGame(process.id, taskList);
-      values["game_id"] = res.id;
+      const res = await oldgamesApi.setGame(process.id, taskList);
+      values.game_id = res.id;
     } else {
       oldgamesApi.deleteGame(process.id).then((res) => {
         dispatch(
@@ -349,7 +264,7 @@ export default function TimeLine({ assets }) {
         phase.children.forEach((objective) => {
           objective.children.forEach((task) => {
             if (task.status === "finished") {
-              const updated_task = Object.assign({}, task);
+              const updated_task = { ...task };
               updated_task.status = "in_progress";
               tasksApi.update(task.id, updated_task).then((res) => {});
             }
@@ -421,7 +336,7 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_1"}
+              id="section_1"
             >
               <StepLabel StepIconComponent={Construction}>
                 <Grid container spacing={2}>
@@ -464,7 +379,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step2.svg"
                       height="350vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/*  <Grid
@@ -503,27 +418,25 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_2"}
+              id="section_2"
             >
               <StepLabel StepIconComponent={DataSaverOff}>
                 <Grid container spacing={2}>
                   <Grid item xs={6} sx={{ minHeight: "55vh" }}>
                     <Stack spacing={1}>
                       <Typography variant="h6">
-                        {t("What is your project") + "?"}
+                        {`${t("What is your project")}?`}
                       </Typography>
 
                       <Typography variant="subtitle1">
-                        {t("Every co-production process has particular") + "."}
+                        {`${t("Every co-production process has particular")}.`}
                       </Typography>
 
                       {process.intergovernmental_model != null ? (
                         <Alert severity="success">
-                          {t(
+                          {`${t(
                             "You have already defined the type of co-production process"
-                          ) +
-                            ": " +
-                            process.intergovernmental_model}
+                          )}: ${process.intergovernmental_model}`}
                         </Alert>
                       ) : (
                         <Button
@@ -559,7 +472,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step3.svg"
                       height="400vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/* <Grid
@@ -598,7 +511,7 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_3"}
+              id="section_3"
             >
               <StepLabel StepIconComponent={AccountTree}>
                 <Grid container spacing={2}>
@@ -654,7 +567,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step4.svg"
                       height="330vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/*  <Grid
@@ -749,7 +662,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step1.svg"
                       height="400vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/*                   <Grid
@@ -789,7 +702,7 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_7"}
+              id="section_7"
             >
               <StepLabel StepIconComponent={Widgets}>
                 <Grid container spacing={2}>
@@ -856,7 +769,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step7.svg"
                       height="450vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/*  <Grid
@@ -896,7 +809,7 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_6"}
+              id="section_6"
             >
               <StepLabel StepIconComponent={BusinessCenter}>
                 <Grid container spacing={2}>
@@ -948,7 +861,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step6.png"
                       height="410vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/* <Grid
@@ -987,7 +900,7 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_5"}
+              id="section_5"
             >
               <StepLabel StepIconComponent={MilitaryTech}>
                 <Grid container spacing={2}>
@@ -1042,7 +955,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step5.svg"
                       height="410vw"
-                    ></img>
+                    />
                   </Grid>
 
                   {/* <Grid
@@ -1081,7 +994,7 @@ export default function TimeLine({ assets }) {
                   fontSize: "2.5rem",
                 },
               }}
-              id={"section_8"}
+              id="section_8"
             >
               <StepLabel StepIconComponent={Flag}>
                 <Grid
@@ -1132,7 +1045,7 @@ export default function TimeLine({ assets }) {
                     <img
                       src="/static/guide/overview_step8.svg"
                       height="450px"
-                    ></img>
+                    />
                   </Grid>
                 </Grid>
               </StepLabel>

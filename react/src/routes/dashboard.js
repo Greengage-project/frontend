@@ -70,6 +70,11 @@ const PrivacyPolicy = Loadable(
 const IframeGamification = Loadable(
   lazy(() => import("../pages/IframeGamification"))
 );
+
+const IframeWithoutGamification = Loadable(
+  lazy(() => import("../pages/IframeWithoutGamification"))
+);
+
 export const routes = [
   {
     path: "publiccoproductions",
@@ -289,6 +294,10 @@ export const routes = [
         path: "gamification",
         element: <IframeGamification />,
       },
+      { 
+        path: "contributionIframe",
+        element: <IframeWithoutGamification />,
+      }
     ],
   },
 ];

@@ -74,7 +74,7 @@ const BehavioralRewardSettings = (props) => {
             data: values,
             onSuccess: () => {
               if (mounted?.current) {
-                console.log(process);
+                // console.log(process);
               }
             },
           })
@@ -147,7 +147,7 @@ const BehavioralRewardSettings = (props) => {
       <Box
         alt="Medals"
         component="img"
-        src={`/static/reward/behavioral_strategy.svg`}
+        src="/static/reward/behavioral_strategy.svg"
         sx={{
           width: "100%",
           margin: "0 auto",

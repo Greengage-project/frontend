@@ -134,7 +134,6 @@ const SettingsTab = () => {
   const { tags } = useSelector((state) => state.general);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  //Dialogs:
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -146,10 +145,9 @@ const SettingsTab = () => {
     setIsCloning(true);
     setTimeoutExceeded(false);
 
-    // Initialize the timeout
     const timeoutId = setTimeout(() => {
-      setTimeoutExceeded(true); // Indicate that the timeout has been exceeded
-    }, 15000); // e.g., wait for 15 seconds
+      setTimeoutExceeded(true);
+    }, 15000);
 
     coproductionProcessesApi
       .copy(process.id, "Copy of ")
@@ -157,7 +155,7 @@ const SettingsTab = () => {
       .catch((error) => {
         clearTimeout(timeoutId);
         console.error(error);
-        setErrorMessage(t("Error while clonning") + ".");
+        setErrorMessage(`${t("Error while clonning")}.`);
         setIsError(true);
       })
       .finally(() => {
@@ -167,27 +165,10 @@ const SettingsTab = () => {
 
   const onPublish = () => {
     setPublishDialogOpen(true);
-    //coproductionProcessesApi.copy(process.id).then(() => navigate('/dashboard'));
   };
 
   const onDownload = () => {
     setShowDownloadDialog(true);
-    // setIsDownloading(true);
-    //alert('Downloading the file');
-    // coproductionProcessesApi.download(process.id).then((res) => {
-    //   if (mounted.current) {
-    //     const url = window.URL.createObjectURL(new Blob([res.data]));
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     link.setAttribute("download", process.name+".zip");
-    //     document.body.appendChild(link);
-
-    //     setIsDownloading(false);
-
-    //     link.click();
-
-    //   }
-    // });
   };
 
   const onRemove = () => {
@@ -286,12 +267,12 @@ const SettingsTab = () => {
   const changeRewarding = async (status, leaderboard) => {
     const values = {
       incentive_and_rewards_state: status,
-      leaderboard: leaderboard,
+      leaderboard,
     };
     if (values.incentive_and_rewards_state) {
       const taskList = prepareGameTemplate(tree);
-      let res = await oldgamesApi.setGame(process.id, taskList);
-      values["game_id"] = res.id;
+      const res = await oldgamesApi.setGame(process.id, taskList);
+      values.game_id = res.id;
     } else {
       oldgamesApi.deleteGame(process.id).then((res) => {
         dispatch(
@@ -312,7 +293,7 @@ const SettingsTab = () => {
         phase.children.forEach((objective) => {
           objective.children.forEach((task) => {
             if (task.status === "finished") {
-              const updated_task = Object.assign({}, task);
+              const updated_task = { ...task };
               updated_task.status = "in_progress";
               tasksApi.update(task.id, updated_task).then((res) => {});
             }
@@ -340,8 +321,6 @@ const SettingsTab = () => {
 
   const toggleGuideHide = async () => {
     if (isGuideHidden) {
-      //Before hide the guide check you have selected a schema:
-
       if (!hasSchema) {
         alert(t("To hide the guide checklist you must select a schema."));
         setOpenDialogSchema(true);
@@ -351,7 +330,6 @@ const SettingsTab = () => {
 
     setIsGuideHidden((prev) => !prev);
 
-    //Hide guide startup checklist
     const values = { hideguidechecklist: isGuideHidden };
 
     try {
@@ -375,7 +353,6 @@ const SettingsTab = () => {
   const toggleIsPublic = async () => {
     if (isPublic) {
       setIsPublic(!isPublic);
-      //Hide guide startup checklist
       const values = { is_public: !isPublic };
       try {
         dispatch(
@@ -418,17 +395,14 @@ const SettingsTab = () => {
     fileReader.readAsText(target.files[0]);
     fileReader.onload = (e) => {
       setIsPublishing(true);
-      //setJsonPropertiesFile( e.target.result);
-      let extractedData1 = e.target.result;
-      let extractedData = JSON.parse(extractedData1);
+      const extractedData1 = e.target.result;
+      const extractedData = JSON.parse(extractedData1);
       setJsonPropertiesFile(extractedData);
 
-      // Initialize the timeout
       const timeoutId = setTimeout(() => {
-        setTimeoutExceeded(true); // Indicate that the timeout has been exceeded
-      }, 15000); // e.g., wait for 15 seconds
+        setTimeoutExceeded(true);
+      }, 15000);
 
-      //Create a clone of the process:
       coproductionProcessesApi
         .publish(
           process.id,
@@ -441,9 +415,9 @@ const SettingsTab = () => {
           navigate("/stories");
         })
         .catch((error) => {
-          clearTimeout(timeoutId); // Clear the timeout in case of an error
+          clearTimeout(timeoutId);
           console.error(error);
-          setErrorMessage(t("Error while publishing the story") + ".");
+          setErrorMessage(`${t("Error while publishing the story")}.`);
           setIsError(true);
         })
         .finally(() => {
@@ -455,7 +429,6 @@ const SettingsTab = () => {
   useEffect(() => {
     storiesApi.getStoriesbyCopro(process.id).then((res) => {
       setStoriesList(res);
-      //console.log(storiesList);
     });
     if (process.tags.length > 0) {
       setSelectedTags(process.tags);
@@ -467,7 +440,7 @@ const SettingsTab = () => {
       setStoriesList((storiesList) =>
         storiesList.filter((story) => story.id !== story_id)
       );
-      navigate("/dashboard/coproductionprocesses/" + process.id + "/settings");
+      navigate(`/dashboard/coproductionprocesses/${process.id}/settings`);
     });
   };
 
@@ -494,7 +467,7 @@ const SettingsTab = () => {
     <>
       <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
         <Grid container>
-          <Grid item xl={12} lg={12} md={12} xs={12}></Grid>
+          <Grid item xl={12} lg={12} md={12} xs={12} />
 
           <AppBar
             position="static"
@@ -506,7 +479,6 @@ const SettingsTab = () => {
               indicatorColor="secondary"
               onChange={(event, value) => onSelect(value)}
               value={selectedTab}
-              // centered
               variant="scrollable"
               textColor="inherit"
               aria-label="Coproduction phases tabs"
@@ -520,12 +492,11 @@ const SettingsTab = () => {
                 },
               }}
             >
-              <Tab key="1" label={t("Info")} value="0"></Tab>
-              <Tab key="2" label={t("Admins")} value="1"></Tab>
-              <Tab key="3" label={t("Actions")} value="2"></Tab>
-              <Tab key="4" label={t("Extra")} value="3"></Tab>
+              <Tab key="1" label={t("Info")} value="0" />
+              <Tab key="2" label={t("Admins")} value="1" />
+              <Tab key="3" label={t("Actions")} value="2" />
+              <Tab key="4" label={t("Extra")} value="3" />
             </MuiTabs>
-            {/* {loading && <LinearProgress />} */}
           </AppBar>
         </Grid>
       </Box>
@@ -633,18 +604,12 @@ const SettingsTab = () => {
                 }}
                 validationSchema={Yup.object().shape({
                   name: Yup.string().required(t("Required")),
-                  /* description: Yup.string().required('required'),
-                                aim: Yup.string().required('required'),
-                                organization: Yup.string().required('required'),
-                                idea: Yup.string().required('required'),
-                                challenges: Yup.string().required('required'), */
                 })}
                 onSubmit={async (
                   values,
                   { setErrors, setStatus, setSubmitting }
                 ) => {
-                  //console.log(values);
-                  for (let tag of values.tags) {
+                  for (const tag of values.tags) {
                     if (!tag.id) {
                       await tagsApi
                         .createbyName({ name: tag })
@@ -812,15 +777,12 @@ const SettingsTab = () => {
                           options={tags}
                           noOptionsText="Enter to create a new option"
                           getOptionLabel={(tag) => {
-                            // Value selected with enter, right from the input
                             if (typeof tag === "string") {
                               return tag;
                             }
-                            // Add "xxx" option created dynamically
                             if (tag.inputValue) {
                               return tag.inputValue;
                             }
-                            // Regular option
                             return tag.name;
                           }}
                           onChange={(event, newValue) => {
@@ -829,14 +791,12 @@ const SettingsTab = () => {
                                 name: newValue,
                               });
                             } else if (newValue && newValue.inputValue) {
-                              // Create a new value from the user input
                               setSelectedTags({
                                 name: newValue.inputValue,
                               });
                             } else {
                               setSelectedTags(newValue);
                             }
-                            //console.log("New Tags values:",newValue);
                             setFieldValue("tags", newValue);
                           }}
                           renderOption={(props, tag) => (
@@ -1154,9 +1114,9 @@ const SettingsTab = () => {
                         </LoadingButton>
                       }
                     >
-                      {t(
+                      {`${t(
                         "This option lets you download the structure of the co"
-                      ) + "."}
+                      )}.`}
                     </Alert>
                   </Card>
 
@@ -1181,13 +1141,12 @@ const SettingsTab = () => {
                         </>
                       }
                     >
-                      {t(
+                      {`${t(
                         "This option will show the process startup guide to all users"
-                      ) + "."}
+                      )}.`}
                     </Alert>
                   </Card>
 
-                  {/* Make it public to anyone to see information about the process */}
                   <Card sx={{ border: "1px solid #b2b200", p: 5, my: 4 }}>
                     <Typography variant="h5" sx={{ fontWeight: "bold", mb: 0 }}>
                       {t("Open the process to new collaborators")}
@@ -1208,9 +1167,9 @@ const SettingsTab = () => {
                         </>
                       }
                     >
-                      {t(
+                      {`${t(
                         "This option will allow new collaborators to join the process"
-                      ) + "."}
+                      )}.`}
                     </Alert>
                   </Card>
                 </>
@@ -1295,20 +1254,16 @@ const SettingsTab = () => {
                 </Typography>
                 {storiesList.map((story) => {
                   const fechaStoryDate = new Date(story.created_at);
-                  let fechaStoryText = fechaStoryDate.toUTCString();
+                  const fechaStoryText = fechaStoryDate.toUTCString();
 
                   return (
                     <>
                       <ListItem disablePadding>
                         <ListItemButton
                           onClick={(event) => {
-                            // storiesApi.getStoriesbyId(story.id).then((res) => {
-                            // res.data=JSON.parse(res.data_story)
                             dispatch(getSelectedStory(story.id));
 
-                            navigate("/stories/" + story.id + "/overview");
-
-                            // });
+                            navigate(`/stories/${story.id}/overview`);
                           }}
                         >
                           <ListItemIcon>
@@ -1355,7 +1310,6 @@ const SettingsTab = () => {
               </List>
             )}
 
-            {/* {storiesList && ( */}
             <>
               <Typography variant="h6" sx={{ mt: 3 }}>
                 {t("New Publication of a Success Story")}
@@ -1385,8 +1339,6 @@ const SettingsTab = () => {
                       variant="contained"
                       disabled={!isAdministrator}
                       loading={isPublishing}
-                      //color="warning"
-                      //onClick={handleCapture}
                       component="label"
                       startIcon={<ViewList />}
                       sx={{
@@ -1404,20 +1356,9 @@ const SettingsTab = () => {
                       />
                     </LoadingButton>
                   </Stack>
-
-                  {/* <Button sx={{ mt: 2 }} variant="contained" component="label">
-                  {t("Publish from a File")}
-                  <input
-                    type="file"
-                    accept=".json"
-                    hidden
-                    onChange={handleCapture}
-                  />
-                </Button> */}
                 </Grid>
               </Grid>
             </>
-            {/* )} */}
           </DialogContent>
         </Dialog>
 
@@ -1450,17 +1391,17 @@ const SettingsTab = () => {
                 </div>
               </Item>
               <Item>
-                <div>{t("Publishing the Story please wait") + "."}</div>
+                <div>{`${t("Publishing the Story please wait")}.`}</div>
               </Item>
               <Item>
-                <div>{t("The process could last some minutes") + "."}</div>
+                <div>{`${t("The process could last some minutes")}.`}</div>
               </Item>
               {timeoutExceeded && (
                 <Item>
                   <div style={{ color: "blue" }}>
-                    {t(
+                    {`${t(
                       "The process of publishing a story can take a long time"
-                    ) + "."}
+                    )}.`}
                   </div>
                 </Item>
               )}
@@ -1497,18 +1438,18 @@ const SettingsTab = () => {
                 </div>
               </Item>
               <Item>
-                <div>{t("Cloning the project please wait") + "."}</div>
+                <div>{`${t("Cloning the project please wait")}.`}</div>
               </Item>
               <Item>
-                <div>{t("The process could last some minutes") + "."}</div>
+                <div>{`${t("The process could last some minutes")}.`}</div>
               </Item>
 
               {timeoutExceeded && (
                 <Item>
                   <div style={{ color: "red" }}>
-                    {t(
+                    {`${t(
                       "The process of creating a clone of an entire process can"
-                    ) + "."}
+                    )}.`}
                   </div>
                 </Item>
               )}

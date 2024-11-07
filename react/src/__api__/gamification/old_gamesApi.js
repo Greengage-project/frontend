@@ -13,14 +13,14 @@ class GamesApi extends GeneralApi {
 
   async setGame(processId, taskList) {
     const res = await axiosInstance.post(`/${this.url}/${processId}`, {
-      taskList: taskList,
+      taskList,
     });
     return res.data;
   }
 
   async updateGame(processId, task) {
     const res = await axiosInstance.put(`/${this.url}/${processId}`, {
-      task: task,
+      task,
     });
     return res.data;
   }
@@ -46,7 +46,7 @@ class GamesApi extends GeneralApi {
     const res = await axiosInstance.put(
       `/${this.url}/${processId}/${taskId}/complete`,
       {
-        data: data,
+        data,
       }
     );
     return res.data;
@@ -59,7 +59,7 @@ class GamesApi extends GeneralApi {
 
   async updateTask(processId, taskId, development) {
     const res = await axiosInstance.put(`/${this.url}/${processId}/${taskId}`, {
-      development: development,
+      development,
     });
     return res.data;
   }

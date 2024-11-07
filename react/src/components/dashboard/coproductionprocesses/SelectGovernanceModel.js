@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Avatar,
   Box,
   Grid,
-  Item,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,29 +10,14 @@ import {
   Button,
   CardActions,
   Card,
-  FormControl,
   IconButton,
-  Input,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
   Typography,
   Stack,
-  Chip,
 } from "@mui/material";
 
-import { LoadingButton } from "@mui/lab";
-import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getLanguage, LANGUAGES } from "translations/i18n";
-import {
-  Done,
-  Delete,
-  Close,
-  KeyboardArrowRight,
-  ArrowBack,
-} from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 
 import { updateProcess } from "slices/process";
@@ -64,9 +47,7 @@ export default function SelectGovernanceModel({
   const [logotype] = useState(null);
 
   function handleClick(name) {
-    //alert(`You have selected the governance model, ${name}`);
 
-    //Save Inter-governmental model
     const values = { intergovernmental_model: name };
 
     try {
@@ -136,9 +117,9 @@ export default function SelectGovernanceModel({
   ]);
 
   useEffect(() => {
-    let newStateGovernanceModels = [];
+    const newStateGovernanceModels = [];
     for (let i = 0; i < listGovernanceModels.length; i++) {
-      let newModel = listGovernanceModels[i];
+      const newModel = listGovernanceModels[i];
 
       if (categories.includes(listGovernanceModels[i].code)) {
         newModel.recomended = true;
@@ -179,7 +160,7 @@ export default function SelectGovernanceModel({
         </Grid>
 
         <Typography variant="body2">{governanceModel.description}</Typography>
-        <Typography variant="subtitle2">{t("For example") + ":"}</Typography>
+        <Typography variant="subtitle2">{`${t("For example")}:`}</Typography>
         <Typography variant="body2">{governanceModel.example}</Typography>
       </CardContent>
       <CardActions>

@@ -2,8 +2,6 @@ import { lazy } from "react";
 import MainLayout from "components/layouts/MainLayout";
 import Loadable from "./Loadable";
 
-// Error pages
-
 const AuthorizationRequired = Loadable(
   lazy(() => import("../pages/AuthorizationRequired"))
 );

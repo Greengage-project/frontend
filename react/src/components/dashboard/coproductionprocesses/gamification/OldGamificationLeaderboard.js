@@ -1,38 +1,21 @@
 import {
-  Dialog,
   Box,
   List,
   Chip,
-  DialogContent,
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  IconButton,
   Grid,
-  Card,
-  CardContent,
-  Container,
   Typography,
-  CardMedia,
-  Button,
-  Divider,
   Link,
   CircularProgress,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import UserAvatar from "components/UserAvatar";
-import LeaderboardOutlinedIcon from "@mui/icons-material/LeaderboardOutlined";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
-import { Close, ViewTimeline } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserActivities } from "slices/general";
-import CoproNotifications from "components/dashboard/coproductionprocesses/CoproNotifications";
-import { getAllChildren } from "slices/process";
-import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import { useNavigate } from "react-router";
 import { setSelectedTreeItemById } from "slices/process";
+import { useNavigate } from "react-router";
 
 const DEVELOPMENT_COMPLEXITY = {
   0: "None",
@@ -80,17 +63,17 @@ const OldGamificationLeaderboard = ({ user, game, place, loading }) => {
   };
 
   const filterGame = () => {
-    let tmpGame = {};
-    let tmpPhases = {};
+    const tmpGame = {};
+    const tmpPhases = {};
     let tmpPoints = 0;
-    for (let task of game.taskList) {
-      for (let player of task.players) {
+    for (const task of game.taskList) {
+      for (const player of task.players) {
         if (player.id === user.id) {
           tmpGame[task.id] = {
             score: task.development * player.development,
             contribution: player.development,
           };
-          let phase_id = treeitems.find((item) => item.id === task.id).phase_id;
+          const { phase_id } = treeitems.find((item) => item.id === task.id);
           if (tmpPhases[phase_id] === undefined) {
             tmpPhases[phase_id] = task.development * player.development;
           } else {
@@ -152,7 +135,7 @@ const OldGamificationLeaderboard = ({ user, game, place, loading }) => {
               {place < 4 && place != 0 ? (
                 <img
                   src={`/static/graphics/${place}place.svg`}
-                  alt={"medal"}
+                  alt="medal"
                   loading="lazy"
                 />
               ) : place === 0 ? (
@@ -184,7 +167,7 @@ const OldGamificationLeaderboard = ({ user, game, place, loading }) => {
             {tree.map((node) => (
               <>
                 <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-                  {node.name} - {phases[node.id] ? phases[node.id] : "0"}{" "}
+                  {node.name} -{phases[node.id] ? phases[node.id] : "0"}{" "}
                   {t("points")}
                 </Typography>
                 <List>
@@ -204,12 +187,11 @@ const OldGamificationLeaderboard = ({ user, game, place, loading }) => {
                               }
                             >
                               {filteredGame[child.id]
-                                ? CONTRIBUTION_LEVELS[
-                                    filteredGame[child.id].contribution
-                                  ] +
-                                  " - " +
-                                  filteredGame[child.id].score +
-                                  " points"
+                                ? `${
+                                    CONTRIBUTION_LEVELS[
+                                      filteredGame[child.id].contribution
+                                    ]
+                                  } - ${filteredGame[child.id].score} points`
                                 : "No contribution"}
                             </Typography>
                           </ListItemSecondaryAction>
@@ -224,12 +206,11 @@ const OldGamificationLeaderboard = ({ user, game, place, loading }) => {
                                 {child.name}
                               </Link>
                             }
-                            secondary={
-                              DEVELOPMENT_COMPLEXITY[child.development] +
-                              " - " +
-                              child.development * 3 +
-                              t(" points possible")
-                            }
+                            secondary={`${
+                              DEVELOPMENT_COMPLEXITY[child.development]
+                            } - ${child.development * 3}${t(
+                              " points possible"
+                            )}`}
                             sx={{
                               bgcolor: "",
                               borderRadius: "5px",

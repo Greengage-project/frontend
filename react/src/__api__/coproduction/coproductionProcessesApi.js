@@ -34,20 +34,17 @@ class CoproductionProcessesApi extends GeneralApi {
 
       try {
         const res = await axiosInstance.post(`/${this.url}/import`, formData, {
-          timeout: 240000, // Set timeout to 4 min
+          timeout: 240000,
         });
-        console.log("the response of import is: ", res.data);
+        console.log("the response of import is: ", res?.data);
         return res.data;
       } catch (error) {
-        // If the request took longer than 24000 seconds, it will throw an error which you can catch here
         console.error(error);
       }
     }
   }
 
   async getPublicProcesses(params = {}, language = getLanguage()) {
-    //console.log(`/${this.url}` + params);
-    //Get data of user_notifications
     const res = await axiosInstance.get(`/${this.url}/public`, {
       params: removeEmpty(params),
       headers: {
@@ -64,7 +61,6 @@ class CoproductionProcessesApi extends GeneralApi {
           "Accept-Language": language,
         },
       });
-      //console.log('get call', res.data, 'in', language);
       return res.data;
     }
   }
@@ -112,7 +108,6 @@ class CoproductionProcessesApi extends GeneralApi {
   async getTreeCatalogue(id) {
     if (id) {
       const res = await axiosInstance.get(`/${this.url}/${id}/tree/catalogue`);
-      //console.log('get tree', res.data);
       return res.data;
     }
   }
@@ -135,33 +130,22 @@ class CoproductionProcessesApi extends GeneralApi {
   async clearSchema(id) {
     if (id) {
       const res = await axiosInstance.post(`/${this.url}/${id}/clear_schema`);
-      console.log("clear schema", res.data);
       return res.data;
     }
   }
 
-  // The timeout: 0 is needed to avoid the default timeout of 40s
   async copy(id, label_name, from_view = "settings") {
-    console.log(
-      `/${this.url}/${id}/copy?label_name=${label_name}&from_view=${from_view}`
-    );
     if (id) {
       const res = await axiosInstance.request({
         method: "post",
         url: `/${this.url}/${id}/copy?label_name=${label_name}&from_view=${from_view}`,
         timeout: 0,
       });
-      console.log("copy", res.data);
       return res.data;
     }
   }
 
-  // The timeout: 0 is needed to avoid the default timeout of 40s
   async publish(id, label_name, from_view = "settings", extractedData) {
-    console.log(
-      `/${this.url}/${id}/publish_story?label_name=${label_name}&from_view=${from_view}`
-    );
-
     if (id) {
       try {
         const res = await axiosInstance.request({
@@ -170,11 +154,9 @@ class CoproductionProcessesApi extends GeneralApi {
           data: extractedData,
           timeout: 0,
         });
-        console.log("publish", res.data);
         return res.data;
       } catch (error) {
         console.error("Error during publish:", error);
-        // Handle or throw the error based on your use case
         throw error;
       }
     }

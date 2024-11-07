@@ -22,7 +22,6 @@ import {
   MenuItem,
   TextField,
   Typography,
-  Snackbar,
   Grid,
   FormControlLabel,
   FormGroup,
@@ -56,7 +55,6 @@ const ContributionsTabs = () => {
   const [task, setTask] = useState(null);
   const [loadingContributions, setLoadingContributions] = useState(false);
 
-  // Data for new contributions
   const [rows, setRows] = useState([]);
   const [contributor, setContributor] = useState(null);
   const [closedTask, setClosedTask] = useState(false);
@@ -79,8 +77,8 @@ const ContributionsTabs = () => {
   const [checkboxValues, setCheckboxValues] = useState([]);
 
   const handleCheckboxChange = (event) => {
-    const value = event.target.value;
-    const checked = event.target.checked;
+    const { value } = event.target;
+    const { checked } = event.target;
 
     if (checked) {
       setCheckboxValues([...checkboxValues, value]);
@@ -98,7 +96,6 @@ const ContributionsTabs = () => {
       .replace(/'/g, "&#39;");
   }
 
-  //Function to create a claim from a list
   const createClaims_by_users = (values, user_ids) => {
     const claimData = {
       users_id: user_ids,
@@ -115,21 +112,16 @@ const ContributionsTabs = () => {
       const responseData = JSON.parse(res.data);
       console.log(responseData);
 
-      if (responseData["excluded"].length > 0) {
+      if (responseData.excluded.length > 0) {
         alert(
-          t("We couldn't include") +
-            ": [" +
-            responseData["excluded"] +
-            "] " +
-            t(
-              "users because are not part of a team with permissions over this task. Please check the list of users and try again"
-            )
+          `${t("We couldn't include")}: [${responseData.excluded}] ${t(
+            "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+          )}`
         );
       }
     });
   };
 
-  //Function to create a claims from a team
   const createClaims_by_teams = (values, team_ids) => {
     const claimData = {
       teams_id: team_ids,
@@ -146,15 +138,11 @@ const ContributionsTabs = () => {
       const responseData = JSON.parse(res.data);
       console.log(responseData);
 
-      if (responseData["excluded"].length > 0) {
+      if (responseData.excluded.length > 0) {
         alert(
-          t("We couldn't include") +
-            ": [" +
-            responseData["excluded"] +
-            "] " +
-            t(
-              "users because are not part of a team with permissions over this task. Please check the list of users and try again"
-            )
+          `${t("We couldn't include")}: [${responseData.excluded}] ${t(
+            "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+          )}`
         );
       }
     });
@@ -170,13 +158,11 @@ const ContributionsTabs = () => {
     setSubmitting
   ) => {
     const selectedAsset = values.asset;
-    //Defino el link del asset
     let selectedAssetLink = "";
     let selectedAssetIcon = "";
     let selectedShowIcon = "";
     let selectedShowLink = "";
     if (selectedAsset.type == "externalasset") {
-      //Is external
       selectedAssetLink = selectedAsset.uri;
 
       if (selectedAsset.icon_path) {
@@ -187,23 +173,19 @@ const ContributionsTabs = () => {
 
       selectedShowIcon = "";
       selectedShowLink = "hidden";
+    } else if (selectedAsset.link) {
+      selectedAssetLink = `${selectedAsset.link}/view`;
+      selectedShowIcon = "";
+      selectedShowLink = "hidden";
     } else {
-      if (selectedAsset.link) {
-        //Is internal
-        selectedAssetLink = selectedAsset.link + "/view";
-        selectedShowIcon = "";
-        selectedShowLink = "hidden";
-      } else {
-        const backend = selectedAsset["software_response"]["backend"];
-        const linkAsset =
-          backend + "/" + selectedAsset["external_asset_id"] + "/view";
-        selectedAssetLink = linkAsset;
-      }
+      const { backend } = selectedAsset.software_response;
+      const linkAsset = `${backend}/${selectedAsset.external_asset_id}/view`;
+      selectedAssetLink = linkAsset;
     }
 
     const parametersList = {
       assetId: selectedAsset.id,
-      assetName: "{assetid:" + selectedAsset.id + "}",
+      assetName: `{assetid:${selectedAsset.id}}`,
       assetLink: selectedAssetLink,
       assetIcon: selectedAssetIcon,
       commentTitle: escape(values.title),
@@ -219,7 +201,7 @@ const ContributionsTabs = () => {
     let dataToSend = {};
     let listUsuarios = [];
     if (!isListUsers) {
-      //Solamente guardo info de 1 usuario
+      // Solamente guardo info de 1 usuario
       listUsuarios = [user.id];
       dataToSend = {
         coproductionprocess_id: process.id,
@@ -231,7 +213,7 @@ const ContributionsTabs = () => {
         isTeam: isTeams,
       };
     } else {
-      //En el caso que sea una lista de usuarios:
+      // En el caso que sea una lista de usuarios:
       listUsuarios = user.join(",");
 
       dataToSend = {
@@ -251,15 +233,11 @@ const ContributionsTabs = () => {
         const responseData = JSON.parse(res.data);
         console.log(responseData);
 
-        if (responseData["excluded"].length > 0) {
+        if (responseData.excluded.length > 0) {
           alert(
-            t("We couldn't include") +
-              ": [" +
-              responseData["excluded"] +
-              "] " +
-              t(
-                "users because are not part of a team with permissions over this task. Please check the list of users and try again"
-              )
+            `${t("We couldn't include")}: [${responseData.excluded}] ${t(
+              "users because are not part of a team with permissions over this task. Please check the list of users and try again"
+            )}`
           );
         }
 
@@ -268,7 +246,7 @@ const ContributionsTabs = () => {
         // getAssets();
         handleCloseDialog();
 
-        //Register an event in matomo
+        // Register an event in matomo
         async function getRoles(user_id, isTeamsSelected = false) {
           if (isTeamsSelected) {
             const team_temp = await teamsApi.get(user_id);
@@ -278,7 +256,7 @@ const ContributionsTabs = () => {
             }
           } else {
             const user_temp = await usersApi.get(user_id);
-            let listofRoles = [];
+            const listofRoles = [];
 
             for (let i = 0; i < user_temp.teams_ids.length; i++) {
               const listAllowedTeams = selectedTreeItem.teams;
@@ -296,7 +274,7 @@ const ContributionsTabs = () => {
             if (listofRoles.length > 0) {
               action_role_value = listofRoles[0].type;
 
-              //Register an event in matomo
+              // Register an event in matomo
               trackEvent({
                 category: process.name,
                 action: "claim-contribution",
@@ -324,18 +302,18 @@ const ContributionsTabs = () => {
       });
   };
 
-  //Obtain the contributions data
+  // Obtain the contributions data
   // TODO: use this method as the default one to get the contributions
   const getContributionsData = () => {
     dispatch(getContributions(selectedTreeItem.id));
   };
 
   const parseFile = (evt) => {
-    let exclude = [];
+    const exclude = [];
     if (!(evt.target && evt.target.files && evt.target.files[0])) {
       return;
     }
-    let options = {
+    const options = {
       fieldSeparator: ",",
       decimalSeparator: ".",
       showLabels: false,
@@ -345,20 +323,20 @@ const ContributionsTabs = () => {
       headers: ["mails"],
     };
 
-    let csvExporter = new ExportToCsv(options);
-    let rejected_users = [];
+    const csvExporter = new ExportToCsv(options);
+    const rejected_users = [];
     Papa.parse(evt.target.files[0], {
       header: false,
       skipEmptyLines: true,
-      complete: function (results) {
-        let new_users = [];
-        for (let u of results.data) {
+      complete(results) {
+        const new_users = [];
+        for (const u of results.data) {
           const email = u.toString().replace(",", "");
-          //alert(email);
+          // alert(email);
           new_users.push(email);
         }
         setListUsers(new_users);
-        //alert(new_users.length + " users added");
+        // alert(new_users.length + " users added");
 
         if (rejected_users.length > 0) {
           // setMailErrors(true);
@@ -371,12 +349,12 @@ const ContributionsTabs = () => {
 
   useEffect(() => {
     if (claimDialogOpen) {
-      const permissions = selectedTreeItem.permissions;
+      const { permissions } = selectedTreeItem;
       setListTeams([]);
 
-      let listTeamsTemporal = [];
+      const listTeamsTemporal = [];
 
-      for (var i = 0; i < permissions.length; i++) {
+      for (let i = 0; i < permissions.length; i++) {
         const equipoTemp = permissions[i].team;
 
         if (listTeamsTemporal.includes(equipoTemp)) {
@@ -385,7 +363,7 @@ const ContributionsTabs = () => {
         }
       }
 
-      let listTeamsSet = new Set(listTeamsTemporal);
+      const listTeamsSet = new Set(listTeamsTemporal);
       setListTeams(Array.from(listTeamsSet));
     }
   }, [claimDialogOpen]);
@@ -418,44 +396,6 @@ const ContributionsTabs = () => {
     setCheckboxValues([]);
     setListUsers([]);
   };
-
-  // const handleCloseTask = async () => {
-  //   console.log("Closing task", rows);
-  //   for (let row of rows) {
-  //     await oldgamesApi.addClaim(
-  //       process.id,
-  //       selectedTreeItem.id,
-  //       row.id,
-  //       row.name,
-  //       CONTRIBUTION_LEVELS[row.contribution]
-  //     );
-  //   }
-  //   console.log("Claims done")
-
-  //   //Save user data and contribution in data object
-  //   const data = {};
-  //   for (let row of rows) {
-  //     const user = await usersApi.get(row.id);
-  //     data[row.id] = {
-  //       name: user.full_name,
-  //       email: user.email
-  //     };
-  //   }
-  //   console.log("Data", data);
-
-  //   oldgamesApi.completeTask(process.id, selectedTreeItem.id, data).then((res) => {
-  //     console.log(res);
-  //     setClosedTask(true);
-  //   });
-
-  //   tasksApi.update(selectedTreeItem.id, { status: "finished" }).then((res) => {
-  //     console.log(res);
-  //   });
-
-  //   setLoadingContributions(ture);
-  //   //Remove temporal list of contributions levels
-  //   dispatch(setContributionsListLevels([]));
-  // };
 
   const handleCloseTask = async () => {
     try {
@@ -514,30 +454,27 @@ const ContributionsTabs = () => {
       dispatch(setContributionsListLevels([]));
     } catch (error) {
       console.error("An error occurred:");
-      console.error("Error Name:", error.name);
-      console.error("Error Message:", error.message);
-      console.error("Stack Trace:", error.stack);
+      console.error("Error Name:", error?.name);
+      console.error("Error Message:", error?.message);
+      console.error("Stack Trace:", error?.stack);
       // Handle other errors here
     }
   };
 
   useEffect(() => {
     let isSubscribed = true;
-    //console.log("contributions", contributions);
-    //alert("Recarga el listado de contribuciones");
     if (isSubscribed) {
       setRows([]);
     }
 
-    // declare the data fetching function
     const fetchData = async () => {
-      let task = await oldgamesApi.getTask(process.id, selectedTreeItem.id);
+      const task = await oldgamesApi.getTask(process.id, selectedTreeItem.id);
 
       if (typeof task !== "undefined" && task.completed) {
         setClosedTask(task.completed);
         console.log("tasks dentro de closed task", task);
-        let r = [];
-        for (let player of task.players) {
+        const r = [];
+        for (const player of task.players) {
           r.push({
             id: player.id,
             name: player.name,
@@ -559,7 +496,7 @@ const ContributionsTabs = () => {
           return;
         }
         let total_contribs = 0;
-        let contribs = {};
+        const contribs = {};
         for (let i = 0; i < contributions.length; i++) {
           for (let j = 0; j < contributions[i].contributors.length; j++) {
             if (!contribs[contributions[i].contributors[j].user_id]) {
@@ -571,13 +508,13 @@ const ContributionsTabs = () => {
           }
         }
 
-        let tempListRows = [];
-        for (let id in contribs) {
+        const tempListRows = [];
+        for (const id in contribs) {
           const userTemp = await usersApi.get(id);
 
           tempListRows.push({
-            id: id,
-            name: userTemp.full_name + " (" + contribs[id] + ")",
+            id,
+            name: `${userTemp.full_name} (${contribs[id]})`,
             contribution: mapContributions(total_contribs, contribs[id]),
             contrib_value: contribs[id],
           });
@@ -727,7 +664,7 @@ const ContributionsTabs = () => {
                       values,
                       { setErrors, setStatus, setSubmitting }
                     ) => {
-                      //alert("Lets send the contribution to the server!!");
+                      // alert("Lets send the contribution to the server!!");
 
                       const userSelected = values.user != "";
                       const fileSelected = listUsers.length > 0;
@@ -737,7 +674,7 @@ const ContributionsTabs = () => {
 
                       if (userSelected || fileSelected || teamsSelected) {
                         if (userSelected) {
-                          //alert("You have selected a user:" + values.user.id);
+                          // alert("You have selected a user:" + values.user.id);
 
                           // Create a Claim for the user:
                           createClaims_by_users(values, [values.user.id]);
@@ -754,28 +691,22 @@ const ContributionsTabs = () => {
                           );
                         }
                         if (fileSelected) {
-                          //("You have selected a file:" + listUsers.length);
+                          // ("You have selected a file:" + listUsers.length);
                           let listUsersIds = [];
                           for (let i = 0; i < listUsers.length; i++) {
-                            //Obtain a user from its email:
+                            // Obtain a user from its email:
                             const usuario = await usersApi.search(listUsers[i]);
                             if (usuario[0] === undefined) {
                               alert(
-                                t("The user") +
-                                  " " +
-                                  listUsers[i] +
-                                  " " +
-                                  t(
-                                    "haven't registered yet in the platform. Please, ask him to register and try again"
-                                  ) +
-                                  "."
+                                `${t("The user")} ${listUsers[i]} ${t(
+                                  "haven't registered yet in the platform. Please, ask him to register and try again"
+                                )}.`
                               );
                               return false;
-                            } else {
-                              listUsersIds = [...listUsersIds, usuario[0].id];
                             }
+                            listUsersIds = [...listUsersIds, usuario[0].id];
                           }
-                          //alert("You have selected a file:" + listUsersIds)
+                          // alert("You have selected a file:" + listUsersIds)
 
                           // Create a claims for the users:
                           createClaims_by_users(values, listUsersIds);
@@ -790,14 +721,14 @@ const ContributionsTabs = () => {
                             setStatus,
                             setSubmitting
                           );
-                          //Refresh the list of contributions
+                          // Refresh the list of contributions
                           getContributionsData();
                         }
                         if (teamsSelected) {
                           // Create a claims for a list of teams:
                           createClaims_by_teams(values, checkboxValues);
 
-                          //alert("You have selected a team:" + checkboxValues);
+                          // alert("You have selected a team:" + checkboxValues);
                           createNotificationsProcess(
                             values,
                             checkboxValues,
@@ -807,7 +738,7 @@ const ContributionsTabs = () => {
                             setStatus,
                             setSubmitting
                           );
-                          //Refresh the list of contributions
+                          // Refresh the list of contributions
                         }
                         getContributionsData();
                       } else {
@@ -836,24 +767,23 @@ const ContributionsTabs = () => {
                           {!contributor &&
                           listUsers.length == 0 &&
                           checkboxValues.length == 0 ? (
-                            //Show all Options
+                            // Show all Options
                             <Box sx={{ mt: 0 }}>
                               <Typography
                                 variant="h6"
                                 component="h5"
                                 sx={{ mt: 2 }}
                               >
-                                {t("Select one of the following options") + ":"}
+                                {`${t("Select one of the following options")}:`}
                               </Typography>
                               <Box sx={{ ml: 1 }}>
                                 <InputLabel
                                   id="resource-select-label"
                                   sx={{ mt: 2, mb: -1, fontWeight: "bold" }}
                                 >
-                                  {"1.- " +
-                                    t(
-                                      "Add contribution of a single user" + "."
-                                    )}
+                                  {`1.- ${t(
+                                    "Add contribution of a single user" + "."
+                                  )}`}
                                 </InputLabel>
                                 <UserSearch
                                   error={Boolean(touched.user && errors.user)}
@@ -871,11 +801,9 @@ const ContributionsTabs = () => {
                                   id="resource-select-label"
                                   sx={{ mt: 2, mb: -1, fontWeight: "bold" }}
                                 >
-                                  {"2.- " +
-                                    t(
-                                      "Add contribution of one or multiple teams"
-                                    ) +
-                                    "."}
+                                  {`2.- ${t(
+                                    "Add contribution of one or multiple teams"
+                                  )}.`}
                                 </InputLabel>
                                 <FormGroup sx={{ mt: 1 }}>
                                   {listTeams.length == 0 && (
@@ -920,11 +848,10 @@ const ContributionsTabs = () => {
                                   id="resource-select-label"
                                   sx={{ mt: 2, mb: -1, fontWeight: "bold" }}
                                 >
-                                  {"3.- " +
-                                    t(
-                                      "Add contribution from multiple users included in a file" +
-                                        "."
-                                    )}
+                                  {`3.- ${t(
+                                    "Add contribution from multiple users included in a file" +
+                                      "."
+                                  )}`}
                                 </InputLabel>
                                 <Stack
                                   direction="row"
@@ -935,7 +862,7 @@ const ContributionsTabs = () => {
                                     variant="contained"
                                     //   disabled={!isAdministrator}
                                     loading={false}
-                                    //color="warning"
+                                    // color="warning"
                                     component="label"
                                     startIcon={<ViewList />}
                                     sx={{
@@ -957,7 +884,7 @@ const ContributionsTabs = () => {
                                       variant="p"
                                       sx={{ mt: 3, ml: 4 }}
                                     >
-                                      {t("An example of this file") + ":"}
+                                      {`${t("An example of this file")}:`}
                                       <Link
                                         to="/static/story/ExampleFileCSV.csv"
                                         target="_blank"
@@ -974,7 +901,7 @@ const ContributionsTabs = () => {
                           ) : (
                             <>
                               {contributor ? (
-                                //Muestro Opciones de unico contribuidor
+                                // Muestro Opciones de unico contribuidor
                                 <>
                                   <Typography
                                     variant="h6"
@@ -1015,7 +942,7 @@ const ContributionsTabs = () => {
                               ) : (
                                 <>
                                   {listUsers.length > 0 ? (
-                                    //Muestro Opciones de Archivo CSV
+                                    // Muestro Opciones de Archivo CSV
                                     <>
                                       <Typography
                                         variant="h6"
@@ -1031,7 +958,7 @@ const ContributionsTabs = () => {
                                             sx={{ mt: 2 }}
                                             id="outlined-disabled"
                                             label="Archivo CSV"
-                                            value={listUsers.length + " users"}
+                                            value={`${listUsers.length} users`}
                                             InputProps={{
                                               readOnly: true,
                                             }}
@@ -1058,7 +985,7 @@ const ContributionsTabs = () => {
                                   ) : (
                                     <>
                                       {listTeams.length > 0 && (
-                                        //Muestro Opciones de Teams
+                                        // Muestro Opciones de Teams
                                         <>
                                           <Typography
                                             variant="h6"
@@ -1074,10 +1001,7 @@ const ContributionsTabs = () => {
                                                 sx={{ mt: 2 }}
                                                 id="outlined-disabled"
                                                 label="Teams"
-                                                value={
-                                                  checkboxValues.length +
-                                                  " teams"
-                                                }
+                                                value={`${checkboxValues.length} teams`}
                                                 InputProps={{
                                                   readOnly: true,
                                                 }}
@@ -1236,7 +1160,7 @@ const ContributionsTabs = () => {
                   severity="warning"
                   sx={{ m: 1.35, float: "right", alignItems: "center" }}
                 >
-                  {t("This task does not have a complexity defined") + "."}
+                  {`${t("This task does not have a complexity defined")}.`}
                 </Alert>
               )}
             </>

@@ -12,20 +12,22 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { Close, MilitaryTech } from "@mui/icons-material";
+import {
+  Close,
+  MilitaryTech,
+  Article,
+  MoreVert as MoreVertIcon,
+} from "@mui/icons-material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { Article, MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { InterlinkerDialog } from "components/dashboard/interlinkers";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { InterlinkerReference } from "../interlinkers";
 import CoproNotifications from "components/dashboard/coproductionprocesses/CoproNotifications";
 import { useDispatch, useSelector } from "react-redux";
 import { getCoproductionProcessNotifications } from "slices/general";
 import { useLocation } from "react-router";
-import { useNavigate } from "react-router-dom";
-
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/styles";
 
@@ -42,16 +44,11 @@ const Assets = ({ language, loading, getActions = null }) => {
   const [activitiesDialogOpen, setactivitiesDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const navigate = useNavigate();
   const [selectedRow, setSelectedRow] = useState(null);
 
   const dispatch = useDispatch();
 
-  const [inputValue, setInputValue] = useState("");
   const { process } = useSelector((state) => state.process);
-  console.log("-------------------> process");
-  console.log(process);
-  console.log("-------------------> process");
   const isGamification = process?.game_gamification_engine === "GAME";
 
   const { assetsList } = useSelector((state) => state.general);
@@ -59,15 +56,6 @@ const Assets = ({ language, loading, getActions = null }) => {
 
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
-  const largeDevice = useMediaQuery(theme.breakpoints.down("lg"));
-  const xlargeDevice = useMediaQuery(theme.breakpoints.down("xl"));
-
-  const handleClick = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setAnchorEl(event.currentTarget);
-    //console.log(event);
-  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -98,16 +86,14 @@ const Assets = ({ language, loading, getActions = null }) => {
           headerName: "",
           sortable: false,
           flex: 0.05,
-          renderCell: (params) => {
-            return (
-              <Avatar
-                src={params.row.icon}
-                sx={{ height: "30px", width: "30px" }}
-              >
-                {!params.row.icon && <Article />}
-              </Avatar>
-            );
-          },
+          renderCell: (params) => (
+            <Avatar
+              src={params.row.icon}
+              sx={{ height: "30px", width: "30px" }}
+            >
+              {!params.row.icon && <Article />}
+            </Avatar>
+          ),
         },
         {
           field: "name",
@@ -142,58 +128,55 @@ const Assets = ({ language, loading, getActions = null }) => {
           headerName: t("Actions"),
           sortable: false,
           flex: 0.15,
-          renderCell: (params) => {
-            //console.log(params.row);
-            return (
-              <>
-                <IconButton
-                  aria-label="settings"
-                  aria-controls="basic-menu"
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    setAnchorEl(event.currentTarget);
-                    setSelectedRow(params.row.id);
-                  }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open && selectedRow == params.row.id}
-                  onClose={handleClose}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  {params.row.actions &&
-                    params.row.actions.map(
-                      ({ id, loading, onClick, text, icon }) => (
-                        <MyMenuItem
-                          key={id}
-                          loading={loading}
-                          id={id}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            event.preventDefault();
-                            onClick(handleClose);
-                          }}
-                          text={text}
-                          icon={icon}
-                        />
-                      )
-                    )}
-                </Menu>
-              </>
-            );
-          },
+          renderCell: (params) => (
+            <>
+              <IconButton
+                aria-label="settings"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  setAnchorEl(event.currentTarget);
+                  setSelectedRow(params.row.id);
+                }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open && selectedRow == params.row.id}
+                onClose={handleClose}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                }}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                {params.row.actions &&
+                  params.row.actions.map(
+                    ({ id, loading, onClick, text, icon }) => (
+                      <MyMenuItem
+                        key={id}
+                        loading={loading}
+                        id={id}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          event.preventDefault();
+                          onClick(handleClose);
+                        }}
+                        text={text}
+                        icon={icon}
+                      />
+                    )
+                  )}
+              </Menu>
+            </>
+          ),
         },
       ];
     } else {
@@ -203,16 +186,14 @@ const Assets = ({ language, loading, getActions = null }) => {
           headerName: "",
           sortable: false,
           flex: 0.05,
-          renderCell: (params) => {
-            return (
-              <Avatar
-                src={params.row.icon}
-                sx={{ height: "30px", width: "30px" }}
-              >
-                {!params.row.icon && <Article />}
-              </Avatar>
-            );
-          },
+          renderCell: (params) => (
+            <Avatar
+              src={params.row.icon}
+              sx={{ height: "30px", width: "30px" }}
+            >
+              {!params.row.icon && <Article />}
+            </Avatar>
+          ),
         },
         process?.game_gamification_engine === "GAME"
           ? {
@@ -220,25 +201,23 @@ const Assets = ({ language, loading, getActions = null }) => {
               headerName: t("Gamified"),
               sortable: false,
               flex: 0.2,
-              renderCell: (params) => {
-                return (
-                  <Tooltip title="This badge represents a gamified reward for your achievements!">
-                    <MilitaryTech
-                      color="black"
-                      style={{
-                        cursor: "pointer",
-                        transition: "transform 0.2s",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "scale(1.2)"; // Agrandar al pasar el cursor
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                    />
-                  </Tooltip>
-                );
-              },
+              renderCell: (params) => (
+                <Tooltip title="This badge represents a gamified reward for your achievements!">
+                  <MilitaryTech
+                    color="black"
+                    style={{
+                      cursor: "pointer",
+                      transition: "transform 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "scale(1.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "scale(1)";
+                    }}
+                  />
+                </Tooltip>
+              ),
             }
           : undefined,
         {
@@ -309,58 +288,55 @@ const Assets = ({ language, loading, getActions = null }) => {
           headerName: t("Actions"),
           sortable: false,
           flex: 0.15,
-          renderCell: (params) => {
-            //console.log(params.row);
-            return (
-              <>
-                <IconButton
-                  aria-label="settings"
-                  aria-controls="basic-menu"
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    setAnchorEl(event.currentTarget);
-                    setSelectedRow(params.row.id);
-                  }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open && selectedRow == params.row.id}
-                  onClose={handleClose}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  {params.row.actions &&
-                    params.row.actions.map(
-                      ({ id, loading, onClick, text, icon }) => (
-                        <MyMenuItem
-                          key={id}
-                          loading={loading}
-                          id={id}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            event.preventDefault();
-                            onClick(handleClose);
-                          }}
-                          text={text}
-                          icon={icon}
-                        />
-                      )
-                    )}
-                </Menu>
-              </>
-            );
-          },
+          renderCell: (params) => (
+            <>
+              <IconButton
+                aria-label="settings"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  setAnchorEl(event.currentTarget);
+                  setSelectedRow(params.row.id);
+                }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open && selectedRow == params.row.id}
+                onClose={handleClose}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                }}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                {params.row.actions &&
+                  params.row.actions.map(
+                    ({ id, loading, onClick, text, icon }) => (
+                      <MyMenuItem
+                        key={id}
+                        loading={loading}
+                        id={id}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          event.preventDefault();
+                          onClick(handleClose);
+                        }}
+                        text={text}
+                        icon={icon}
+                      />
+                    )
+                  )}
+              </Menu>
+            </>
+          ),
         },
       ];
     }
@@ -371,16 +347,11 @@ const Assets = ({ language, loading, getActions = null }) => {
         headerName: "",
         sortable: false,
         flex: 0.05,
-        renderCell: (params) => {
-          return (
-            <Avatar
-              src={params.row.icon}
-              sx={{ height: "30px", width: "30px" }}
-            >
-              {!params.row.icon && <Article />}
-            </Avatar>
-          );
-        },
+        renderCell: (params) => (
+          <Avatar src={params.row.icon} sx={{ height: "30px", width: "30px" }}>
+            {!params.row.icon && <Article />}
+          </Avatar>
+        ),
       },
       {
         field: "name",
@@ -421,36 +392,33 @@ const Assets = ({ language, loading, getActions = null }) => {
   }
 
   const rows = assetsList.map((asset) => {
-    let dataExtra = {};
+    const dataExtra = {};
     if (asset.type == "externalasset") {
     } else {
-      //Add extra information needed:
-      const backend = asset["software_response"]["backend"];
-      dataExtra["link"] = backend + "/" + asset["external_asset_id"];
+      const { backend } = asset.software_response;
+      dataExtra.link = `${backend}/${asset.external_asset_id}`;
 
-      const api_path = asset["software_response"]["api_path"];
-      dataExtra["internal_link"] =
-        "http://" + backend + api_path + "/" + asset["external_asset_id"];
+      const { api_path } = asset.software_response;
+      dataExtra.internal_link = `http://${backend}${api_path}/${asset.external_asset_id}`;
 
-      dataExtra["capabilities"] = {
-        clone: asset["software_response"]["clone"],
-        view: asset["software_response"]["view"],
-        edit: asset["software_response"]["edit"],
-        delete: asset["software_response"]["delete"],
-        download: asset["software_response"]["download"],
+      dataExtra.capabilities = {
+        clone: asset.software_response.clone,
+        view: asset.software_response.view,
+        edit: asset.software_response.edit,
+        delete: asset.software_response.delete,
+        download: asset.software_response.download,
       };
 
-      dataExtra["softwareinterlinker"] = null;
-      if (asset["software_response"]) {
-        dataExtra["softwareinterlinker"] = {
-          id: asset["software_response"]["id"],
-          name: asset["software_response"]["name"],
-          description: asset["software_response"]["description"],
-          logotype_link: asset["software_response"]["logotype_link"],
+      dataExtra.softwareinterlinker = null;
+      if (asset.software_response) {
+        dataExtra.softwareinterlinker = {
+          id: asset.software_response.id,
+          name: asset.software_response.name,
+          description: asset.software_response.description,
+          logotype_link: asset.software_response.logotype_link,
         };
       }
     }
-    //console.log("asset", asset);
     return {
       id: asset.id,
       icon: asset.internalData.icon,
@@ -458,34 +426,32 @@ const Assets = ({ language, loading, getActions = null }) => {
       updated: moment(asset.updated_at || asset.created_at).fromNow(),
       actions: getActions && getActions(asset),
       data: asset,
-      dataExtra: dataExtra,
+      dataExtra,
     };
   });
 
-  const QuickSearchToolbar = () => {
-    return (
-      <Box
-        sx={{
-          pl: 1,
-          pr: 1,
-          pb: 2,
-          pt: 1,
-          display: "flex",
-        }}
-      >
-        <GridToolbarQuickFilter
-          style={{ flex: 1 }}
-          quickFilterParser={(searchInput) =>
-            searchInput
-              .split(",")
-              .map((value) => value.trim())
-              .filter((value) => value !== "")
-          }
-          debounceMs={600}
-        />
-      </Box>
-    );
-  };
+  const QuickSearchToolbar = () => (
+    <Box
+      sx={{
+        pl: 1,
+        pr: 1,
+        pb: 2,
+        pt: 1,
+        display: "flex",
+      }}
+    >
+      <GridToolbarQuickFilter
+        style={{ flex: 1 }}
+        quickFilterParser={(searchInput) =>
+          searchInput
+            .split(",")
+            .map((value) => value.trim())
+            .filter((value) => value !== "")
+        }
+        debounceMs={600}
+      />
+    </Box>
+  );
 
   return (
     <>
@@ -509,10 +475,7 @@ const Assets = ({ language, loading, getActions = null }) => {
           <Box sx={{ my: 1, mx: 2 }}>
             <DataGrid
               rows={rows}
-              columns={
-                // delete all undefined elements in columns
-                columns.filter((column) => column)
-              }
+              columns={columns.filter((column) => column)}
               components={{
                 Toolbar: QuickSearchToolbar,
               }}
@@ -524,24 +487,21 @@ const Assets = ({ language, loading, getActions = null }) => {
               rowsPerPageOptions={[5, 10, 20]}
               disableSelectionOnClick
               rowSelection={false}
-              disableRowSelectionOnClick={true}
+              disableRowSelectionOnClick
               autoHeight
               onRowClick={(params) => {
-                console.log("Clicked on row");
                 let uriToOpen = "";
-                console.log(params);
-
                 if (params.row.data.type === "internalasset") {
-                  console.log("internalasset");
-                  console.log(
-                    "---------------------`${params.row.dataExtra.link}/view`"
-                  );
-                  console.log(`${params.row.dataExtra.link}/view`);
                   uriToOpen = `${params.row.dataExtra.link}/view`;
                 } else {
                   uriToOpen = params.row.data.uri;
                 }
-                uriToOpen = `/dashboard/gamification?taskId=${params?.row?.data?.task_id}&url=${uriToOpen}&assetId=${params?.row?.id}&coproductionprocessesId=${process?.id}`;
+                const gameId = process?.game_id;
+                if (isGamification && gameId) {
+                  uriToOpen = `/dashboard/gamification?taskId=${params?.row?.data?.task_id}&url=${uriToOpen}&assetId=${params?.row?.id}&coproductionprocessesId=${process?.id}`;
+                } else {
+                  uriToOpen = `/dashboard/contributionIframe?taskId=${params?.row?.data?.task_id}&url=${uriToOpen}&assetId=${params?.row?.id}&coproductionprocessesId=${process?.id}`;
+                }
                 window.open(uriToOpen, "_blank");
               }}
               localeText={{

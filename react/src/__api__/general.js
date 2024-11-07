@@ -12,13 +12,10 @@ export default class GeneralApi {
   }
 
   async create(data) {
-    //console.log(data);
     return axiosInstance.post(`/${this.url}`, data);
   }
 
   async getMulti(params = {}, language = getLanguage()) {
-    //console.log(`/${this.url}` + params);
-    //Get data of user_notifications
     const res = await axiosInstance.get(`/${this.url}`, {
       params: removeEmpty(params),
       headers: {
@@ -42,7 +39,6 @@ export default class GeneralApi {
           "Accept-Language": language,
         },
       });
-      //console.log('get call', res.data, 'in', language);
       return res.data;
     }
   }
@@ -54,7 +50,6 @@ export default class GeneralApi {
           "Accept-Language": language,
         },
       });
-      //console.log('get call', res.data, 'in', language);
       return res.data;
     }
   }

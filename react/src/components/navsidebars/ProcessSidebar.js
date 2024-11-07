@@ -248,7 +248,7 @@ const ProcessSidebar = (props) => {
               <Chip
                 size="small"
                 color="primary"
-                label={"Incentives"}
+                label="Incentives"
                 icon={<MilitaryTech />}
                 sx={{ backgroundColor: "gold.main" }}
                 onClick={(e) => setAnchorElGamification(e.currentTarget)}

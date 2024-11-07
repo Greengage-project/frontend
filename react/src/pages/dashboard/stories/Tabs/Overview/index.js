@@ -1,6 +1,5 @@
 import {
   Avatar,
-  IconButton,
   Grid,
   Card,
   CardHeader,
@@ -16,35 +15,16 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import {
-  AccountTree,
-  OpenInNew,
-  MoreVert,
-  YouTube,
-  ArrowForward,
-} from "@mui/icons-material";
-// import { ReviewsTable } from 'components/dashboard/reviews';
+import { YouTube } from "@mui/icons-material";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import useMounted from "hooks/useMounted";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-// import { setSelectedTreeItemById } from 'slices/process';
-// import { coproductionProcessesApi } from '__api__';
-import TimeLine from "components/dashboard/coproductionprocesses/TimeLine";
-//import CoproNotifications from 'components/dashboard/coproductionprocesses/CoproNotifications';
-import {
-  getCoproductionProcessNotifications,
-  getSelectedStory,
-} from "slices/general";
-import useAuth from "hooks/useAuth";
-// import { cleanProcess } from 'slices/process';
-import { defaultReduceAnimations } from "@mui/lab/CalendarPicker/CalendarPicker";
+import { getSelectedStory } from "slices/general";
 import StoryReviews from "components/dashboard/stories/profile/StoryReviews";
-import { storiesApi } from "__api__";
-
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/styles";
 import { getProcessCatalogue } from "slices/process";
@@ -106,16 +86,13 @@ export default function OverviewStory({}) {
 
   const { selectedStory } = useSelector((state) => state.general);
 
-  var userLang = navigator.language.substring(0, 2);
-
-  //const t = useCustomTranslation(selectedStory.story_language);
+  const userLang = navigator.language.substring(0, 2);
 
   const t = useCustomTranslation(userLang);
 
   const [tab, setTab] = useState("showcase");
 
   const [loading, setLoading] = React.useState(true);
-  //   const [reviews, setReviews] = React.useState([]);
 
   const mounted = useMounted();
   const dispatch = useDispatch();
@@ -127,24 +104,14 @@ export default function OverviewStory({}) {
     if (selectedStory) {
       if (selectedStory.id != id) {
         dispatch(getSelectedStory(id));
-      } //else{
+      }
     } else {
       dispatch(getSelectedStory(id));
     }
-
-    // storiesApi.getStoriesbyId(id).then((res) => {
-    //   res.data=JSON.parse(res.data_story)
-    //   selectedStory=res
-
-    // });
-    //}
   }, []);
 
-  //Every time another story is selected then the data info of the process is loaded
   useEffect(() => {
-    //console.log("La STORY A CAMBIADO:")
     if (selectedStory) {
-      //console.log(selectedStory.coproductionprocess_cloneforpub_id)
       dispatch(
         getProcessCatalogue(selectedStory.coproductionprocess_cloneforpub_id)
       );
@@ -246,10 +213,10 @@ export default function OverviewStory({}) {
                 sx={{ mt: 3, mb: 3, ml: 5 }}
               >
                 <Typography color="textSecondary" variant="subtitle2">
-                  {t("Started at")}: {selectedStory.data_story.start_at}
+                  {t("Started at")}:{selectedStory.data_story.start_at}
                 </Typography>
                 <Typography color="textSecondary" variant="subtitle2">
-                  {t("Ended at")}: {selectedStory.data_story.end_at}
+                  {t("Ended at")}:{selectedStory.data_story.end_at}
                 </Typography>
               </Grid>
 
@@ -364,7 +331,7 @@ export default function OverviewStory({}) {
                         switch (material.type) {
                           case "video_channel":
                             return <YouTube />;
-                          //case "video_channel": return <Component2 />;
+                          // case "video_channel": return <Component2 />;
                           default:
                             null;
                         }
@@ -407,13 +374,13 @@ export default function OverviewStory({}) {
                           sx={owner.logo}
                           aria-label="recipe"
                           src={owner.logo}
-                        ></Avatar>
+                        />
                       }
                       title={owner && owner.name}
                     />
                     {/* <CardContent>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      
+
                       </Typography>
                     </CardContent> */}
                     <CardActions>

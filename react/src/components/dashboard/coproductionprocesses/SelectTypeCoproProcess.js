@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Grid,
@@ -14,9 +14,7 @@ import {
 } from "@mui/material";
 
 import { LoadingButton } from "@mui/lab";
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { getLanguage, LANGUAGES } from "translations/i18n";
+
 import { recommenderApi } from "__api__";
 import { Done, Delete, Close, KeyboardArrowRight } from "@mui/icons-material";
 import SelectGovernanceModel from "./SelectGovernanceModel";
@@ -51,16 +49,13 @@ export default function SelectTypeCoproProcess({
 
   const handleNext = async () => {
     setLoading(true);
-    //Actions for next
-    //Save the tags related to the process.
-    //Create the training data
 
     const listCategories =
       "C2C,C2G;C2G;G+G,C2G;G+G,G2C,C2G;C2G,G2C;G2C,C2G;G+G,C2C,C2G;G2C,C2C,C2G;G2C,C2C,C2G;G2C,C2G;C2C,C2G;C2C,C2G;G+G,C2C,C2G;G+G,G2C,C2G;C2C,C2G;G+G,G2C,C2G;G+G,G2C;G+G;G+G;G+G;G+G,G2C;G+G,G2C;G+G,C2G;G+G,C2G;G+G,G2C;G2C,G+G;G2C,G+G;G+G,G+G;C2C,C2G,G+G;G2C,G+G;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;G2C;C2C,C2G,G2C;C2C;C2C;C2C,C2G;C2C;C2C;C2C,C2G;C2C,G+G;C2C,G+G;C2C,G+G;C2C,C2G;C2C,C2G;G+G,C2C;G+G,C2C".split(
         ";"
       );
 
-    let trainingdata = {};
+    const trainingdata = {};
     let cont = 0;
     for (const keyword of listKeywords) {
       trainingdata[keyword] = listCategories[cont];
@@ -134,7 +129,7 @@ export default function SelectTypeCoproProcess({
                   id="contained-button-file"
                   type="file"
                   sx={{ display: "none" }}
-                  //onChange={handleFileSelected}
+                  // onChange={handleFileSelected}
                 />
                 {/* <IconButton component='span'>
                   <Avatar
@@ -162,9 +157,9 @@ export default function SelectTypeCoproProcess({
               )} */}
             </Box>
             <Typography sx={{ mb: 1 }} variant="body1">
-              {t(
+              {`${t(
                 "Select the keywords that represent you type of co-production process"
-              ) + "."}
+              )}.`}
             </Typography>
 
             <Box sx={{ minWidth: 275, flexGrow: 1, p: 2 }}>

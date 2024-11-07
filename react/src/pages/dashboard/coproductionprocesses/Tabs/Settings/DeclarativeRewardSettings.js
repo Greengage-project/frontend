@@ -35,7 +35,7 @@ const DeclarativeRewardSettings = (props) => {
       <Box
         alt="Medals"
         component="img"
-        src={`/static/reward/Medals.svg`}
+        src="/static/reward/Medals.svg"
         className="medals-image-pc imageContainer"
         ref={imageRef}
       />
@@ -70,15 +70,15 @@ const DeclarativeRewardSettings = (props) => {
                   :
                   <Box className="box-reward">
                     <li>
-                      <Typography variant="body1">• {t("Easy")}</Typography>
+                      <Typography variant="body1">•{t("Easy")}</Typography>
                       <SentimentSatisfied />
                     </li>
                     <li>
-                      <Typography variant="body1">• {t("Medium")}</Typography>
+                      <Typography variant="body1">•{t("Medium")}</Typography>
                       <SentimentNeutral />
                     </li>
                     <li>
-                      <Typography variant="body1">• {t("Hard")}</Typography>
+                      <Typography variant="body1">•{t("Hard")}</Typography>
                       <SentimentDissatisfied />
                     </li>
                   </Box>
@@ -89,13 +89,13 @@ const DeclarativeRewardSettings = (props) => {
             <Box
               alt="Reward image 1"
               component="img"
-              src={`/static/reward/Reward_image_1.svg`}
+              src="/static/reward/Reward_image_1.svg"
               sx={{
                 height: "auto",
                 maxWidth: "100%",
                 margin: "0 auto",
               }}
-            ></Box>
+            />
           </Grid>
           <Grid container md={12} className="mb-2">
             <Grid item md={1} className="reward-left-number">
@@ -113,12 +113,12 @@ const DeclarativeRewardSettings = (props) => {
                 className="mt-1"
                 alt="Reward image 2"
                 component="img"
-                src={`/static/reward/Reward_image_2.svg`}
+                src="/static/reward/Reward_image_2.svg"
                 sx={{
                   height: "auto",
                   maxWidth: "100%",
                 }}
-              ></Box>
+              />
             </Grid>
           </Grid>
           <Grid container md={12}>
@@ -129,9 +129,9 @@ const DeclarativeRewardSettings = (props) => {
             </Grid>
             <Grid item md={11} sx={{ mt: 0 }}>
               <Typography variant="body1" className="reward-left-text">
-                {t(
+                {`${t(
                   "Once finished a task you will have to set the contribution of every collaborator assigning a level of contribution based on four levels"
-                ) + ":"}
+                )}:`}
               </Typography>
               <Box className="box-reward">
                 <li>
@@ -172,12 +172,12 @@ const DeclarativeRewardSettings = (props) => {
                 className="mt-1 mb-1"
                 alt="Reward image 3"
                 component="img"
-                src={`/static/reward/Reward_image_3.svg`}
+                src="/static/reward/Reward_image_3.svg"
                 sx={{
                   height: "auto",
                   maxWidth: "100%",
                 }}
-              ></Box>
+              />
             </Grid>
           </Grid>
           <Grid container md={12}>
@@ -193,10 +193,9 @@ const DeclarativeRewardSettings = (props) => {
                 )}
                 .
                 <strong>
-                  {" " +
-                    t(
-                      "Remember that in any case the admins will see the Leaderboard"
-                    )}
+                  {` ${t(
+                    "Remember that in any case the admins will see the Leaderboard"
+                  )}`}
                   .
                 </strong>
                 <p>
@@ -226,7 +225,7 @@ const DeclarativeRewardSettings = (props) => {
           <Box
             alt="Medals"
             component="img"
-            src={`/static/reward/Medals.svg`}
+            src="/static/reward/Medals.svg"
             className="medals-image imageContainer"
             ref={imageRef}
           />
