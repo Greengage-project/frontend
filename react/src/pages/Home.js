@@ -29,18 +29,12 @@ const Home = () => {
   const [showCookiePopup, setShowCookiePopup] = useState(true);
 
   useEffect(() => {
-    // Check if the cookie has a value when the component mounts
     const storedPopupValue = Cookies.get("cookiePreference");
 
     if (storedPopupValue) {
-      // If there's a value in the cookie, don't show the popup
       setOpen(false);
     }
   }, []);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -52,22 +46,16 @@ const Home = () => {
 
   const handleAcceptAll = () => {
     console.log("Accepted all cookies");
-    // Here, implement logic to accept all cookies
-
-    // This cookie will expire in 365 days.
     Cookies.set("cookiePreference", "accept-all", { expires: 365 });
 
-    setOpen(false); // close the Snackbar
+    setOpen(false);
   };
 
   const handleAcceptEssential = () => {
     console.log("Accepted only essential cookies");
-    // Here, implement logic to accept only essential cookies
-
-    // This cookie will expire in 365 days.
     Cookies.set("cookiePreference", "accept-essentials", { expires: 365 });
 
-    setOpen(false); // close the Snackbar
+    setOpen(false);
   };
 
   const links = [
@@ -146,10 +134,10 @@ const Home = () => {
                     },
                     ".MuiAlert-icon": {
                       fontSize: "2em",
-                      alignSelf: "center", // Center the icon vertically
+                      alignSelf: "center",
                     },
-                    display: "flex", // Make the Alert a flex container
-                    alignItems: "center", // Center children vertically
+                    display: "flex",
+                    alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
@@ -392,10 +380,10 @@ const Home = () => {
                       color:
                         location.pathname === link.path
                           ? "primary.main"
-                          : "grey.600 !important", // Adjust the colors
+                          : "grey.600 !important",
                       textDecoration: "none !important",
                       "&:hover": {
-                        textDecoration: "underline !important", // Optional: Add an underline on hover
+                        textDecoration: "underline !important",
                       },
                       transition: "color 0.3s ease",
                     }}
@@ -417,8 +405,8 @@ const Home = () => {
                   m: -1,
                   padding: 2,
                   gap: 2,
-                  alignItems: "center", // centers items vertically
-                  justifyContent: "center", // centers items horizontally
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <Typography
@@ -466,21 +454,7 @@ const Home = () => {
                   color="textSecondary"
                   sx={{ my: 3 }}
                   variant="subtitle1"
-                >
-                  {/* <Link
-                    color={
-                      location.pathname === "/parental"
-                        ? "primary"
-                        : "textSecondary"
-                    }
-                    component={RouterLink}
-                    to="/parental"
-                    underline="none"
-                    variant="body1"
-                  >
-                    Parental Consent
-                  </Link> */}
-                </Typography>
+                />
               </Box>
             </>
           }

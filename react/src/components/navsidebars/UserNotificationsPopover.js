@@ -15,22 +15,16 @@ import {
 } from "@mui/material";
 import BellIcon from "../../icons/Bell";
 import ChatAltIcon from "../../icons/ChatAlt";
-
 import GroupsIcon from "@mui/icons-material/Groups";
 import AddchartIcon from "@mui/icons-material/Addchart";
 import ArticleIcon from "@mui/icons-material/Article";
-
 import { makeStyles, withStyles } from "@mui/styles";
 import MuiListItem from "@mui/material/ListItem";
 import { useDispatch, useSelector } from "react-redux";
-
 import { usernotificationsApi } from "__api__";
 import { formatDistanceToNowStrict } from "date-fns";
-
 import { getUnseenUserNotifications } from "slices/general";
 import useAuth from "hooks/useAuth";
-
-const now = new Date();
 
 const iconsMap = {
   group: GroupsIcon,
@@ -41,7 +35,6 @@ const iconsMap = {
 };
 
 const UserNotificationsPopover = () => {
-  //Obtain the notification data from State Reducer
   const usernotificationsState = useSelector((state) => state.general);
   const usernotifications = usernotificationsState.unseenusernotifications;
   const { user } = useAuth();
@@ -55,7 +48,8 @@ const UserNotificationsPopover = () => {
   const includeParametersValues = (text, parameters) => {
     if (parameters) {
       const paramsPattern = /[^{}]+(?=})/g;
-      let extractParams = text.match(paramsPattern);
+
+      const extractParams = text.match(paramsPattern);
 
       let parsedParameters;
       try {
@@ -69,7 +63,7 @@ const UserNotificationsPopover = () => {
         for (let i = 0; i < extractParams.length; i++) {
           const paramValue = parsedParameters[extractParams[i]];
           if (paramValue !== undefined) {
-            text = text.replace("{" + extractParams[i] + "}", paramValue);
+            text = text.replace(`{${extractParams[i]}}`, paramValue);
           }
         }
       }
@@ -125,15 +119,12 @@ const UserNotificationsPopover = () => {
   })(MuiListItem);
 
   const onLinkClick = (usernotificationId) => {
-    //Save the state to seen of the notification.
     usernotificationsApi.setSeenUserNotification({
-      usernotificationId: usernotificationId,
+      usernotificationId,
     });
   };
 
   const onClickMarkAll = () => {
-    //Recorro todas las notificaciones y les pongo como vistas
-
     for (let i = 0; i < usernotifications.length; i++) {
       usernotificationsApi.setSeenUserNotification({
         usernotificationId: usernotifications[i].id,
@@ -192,10 +183,9 @@ const UserNotificationsPopover = () => {
           <>
             <List disablePadding>
               {usernotifications.map((usernotification) => {
-                //Verify if the icon is defined:
                 const Icon = usernotification.notification.icon
                   ? iconsMap[usernotification.notification.icon]
-                  : iconsMap["defaulticon"];
+                  : iconsMap.defaulticon;
 
                 return (
                   <ListItem divider key={usernotification.id}>

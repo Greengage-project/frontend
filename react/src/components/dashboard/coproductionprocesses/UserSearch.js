@@ -22,7 +22,6 @@ import { useEffect, useRef, useState } from "react";
 import { usersApi } from "__api__";
 import Papa from "papaparse";
 import { ExportToCsv } from "export-to-csv";
-import wait from "utils/wait";
 
 const UserSearch = ({
   exclude = [],
@@ -132,7 +131,7 @@ const UserSearch = ({
     if (!(evt.target && evt.target.files && evt.target.files[0])) {
       return;
     }
-    let options = {
+    const options = {
       fieldSeparator: ",",
       decimalSeparator: ".",
       showLabels: false,
@@ -142,14 +141,14 @@ const UserSearch = ({
       headers: ["mails"],
     };
 
-    let csvExporter = new ExportToCsv(options);
-    let rejected_users = [];
+    const csvExporter = new ExportToCsv(options);
+    const rejected_users = [];
     Papa.parse(evt.target.files[0], {
       header: false,
       skipEmptyLines: true,
-      complete: async function (results) {
-        let new_users = [];
-        for (let u of results.data) {
+      async complete(results) {
+        const new_users = [];
+        for (const u of results.data) {
           const res = await usersApi.search(u);
 
           if (res.length > 0) {
@@ -307,7 +306,7 @@ const UserSearch = ({
             ) : (
               open &&
               searchResults.slice(0, 4).map((user) => {
-                if (include.length > 0 && !include.includes(user.id)) {
+                if (include.length > 0 && include.includes(user.id)) {
                   return null;
                 }
 
@@ -326,7 +325,6 @@ const UserSearch = ({
                     }}
                     data-cy={`add-user-${user.email}`}
                   >
-                    {console.log({ user })}
                     <Avatar
                       sx={{ mr: 2, height: 30, width: 30 }}
                       src={user.picture}

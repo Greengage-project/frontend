@@ -24,19 +24,18 @@ import {
   getCoproductionProcesses,
   getTags,
   getUserNotifications,
+  getOrganizations,
+  getUnseenUserNotifications,
+  getContributions,
 } from "slices/general";
-import { getOrganizations } from "slices/general";
-import { getUnseenUserNotifications } from "slices/general";
-import { getContributions } from "slices/general";
 
 import CookieConsentContext from "CookieConsentContext";
 import CookieConsentForm from "pages/dashboard/workspace/CookieConsentForm";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 export const RemoveTrailingSlash = ({ ...rest }) => {
   const location = useLocation();
 
-  // If the last character of the url is '/'
   if (location.pathname.match("/.*/$")) {
     return (
       <Navigate
@@ -67,13 +66,9 @@ const App = () => {
 
   const [cookieConsent, setCookieConsent] = useState({ essentialsOnly: true });
 
-
-
   useScrollReset();
 
-  // Create personal websocket to receive updates on dashboard view
   useEffect(() => {
-    //The personal websocket will include when is in organizations
     if (
       (location.pathname === "/dashboard" ||
         location.pathname === "/dashboard/organizations") &&
@@ -91,12 +86,8 @@ const App = () => {
         )}/ws`
       );
 
-      new_socket.onopen = () => {
-        console.log("PERSONAL WebSocket Client Connected", new_socket);
-      };
+      new_socket.onopen = () => {};
       new_socket.onmessage = (message) => {
-        console.log("RECEIVING MESSAGE ON PERSONAL SOCKET");
-        console.log(message);
         dispatch(getCoproductionProcesses());
         dispatch(getOrganizations(""));
         dispatch(getUnseenUserNotifications({ user_id: auth.user.id }));
@@ -115,7 +106,6 @@ const App = () => {
       ) &&
       personalSocket
     ) {
-      console.log("PERSONAL WebSocket Client Closed");
       personalSocket.close();
       setPersonalSocket(null);
     }
@@ -127,15 +117,12 @@ const App = () => {
     const process_changed = !process || process.id !== lastProcessId;
     if (process_changed) {
       if (socket) {
-        console.log("WebSocket Client Closed");
         socket.close();
         setSocket(null);
         setLastProcessId(null);
       }
 
       if (process) {
-        console.log(REACT_APP_DOMAIN);
-
         let socketProtocol = "ws:";
         if (REACT_APP_DOMAIN !== "localhost") {
           socketProtocol = "wss:";
@@ -144,46 +131,18 @@ const App = () => {
         const new_socket = new WebSocket(
           `${socketProtocol}//${REACT_APP_DOMAIN}/coproduction/api/v1/coproductionprocesses/${process.id}/ws`
         );
-        new_socket.onopen = () => {
-          console.log("WebSocket Client Connected", new_socket);
-        };
-        new_socket.onmessage = (message) => {
-          console.log(message);
-          // dispatch(getProcess(process.id, false, selectedTreeItem.id ))
-        };
+        new_socket.onopen = () => {};
+        new_socket.onmessage = (message) => {};
         setSocket(new_socket);
         setLastProcessId(process.id);
       }
     }
   }, [process]);
 
-  // useEffect(() => {
-  //   if (!socket && process) {
-  //     console.log(REACT_APP_DOMAIN)
-
-  //     let socketProtocol = 'ws:';
-  //     if (REACT_APP_DOMAIN !== 'localhost') {
-  //       socketProtocol = 'wss:';
-  //     }
-
-  //     const new_socket = new WebSocket(`${socketProtocol}//${REACT_APP_DOMAIN}/coproduction/api/v1/coproductionprocesses/${process.id}/ws`);
-  //     new_socket.onopen = () => {
-  //       console.log('WebSocket Client Connected', new_socket);
-  //     };
-  //     new_socket.onmessage = (message) => {
-  //       console.log(message)
-  //       // dispatch(getProcess(process.id, false, selectedTreeItem.id ))
-  //     };
-  //     setSocket(new_socket)
-  //     setLastProcessId(process.id)
-  //   }
-  // }, [socket])
-
   useEffect(() => {
     if (socket) {
       socket.onmessage = (message) => {
         const { event, name, extra } = JSON.parse(message.data);
-        console.log(event, extra, name);
 
         if (event.includes("contribution")) {
           if (selectedTreeItem.id == extra.task_id) {
@@ -217,21 +176,17 @@ const App = () => {
             dispatch(
               getTree(process.id, selectedTreeItem.prerequisites_ids[0])
             );
+          } else if (selectedTreeItem) {
+            dispatch(getTree(process.id, selectedTreeItem.id));
           } else {
-            if (selectedTreeItem) {
-              dispatch(getTree(process.id, selectedTreeItem.id));
-            } else {
-              dispatch(getTree(process.id));
-            }
+            dispatch(getTree(process.id));
           }
         } else if (event.includes("coproductionprocess_removed")) {
           navigate("/dashboard");
-          // show advertence
         } else if (
           event.includes("coproductionprocess") ||
           event.includes("permission")
         ) {
-          console.log(process);
           dispatch(
             getProcess(
               process.id,
@@ -241,59 +196,42 @@ const App = () => {
           );
         } else if (event.includes("asset")) {
           const datosTemp = JSON.parse(message.data);
-          // console.log(datosTemp)
-          // console.log("UPDATE ASSETS")
 
-          //Ask if the selected task is the same:
           if (selectedTreeItem.id === datosTemp.extra.task_id) {
             dispatch(getTree(process.id, selectedTreeItem.id));
-          } else {
-            if (window.location.pathname.includes("overview")) {
-              dispatch(getProcess(process.id, false));
-            }
+          } else if (window.location.pathname.includes("overview")) {
+            dispatch(getProcess(process.id, false));
           }
         }
       };
     }
   }, [selectedTreeItem]);
 
-  // ANALYTICS
   const { enableLinkTracking, trackPageView, pushInstruction } = useMatomo();
   enableLinkTracking();
   useEffect(() => {
+    const storedPopupValue = Cookies.get("cookiePreference");
 
-    const storedPopupValue = Cookies.get('cookiePreference');
-    
-    if (storedPopupValue=="accept-all") {
-        // If there's a value in the cookie, don't show the popup
-        setCookieConsent({ essentialsOnly: false });
-    }else{
-        setCookieConsent({ essentialsOnly: true });
-    }
-
-    //This will initialice the matomo tracking system.
-    if (!cookieConsent.essentialsOnly) {
-  
-    //If the user is logged in, send the user data to Matomo
-    if (
-      auth.isInitialized &&
-      auth.user &&
-      auth.user._id &&
-      auth.user.email &&
-      auth.user.full_name
-    ) {
-      pushInstruction("setUserId", auth.user.email);
-      // const customDimensions = {
-      //   id: 1,
-      //   value:'developer'
-      // };
-      //trackPageView(customDimensions);
-      trackPageView();
+    if (storedPopupValue == "accept-all") {
+      setCookieConsent({ essentialsOnly: false });
     } else {
-      trackPageView();
+      setCookieConsent({ essentialsOnly: true });
     }
-  }
-    
+
+    if (!cookieConsent.essentialsOnly) {
+      if (
+        auth?.isInitialized &&
+        auth?.user &&
+        auth?.user?._id &&
+        auth?.user?.email &&
+        auth?.user?.full_name
+      ) {
+        pushInstruction("setUserId", auth.user.email);
+        trackPageView();
+      } else {
+        trackPageView();
+      }
+    }
   }, [window.location.href]);
 
   return settings.loaded ? (
@@ -312,11 +250,6 @@ const App = () => {
           </Helmet>
           <RemoveTrailingSlash />
           {auth.isInitialized ? content : <SplashScreen />}
-
-          
-
-          
-    
         </RTL>
       </ThemeProvider>
     </CookieConsentContext.Provider>

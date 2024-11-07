@@ -1,22 +1,13 @@
 import {
   AppBar,
   Box,
-  Paper,
   Tab,
-  Tabs,
   Typography,
   Divider,
-  Alert,
-  Avatar,
   Button,
   Card,
-  CardActionArea,
-  CardHeader,
   Grid,
   IconButton,
-  List,
-  ListItem,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -31,7 +22,16 @@ import {
   Tabs as MuiTabs,
   CardActions,
 } from "@mui/material";
-import { AccountTree, OpenInNew, ExpandMore } from "@mui/icons-material";
+import {
+  AccountTree,
+  OpenInNew,
+  ExpandMore,
+  Add,
+  Delete,
+  Archive,
+  Undo,
+  Visibility,
+} from "@mui/icons-material";
 import { AssetsTable } from "components/dashboard/assets";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import useMounted from "hooks/useMounted";
@@ -43,24 +43,12 @@ import { setSelectedTreeItemById } from "slices/process";
 import {
   getAssignmentbyId,
   getFullAssignmentsbyCoproIdUserId,
-  getInPendingAssignmentsbyCoproIdAssigIdUserId,
   getInPendingAssignmentsbyCoproIdUserId,
-} from "slices/general";
-import { assignmentsApi, coproductionProcessesApi } from "__api__";
-import TimeLine from "components/dashboard/coproductionprocesses/TimeLine";
-import CoproNotifications from "components/dashboard/coproductionprocesses/CoproNotifications";
-import {
   getAssetsList_byCopro,
 } from "slices/general";
+import { assignmentsApi, coproductionProcessesApi } from "__api__";
 import useAuth from "hooks/useAuth";
 import moment from "moment";
-import {
-  Add,
-  Delete,
-  Archive,
-  Undo,
-  Visibility,
-} from "@mui/icons-material";
 import { ClaimDialog } from "components/dashboard/coproductionprocesses/ClaimDialog";
 import LinkDialog from "./LinkDialog";
 import { REACT_APP_COMPLETE_DOMAIN } from "configuration";
@@ -71,10 +59,9 @@ export default function Resources({}) {
   );
   const t = useCustomTranslation(process.language);
   const [tab, setTab] = useState(
-    isAdministrator & !process.is_part_of_publication ? "progress" : "assets"
+    isAdministrator & !process?.is_part_of_publication ? "progress" : "assets"
   );
   const [loading, setLoading] = React.useState(true);
-  //const [assets, setAssets] = React.useState([]);
   const { assetsList, assignments } = useSelector((state) => state.general);
   const mounted = useMounted();
   const dispatch = useDispatch();
@@ -92,7 +79,7 @@ export default function Resources({}) {
 
   React.useEffect(() => {
     if (mounted) {
-      const search = location.search;
+      const { search } = location;
       const params = new URLSearchParams(search);
       const selectedTabTemp = params.get("tab");
       if (selectedTabTemp) {
@@ -114,12 +101,6 @@ export default function Resources({}) {
   React.useEffect(() => {
     setLoading(true);
 
-    // coproductionProcessesApi.getAssets(process.id).then((res) => {
-    //   if (mounted.current) {
-    //     setAssets(res);
-    //     setLoading(false);
-    //   }
-    // });
     dispatch(getAssetsList_byCopro(process.id));
     setLoading(false);
   }, [process]);
@@ -167,7 +148,6 @@ export default function Resources({}) {
       });
       setShowHistory(false);
 
-      
       dispatch(
         getInPendingAssignmentsbyCoproIdUserId({
           coproductionprocess_id: process.id,
@@ -179,12 +159,11 @@ export default function Resources({}) {
       const selectedTask = await tasksApi.get(assignment.task_id);
       if (selectedTask.status === "finished") {
         alert(
-          t(
+          `${t(
             "This assignment is already finished, you can not reopen this assignment"
-          ) + "."
+          )}.`
         );
-      }else
-      {
+      } else {
         assignmentsApi.setInProgressAssignment({
           assignmentId: assignment.id,
         });
@@ -199,16 +178,14 @@ export default function Resources({}) {
     }
 
     function showLink() {
-      //Create the link to the claim dialog:
       setSelectedAssignment(assignment);
       setLink_assignment(
         `${REACT_APP_COMPLETE_DOMAIN}/dashboard/coproductionprocesses/${process.id}/resources?tab=Assignments&assignment=${assignment.id}`
       );
-      //console.log(link_assignment);
       setOpenLinkDialog(true);
     }
 
-    function goTask(selectedTaskId){
+    function goTask(selectedTaskId) {
       dispatch(
         setSelectedTreeItemById(selectedTaskId, () => {
           navigate(`/dashboard/coproductionprocesses/${process.id}/guide`);
@@ -265,22 +242,23 @@ export default function Resources({}) {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell align="center"  sx={{verticalAlign: "top", paddingTop: "16px"}} >
-          { !assignment.state && 
-                  <Fab
-                    color="primary"
-                    aria-label="add"
-                    size="small"
-                    onClick={() => {
-                      setSelectedAssignment(assignment);
-                      //console.log(assignment);
-                      handleClaim(assignment.asset);
-                    }} // <-- add your click event here
-                  >
-                    <Add />
-                  </Fab>
-                  }
-
+          <TableCell
+            align="center"
+            sx={{ verticalAlign: "top", paddingTop: "16px" }}
+          >
+            {!assignment.state && (
+              <Fab
+                color="primary"
+                aria-label="add"
+                size="small"
+                onClick={() => {
+                  setSelectedAssignment(assignment);
+                  handleClaim(assignment.asset);
+                }}
+              >
+                <Add />
+              </Fab>
+            )}
           </TableCell>
           <TableCell colSpan={6}>
             <Accordion
@@ -304,8 +282,6 @@ export default function Resources({}) {
                   alignItems="center"
                   gap={2}
                 >
-
-                
                   <Divider orientation="vertical" flexItem />
                   <Typography color="text.secondary">
                     {t("Claims")} ({assignment.claims.length})
@@ -314,19 +290,16 @@ export default function Resources({}) {
               </AccordionSummary>
               <AccordionDetails>
                 {assignment.claims.map((claim) => {
-
                   const handleDeleteClaim = async (claim) => {
-                    //window.open(`${asset.link}/download`, '_blank');
-                    //alert("the task is"+claim.task_id);
                     const selectedTask = await tasksApi.get(claim.task_id);
-                    // console.log("task:")
-                    // console.log(selectedTask)
+
                     if (selectedTask.status === "finished") {
                       alert(
-                        t("This task is already close! You can not delete this claim")+"."
+                        `${t(
+                          "This task is already close! You can not delete this claim"
+                        )}.`
                       );
                     } else {
-                      //alert('The notification a borrar es: '+claim.id)
                       await coproductionprocessnotificationsApi.delete(
                         claim.id
                       );
@@ -340,7 +313,7 @@ export default function Resources({}) {
                   };
 
                   return (
-                    <Card sx={{ minWidth: 275 }} key={"card_" + claim.id}>
+                    <Card sx={{ minWidth: 275 }} key={`card_${claim.id}`}>
                       <CardContent>
                         <Typography
                           sx={{ fontSize: 14 }}
@@ -358,12 +331,12 @@ export default function Resources({}) {
                         <Typography>{claim.description}</Typography>
                       </CardContent>
 
-                       <CardActions
+                      <CardActions
                         align="right"
                         sx={{ justifyContent: "flex-end" }}
                       >
                         <Button
-                         key={"button_" + claim.id}
+                          key={`button_${claim.id}`}
                           size="small"
                           color="error"
                           startIcon={<Delete />}
@@ -371,8 +344,7 @@ export default function Resources({}) {
                         >
                           {t("Delete")}
                         </Button>
-                      </CardActions> 
-
+                      </CardActions>
                     </Card>
                   );
                 })}
@@ -399,7 +371,6 @@ export default function Resources({}) {
 
   const showAssignments = (selectedAssignment) => {
     if (selectedAssignment != null) {
-
       dispatch(
         getAssignmentbyId({
           assignment_id: selectedAssignment,
@@ -416,7 +387,6 @@ export default function Resources({}) {
   };
 
   const handleClaim = (asset) => {
-    //window.open(`${asset.link}/download`, '_blank');
     setSelectedAsset(asset);
     setClaimDialogOpen(true);
     dispatch(setSelectedTreeItemById(asset.task_id));
@@ -427,7 +397,7 @@ export default function Resources({}) {
       <Card sx={{ ...style, mb: 3 }}>
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
           <Grid container>
-            <Grid item xl={12} lg={12} md={12} xs={12}></Grid>
+            <Grid item xl={12} lg={12} md={12} xs={12} />
 
             <AppBar
               position="static"
@@ -439,7 +409,6 @@ export default function Resources({}) {
                 indicatorColor="secondary"
                 onChange={(event, value) => onSelect(value)}
                 value={selectedTab}
-                // centered
                 variant="scrollable"
                 textColor="inherit"
                 aria-label="Coproduction phases tabs"
@@ -453,16 +422,14 @@ export default function Resources({}) {
                   },
                 }}
               >
-                <Tab key="1" label={t("Resources")} value="0"></Tab>
-                <Tab key="2" label={t("Assignments")} value="1"></Tab>
-          
+                <Tab key="1" label={t("Resources")} value="0" />
+                <Tab key="2" label={t("Assignments")} value="1" />
               </MuiTabs>
               {/* {loading && <LinearProgress />} */}
             </AppBar>
           </Grid>
         </Box>
 
-        {/* Show the Resources Tab */}
         {selectedTab === "0" && (
           <Box sx={{ p: 3, justifyContent: "center" }}>
             <AssetsTable
@@ -473,7 +440,6 @@ export default function Resources({}) {
           </Box>
         )}
 
-        {/* //Show the Assignments Tab */}
         {selectedTab === "1" && (
           <>
             <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -483,17 +449,18 @@ export default function Resources({}) {
                     color="textPrimary"
                     variant="h5"
                     data-cy="welcome-to-user"
-                    sx={{m:2}}
+                    sx={{ m: 2 }}
                   >
                     {t("User Assignments")}
                   </Typography>
                   <Typography
                     color="textSecondary"
                     variant="subtitle2"
-                    sx={{ml:2,mb:1}}
+                    sx={{ ml: 2, mb: 1 }}
                   >
-                    {t("These are the most recent assignments you can work on") +
-                      "."}
+                    {`${t(
+                      "These are the most recent assignments you can work on"
+                    )}.`}
                   </Typography>
                 </Grid>
 

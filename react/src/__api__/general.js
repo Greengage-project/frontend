@@ -12,13 +12,10 @@ export default class GeneralApi {
   }
 
   async create(data) {
-    //console.log(data);
     return axiosInstance.post(`/${this.url}`, data);
   }
 
   async getMulti(params = {}, language = getLanguage()) {
-    //console.log(`/${this.url}` + params);
-    //Get data of user_notifications
     const res = await axiosInstance.get(`/${this.url}`, {
       params: removeEmpty(params),
       headers: {
@@ -31,7 +28,6 @@ export default class GeneralApi {
   async update(id, data) {
     if (id) {
       const res = await axiosInstance.put(`/${this.url}/${id}`, data);
-      console.log("update call", res.data);
       return res.data;
     }
   }
@@ -43,7 +39,6 @@ export default class GeneralApi {
           "Accept-Language": language,
         },
       });
-      //console.log('get call', res.data, 'in', language);
       return res.data;
     }
   }
@@ -55,7 +50,6 @@ export default class GeneralApi {
           "Accept-Language": language,
         },
       });
-      //console.log('get call', res.data, 'in', language);
       return res.data;
     }
   }
@@ -63,7 +57,6 @@ export default class GeneralApi {
   async delete(id) {
     if (id) {
       const res = await axiosInstance.delete(`/${this.url}/${id}`);
-      console.log("delete call", res.data);
       return res.data;
     }
   }
@@ -81,7 +74,6 @@ export default class GeneralApi {
         },
       }
     );
-    console.log("setLogotype call", res.data);
     return res;
   }
 
@@ -91,7 +83,6 @@ export default class GeneralApi {
         `/${this.url}/${object_id}/administrators`,
         { user_id }
       );
-      console.log("add administrator call", res.data);
       return res.data;
     }
   }
@@ -101,7 +92,6 @@ export default class GeneralApi {
       const res = await axiosInstance.delete(
         `/${this.url}/${object_id}/administrators/${user_id}`
       );
-      console.log("delete administrator call", res.data);
       return res.data;
     }
   }

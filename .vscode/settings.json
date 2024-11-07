@@ -26,5 +26,8 @@
   "eslint.lintTask.enable": true,
   "eslint.lintTask.options": "-c .eslintrc.json --ext .js,.jsx,.ts,.tsx --fix",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.preferences.importModuleSpecifier": "non-relative"
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

@@ -106,7 +106,6 @@ const PermissionCreate = ({
     if (coproductionprocess) {
       dataToSend.coproductionprocess_id = coproductionprocess.id;
     }
-    console.log(dataToSend);
     permissionsApi
       .create(dataToSend)
       .then((res) => {

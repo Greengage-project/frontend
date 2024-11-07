@@ -20,10 +20,12 @@ import { problemprofilesApi } from "./catalogue/problemProfilesApi";
 import { recommenderApi } from "./coproduction/recommenderApi";
 import { oldgamesApi } from "./gamification/old_gamesApi";
 import { tagsApi } from "./coproduction/tagsApi";
+import { newGamesApi } from "./gamification/new_gameApi";
 import { keywordsApi } from "./coproduction/keywordsApi";
 import { ratingsApi } from "./coproduction/ratingsApi";
 import { claimsApi } from "./coproduction/claimsApi";
 import { assignmentsApi } from "./coproduction/assignmentsApi";
+
 export {
   storiesApi,
   tagsApi,
@@ -31,6 +33,7 @@ export {
   problemprofilesApi,
   permissionsApi,
   oldgamesApi,
+  newGamesApi,
   organizationsApi,
   userActionApi,
   usernotificationsApi,

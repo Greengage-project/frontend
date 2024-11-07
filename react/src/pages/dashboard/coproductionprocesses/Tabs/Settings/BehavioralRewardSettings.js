@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -6,14 +7,91 @@ import {
   Button,
   Divider,
   Link,
+  Alert,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import "./RewardSettings.css";
+import { newGamesApi } from "__api__";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProcess } from "slices/process";
+import useMounted from "hooks/useMounted";
 
 const BehavioralRewardSettings = (props) => {
-  const { handleGoBack, onClose } = props;
+  const { handleGoBack, onClose, coproductionProcessId } = props;
+  const [previousGameId, setPreviousGameId] = useState(null);
+  const dispatch = useDispatch();
+  const mounted = useMounted();
+  const { process, tree } = useSelector((state) => state.process);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    newGamesApi
+      .checkIfProcessHasGame(coproductionProcessId)
+      .then((res) => {
+        setPreviousGameId(res?.gameId);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [coproductionProcessId]);
+
+  const prepareGameTemplate = (tree) => {
+    const taskList = [];
+    for (const phase of tree) {
+      for (const objective of phase.children) {
+        for (const task of objective.children) {
+          if (task.type === "task" && task.is_disabled === false) {
+            taskList.push({
+              id: task.id,
+              management: task.management,
+              development: task.development,
+              exploitation: task.exploitation,
+            });
+          }
+        }
+      }
+    }
+    return taskList;
+  };
+
+  const taskList = prepareGameTemplate(tree);
+
+  const handleActivate = () => {
+    newGamesApi
+      .setGame(coproductionProcessId, {
+        coproductionProcessId,
+        taskList,
+      })
+      .then((res) => {
+        const values = {
+          incentive_and_rewards_state: true,
+          leaderboard: true,
+        };
+        dispatch(
+          updateProcess({
+            id: process.id,
+            data: values,
+            onSuccess: () => {
+              if (mounted?.current) {
+                // console.log(process);
+              }
+            },
+          })
+        );
+      });
+  };
+
+  const handleDeleteAndActivate = () => {
+    newGamesApi
+      .deleteGame(previousGameId)
+      .then((res) => {
+        handleActivate();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <Container maxWidth="lg">
@@ -44,17 +122,24 @@ const BehavioralRewardSettings = (props) => {
               variant="h4"
               sx={{ textAlign: "center" }}
             >
-              {"Dynamic Reward System".toUpperCase()}
+              {t("Dynamic Reward System").toUpperCase()}
             </Typography>
+            {previousGameId && (
+              <Alert severity="warning" variant="filled" sx={{ mt: 2 }}>
+                {t(
+                  "This coproduction process has already been activated. If you activate it again, the previous game could be deleted and a new one will be created."
+                )}
+              </Alert>
+            )}
 
             <Typography
               color="textSecondary"
               variant="h6"
               sx={{ m: 1, textAlign: "center" }}
             >
-              {
+              {t(
                 "A strategy for calculating rewards based on user activity and time spent on tasks."
-              }
+              )}
             </Typography>
           </Grid>
         </Grid>
@@ -62,7 +147,7 @@ const BehavioralRewardSettings = (props) => {
       <Box
         alt="Medals"
         component="img"
-        src={`/static/reward/behavioral_strategy.svg`}
+        src="/static/reward/behavioral_strategy.svg"
         sx={{
           width: "100%",
           margin: "0 auto",
@@ -93,15 +178,15 @@ const BehavioralRewardSettings = (props) => {
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-                {"Legend"}
+                {t("Legend")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"m: Minutes | DP: Default Points | BP: Bonus Points"}
+                {t("m: Minutes | DP: Default Points | BP: Bonus Points")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {
+                {t(
                   "PBP: Personal Bonus Points | DPTE: Default Points Time Elapsed"
-                }
+                )}
               </Typography>
             </Box>
           </Grid>
@@ -124,19 +209,19 @@ const BehavioralRewardSettings = (props) => {
               }}
             >
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-                {"Calculation"}
+                {t("Calculation")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"DP: Defined in the strategy"}
+                {t("DP: Defined in the strategy")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"DPTE = DP × m"}
+                {t("DPTE = DP × m")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"BP = DPTE + (DPTE / 2)"}
+                {t("BP = DPTE + (DPTE / 2)")}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {"PBP = DPTE + (DPTE / 4)"}
+                {t("PBP = DPTE + (DPTE / 4)")}
               </Typography>
             </Box>
           </Grid>
@@ -163,16 +248,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 1.1: Default Points"}
+              {t("Case 1.1: Default Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the last points were rewarded less than 1 minute ago, award default points."
-              }
+              {t(
+                "If the last points were rewarded less than 1 minute ago, award default points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -186,16 +271,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 1.2: Half Default Points"}
+              {t("Case 1.2: Half Default Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the last points were rewarded less than 1 minute ago, award half of the default points."
-              }
+              {t(
+                "If the last points were rewarded less than 1 minute ago, award half of the default points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -209,16 +294,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 2: Double Default Points"}
+              {t("Case 2: Double Default Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the user has no prior record for this task, award double default points."
-              }
+              {t(
+                "If the user has no prior record for this task, award double default points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -232,16 +317,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 3: Bonus Points"}
+              {t("Case 3: Bonus Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the user's time spent is greater than the global average, award bonus points."
-              }
+              {t(
+                "If the user's time spent is greater than the global average, award bonus points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -255,16 +340,16 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 4.1: Personal Bonus Points"}
+              {t("Case 4.1: Personal Bonus Points")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {
-                "If the user's time spent is greater than their personal average, award personal bonus points."
-              }
+              {t(
+                "If the user's time spent is greater than their personal average, award personal bonus points"
+              )}
             </Typography>
           </Box>
         </Grid>
@@ -278,14 +363,14 @@ const BehavioralRewardSettings = (props) => {
             }}
           >
             <Typography variant="h5" sx={{ textAlign: "center", mt: 1 }}>
-              {"Case 4.2: Default Points Time Elapsed"}
+              {t("Case 4.2: Default Points Time Elapsed")}
             </Typography>
             <Typography
               variant="body1"
               color="textSecondary"
               sx={{ textAlign: "center" }}
             >
-              {"Award default points based on the time elapsed (DPTE)."}
+              {t("Award default points based on the time elapsed (DPTE)")}
             </Typography>
           </Box>
         </Grid>
@@ -298,7 +383,7 @@ const BehavioralRewardSettings = (props) => {
           textAlign: "center",
         }}
       >
-        <Grid item md={8} sm={12}>
+        <Grid item md={!previousGameId ? 8 : 6} sm={12}>
           <Typography
             variant="body1"
             className="footer-instruction"
@@ -311,7 +396,7 @@ const BehavioralRewardSettings = (props) => {
             )}
           </Typography>
         </Grid>
-        <Grid item md={2} sm={12} className="skip-reward">
+        <Grid item md={!previousGameId ? 2 : 2} sm={12} className="skip-reward">
           <Link
             href="#"
             variant="body2"
@@ -319,11 +404,12 @@ const BehavioralRewardSettings = (props) => {
             onClick={() => {
               onClose();
             }}
+            data-cy="skip-that-part"
           >
             {t("I want to skip that part")}
           </Link>
         </Grid>
-        <Grid item md={2} sm={12} className="skip-reward">
+        <Grid item md={!previousGameId ? 2 : 2} sm={12} className="skip-reward">
           <Button
             sx={{
               minWidth: {
@@ -334,12 +420,43 @@ const BehavioralRewardSettings = (props) => {
             }}
             variant="outlined"
             onClick={() => {
-              //
+              handleActivate();
+              onClose();
             }}
+            data-cy="activate-this-function"
           >
-            {t("Activate this function")}
+            {previousGameId
+              ? t("Reactivate this function")
+              : t("Activate this function")}
           </Button>
         </Grid>
+        {previousGameId && (
+          <Grid
+            item
+            md={2}
+            sm={12}
+            className="skip-reward"
+            data-cy="create-a-new-game"
+          >
+            <Button
+              sx={{
+                minWidth: {
+                  xs: "140px",
+                  lg: "190px",
+                },
+                mr: 2,
+              }}
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                handleDeleteAndActivate();
+                onClose();
+              }}
+            >
+              {t("Create a new game")}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Container>
   );
@@ -347,10 +464,12 @@ const BehavioralRewardSettings = (props) => {
 
 BehavioralRewardSettings.propTypes = {
   handleGoBack: PropTypes.func,
+  coproductionProcessId: PropTypes.string,
 };
 
 BehavioralRewardSettings.defaultProps = {
   handleGoBack: undefined,
+  coproductionProcessId: "",
 };
 
 export default BehavioralRewardSettings;

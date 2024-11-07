@@ -63,18 +63,8 @@ const TermsPopover = () => {
     setOpen(false);
   };
 
-  const handleSave = (settings) => {
-    saveSettings(settings);
-    setOpen(false);
-  };
-
-  const onLoad = function () {
-    console.log("Iframe refreshed", openDialog, this);
-  };
-
   return (
     <>
-      {" "}
       <Tooltip title={t("Policies")}>
         <IconButton
           color="inherit"

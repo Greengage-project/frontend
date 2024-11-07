@@ -35,7 +35,7 @@ const DeclarativeRewardSettings = (props) => {
       <Box
         alt="Medals"
         component="img"
-        src={`/static/reward/Medals.svg`}
+        src="/static/reward/Medals.svg"
         className="medals-image-pc imageContainer"
         ref={imageRef}
       />
@@ -70,15 +70,15 @@ const DeclarativeRewardSettings = (props) => {
                   :
                   <Box className="box-reward">
                     <li>
-                      <Typography variant="body1">• {t("Easy")}</Typography>
+                      <Typography variant="body1">•{t("Easy")}</Typography>
                       <SentimentSatisfied />
                     </li>
                     <li>
-                      <Typography variant="body1">• {t("Medium")}</Typography>
+                      <Typography variant="body1">•{t("Medium")}</Typography>
                       <SentimentNeutral />
                     </li>
                     <li>
-                      <Typography variant="body1">• {t("Hard")}</Typography>
+                      <Typography variant="body1">•{t("Hard")}</Typography>
                       <SentimentDissatisfied />
                     </li>
                   </Box>
@@ -89,13 +89,13 @@ const DeclarativeRewardSettings = (props) => {
             <Box
               alt="Reward image 1"
               component="img"
-              src={`/static/reward/Reward_image_1.svg`}
+              src="/static/reward/Reward_image_1.svg"
               sx={{
                 height: "auto",
                 maxWidth: "100%",
                 margin: "0 auto",
               }}
-            ></Box>
+            />
           </Grid>
           <Grid container md={12} className="mb-2">
             <Grid item md={1} className="reward-left-number">
@@ -113,12 +113,12 @@ const DeclarativeRewardSettings = (props) => {
                 className="mt-1"
                 alt="Reward image 2"
                 component="img"
-                src={`/static/reward/Reward_image_2.svg`}
+                src="/static/reward/Reward_image_2.svg"
                 sx={{
                   height: "auto",
                   maxWidth: "100%",
                 }}
-              ></Box>
+              />
             </Grid>
           </Grid>
           <Grid container md={12}>
@@ -129,9 +129,9 @@ const DeclarativeRewardSettings = (props) => {
             </Grid>
             <Grid item md={11} sx={{ mt: 0 }}>
               <Typography variant="body1" className="reward-left-text">
-                {t(
+                {`${t(
                   "Once finished a task you will have to set the contribution of every collaborator assigning a level of contribution based on four levels"
-                ) + ":"}
+                )}:`}
               </Typography>
               <Box className="box-reward">
                 <li>
@@ -172,12 +172,12 @@ const DeclarativeRewardSettings = (props) => {
                 className="mt-1 mb-1"
                 alt="Reward image 3"
                 component="img"
-                src={`/static/reward/Reward_image_3.svg`}
+                src="/static/reward/Reward_image_3.svg"
                 sx={{
                   height: "auto",
                   maxWidth: "100%",
                 }}
-              ></Box>
+              />
             </Grid>
           </Grid>
           <Grid container md={12}>
@@ -193,10 +193,9 @@ const DeclarativeRewardSettings = (props) => {
                 )}
                 .
                 <strong>
-                  {" " +
-                    t(
-                      "Remember that in any case the admins will see the Leaderboard"
-                    )}
+                  {` ${t(
+                    "Remember that in any case the admins will see the Leaderboard"
+                  )}`}
                   .
                 </strong>
                 <p>
@@ -221,114 +220,12 @@ const DeclarativeRewardSettings = (props) => {
               </Typography>
             </Grid>
           </Grid>
-          {/* 5 step */}
-          {/* <Grid container md={12}>
-            <Grid item md={1} className="reward-left-number">
-              <Typography variant="h1" sx={{ mt: 0 }}>
-                5.
-              </Typography>
-            </Grid>
-            <Grid item md={11} sx={{ mt: 0 }}>
-              <Typography variant="body1" className="reward-left-text">
-                <strong>
-                  {t("You can decide to set two types of chart")}:
-                </strong>
-                <p>
-                  <Radio
-                    checked={individualChart}
-                    onChange={(e) => setIndividualChart(!individualChart)}
-                    value="individualChart"
-                    name="radio-buttons"
-                    inputProps={{ "aria-label": "A" }}
-                  />
-                  {t("Individual chart (reccomended for citizens involving)")}
-                </p>
-                <p>
-                  <Radio
-                    checked={!individualChart}
-                    onChange={(e) => setIndividualChart(!individualChart)}
-                    value="individualChart"
-                    name="radio-buttons"
-                  />
-                  {t("Team chart")}
-                </p>
-              </Typography>
-            </Grid>
-          </Grid> */}
-          {/* 6 step */}
-          {/* <Grid container md={12}>
-            <Grid item md={1} className="reward-left-number">
-              <Typography variant="h1" sx={{ mt: 0 }}>
-                6.
-              </Typography>
-            </Grid>
-            <Grid item md={11} sx={{ mt: 0 }}>
-              <Typography variant="body1" className="reward-left-text">
-                {t(
-                  "You can also decide beetween two styles of Leaderboard. You can incetivize the podium or you can show it like the other positions. The podium into the Leaderboard does not mean that only the first three places can recive the reward, you can decide the distribution of the rewards as you want"
-                )}
-                .
-                <p>
-                  <Radio
-                    checked={classicChart}
-                    onChange={(e) => setClassicChart(!classicChart)}
-                    value="classicChart"
-                    name="radio-buttons"
-                    inputProps={{ "aria-label": "A" }}
-                  />
-                  {t("Classic chart")}
-                  <Box
-                    className="mt-1 mb-1"
-                    alt="Reward image 4"
-                    component="img"
-                    src={`/static/reward/Reward_image_4.svg`}
-                    sx={{
-                      height: "auto",
-                      maxWidth: "100%",
-                    }}
-                  ></Box>
-                </p>
-                <p>
-                  <Radio
-                    checked={!classicChart}
-                    onChange={(e) => setClassicChart(!classicChart)}
-                    value="classicChart"
-                    name="radio-buttons"
-                  />
-                  {t("Incetive podium")}
-                  <Box
-                    className="mt-1 mb-1"
-                    alt="Reward image 3"
-                    component="img"
-                    src={`/static/reward/Reward_image_5.svg`}
-                    sx={{
-                      height: "auto",
-                      maxWidth: "100%",
-                    }}
-                  ></Box>
-                </p>
-              </Typography>
-            </Grid>
-          </Grid> */}
-          {/* 7 Step */}
-          {/* <Grid container md={12}>
-            <Grid item md={1} className="reward-left-number">
-              <Typography variant="h1" sx={{ mt: 0 }}>
-                7.
-              </Typography>
-            </Grid>
-            <Grid item md={11} sx={{ mt: 0 }}>
-              <Typography variant="body1" className="reward-left-text">
-                Once completed the project.......
-              </Typography>
-            </Grid>
-          </Grid> */}
         </Grid>
         <Grid item md={12} className="col-reward-right" ref={rightColumn}>
           <Box
             alt="Medals"
             component="img"
-            src={`/static/reward/Medals.svg`}
+            src="/static/reward/Medals.svg"
             className="medals-image imageContainer"
             ref={imageRef}
           />
@@ -381,12 +278,14 @@ DeclarativeRewardSettings.propTypes = {
   onClose: PropTypes.func,
   activateReward: PropTypes.func,
   handleGoBack: PropTypes.func,
+  coproductionProcessId: PropTypes.string,
 };
 
 DeclarativeRewardSettings.defaultProps = {
   onClose: () => {},
   activateReward: () => {},
   handleGoBack: () => {},
+  coproductionProcessId: "",
 };
 
 export default DeclarativeRewardSettings;

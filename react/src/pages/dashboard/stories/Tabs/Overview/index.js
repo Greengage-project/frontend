@@ -1,6 +1,5 @@
 import {
   Avatar,
-  IconButton,
   Grid,
   Card,
   CardHeader,
@@ -16,35 +15,16 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import {
-  AccountTree,
-  OpenInNew,
-  MoreVert,
-  YouTube,
-  ArrowForward,
-} from "@mui/icons-material";
-// import { ReviewsTable } from 'components/dashboard/reviews';
+import { YouTube } from "@mui/icons-material";
 import { useCustomTranslation } from "hooks/useDependantTranslation";
 import useMounted from "hooks/useMounted";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-// import { setSelectedTreeItemById } from 'slices/process';
-// import { coproductionProcessesApi } from '__api__';
-import TimeLine from "components/dashboard/coproductionprocesses/TimeLine";
-//import CoproNotifications from 'components/dashboard/coproductionprocesses/CoproNotifications';
-import {
-  getCoproductionProcessNotifications,
-  getSelectedStory,
-} from "slices/general";
-import useAuth from "hooks/useAuth";
-// import { cleanProcess } from 'slices/process';
-import { defaultReduceAnimations } from "@mui/lab/CalendarPicker/CalendarPicker";
+import { getSelectedStory } from "slices/general";
 import StoryReviews from "components/dashboard/stories/profile/StoryReviews";
-import { storiesApi } from "__api__";
-
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/styles";
 import { getProcessCatalogue } from "slices/process";
@@ -60,8 +40,7 @@ function TwoColumnsText(props) {
         </Typography>
       ) : (
         <>
-          {(largeDevice || xlargeDevice) ? (
-            
+          {largeDevice || xlargeDevice ? (
             <Typography color="textSecondary" variant="body2" sx={{ m: 5 }}>
               <Grid container spacing={{ xs: 2, md: 3 }}>
                 <Grid item xs={6} sx={{ textAlign: "justify" }}>
@@ -72,7 +51,6 @@ function TwoColumnsText(props) {
                 </Grid>
               </Grid>
             </Typography>
-
           ) : (
             <Typography color="textSecondary" variant="body2" sx={{ m: 5 }}>
               <Grid container spacing={{ xs: 2, md: 3 }}>
@@ -92,7 +70,8 @@ function TwoColumnsText(props) {
                   )}
                 </Grid>
               </Grid>
-            </Typography>          )}
+            </Typography>
+          )}
         </>
       )}
     </>
@@ -107,52 +86,37 @@ export default function OverviewStory({}) {
 
   const { selectedStory } = useSelector((state) => state.general);
 
-  var userLang = navigator.language.substring(0, 2);
-
-  //const t = useCustomTranslation(selectedStory.story_language);
+  const userLang = navigator.language.substring(0, 2);
 
   const t = useCustomTranslation(userLang);
 
   const [tab, setTab] = useState("showcase");
 
   const [loading, setLoading] = React.useState(true);
-  //   const [reviews, setReviews] = React.useState([]);
 
   const mounted = useMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = React.useState("");
 
-
   useEffect(() => {
     const id = window.location.pathname.split("/")[2];
     if (selectedStory) {
       if (selectedStory.id != id) {
         dispatch(getSelectedStory(id));
-       
-      } //else{
+      }
     } else {
       dispatch(getSelectedStory(id));
     }
-
-    // storiesApi.getStoriesbyId(id).then((res) => {
-    //   res.data=JSON.parse(res.data_story)
-    //   selectedStory=res
-
-    // });
-    //}
   }, []);
 
-
-  //Every time another story is selected then the data info of the process is loaded
-  useEffect(() =>{
-    //console.log("La STORY A CAMBIADO:")
-    if(selectedStory){
-      //console.log(selectedStory.coproductionprocess_cloneforpub_id)
-      dispatch(getProcessCatalogue(selectedStory.coproductionprocess_cloneforpub_id))
+  useEffect(() => {
+    if (selectedStory) {
+      dispatch(
+        getProcessCatalogue(selectedStory.coproductionprocess_cloneforpub_id)
+      );
     }
-    
-  },[selectedStory])
+  }, [selectedStory]);
 
   return (
     <Box sx={{ pb: 3, justifyContent: "center" }}>
@@ -208,8 +172,6 @@ export default function OverviewStory({}) {
                 </Typography>
               </Grid>
 
-             
-
               {selectedStory.data_story.tags != "" && (
                 <Grid item xs={6} md={6} lg={3} xl={3} sx={{ m: 3 }}>
                   <Typography
@@ -242,20 +204,19 @@ export default function OverviewStory({}) {
                 {selectedStory.data_story.short_description}
               </Typography>
 
-
               <Grid
                 container
                 spacing={3}
                 direction="column"
                 justifyContent="left"
                 alignItems="left"
-                sx={{ mt: 3,mb:3,ml:5 }}
+                sx={{ mt: 3, mb: 3, ml: 5 }}
               >
                 <Typography color="textSecondary" variant="subtitle2">
-                  {t("Started at")}: {selectedStory.data_story.start_at}
+                  {t("Started at")}:{selectedStory.data_story.start_at}
                 </Typography>
                 <Typography color="textSecondary" variant="subtitle2">
-                {t("Ended at")}: {selectedStory.data_story.end_at}
+                  {t("Ended at")}:{selectedStory.data_story.end_at}
                 </Typography>
               </Grid>
 
@@ -332,6 +293,7 @@ export default function OverviewStory({}) {
                     color="textSecondary"
                     variant="h6"
                     sx={{ ml: 5, mt: 3 }}
+                    data-cy="incentives"
                   >
                     {t("Incentives")}
                   </Typography>
@@ -345,8 +307,12 @@ export default function OverviewStory({}) {
               )}
 
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Materials")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Materials")}
               </Typography>
 
               <Grid
@@ -365,7 +331,7 @@ export default function OverviewStory({}) {
                         switch (material.type) {
                           case "video_channel":
                             return <YouTube />;
-                          //case "video_channel": return <Component2 />;
+                          // case "video_channel": return <Component2 />;
                           default:
                             null;
                         }
@@ -375,7 +341,7 @@ export default function OverviewStory({}) {
 
                     <CardActions>
                       <Button href={material.link} size="small">
-                      {t("View")}
+                        {t("View")}
                       </Button>
                     </CardActions>
                   </Card>
@@ -383,8 +349,12 @@ export default function OverviewStory({}) {
               </Grid>
 
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Owners")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Owners")}
               </Typography>
 
               <Grid
@@ -404,32 +374,31 @@ export default function OverviewStory({}) {
                           sx={owner.logo}
                           aria-label="recipe"
                           src={owner.logo}
-                        ></Avatar>
+                        />
                       }
                       title={owner && owner.name}
                     />
                     {/* <CardContent>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      
+
                       </Typography>
                     </CardContent> */}
                     <CardActions>
                       <Button href={owner.link} size="small">
-                      {t("More")}
+                        {t("More")}
                       </Button>
                     </CardActions>
                   </Card>
                 ))}
               </Grid>
 
-
-              
-
-
-
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Licenses")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Licenses")}
               </Typography>
               <Grid
                 container
@@ -448,13 +417,13 @@ export default function OverviewStory({}) {
                 </Typography>
               </Grid>
 
-
-
-
-
               <Divider />
-              <Typography color="textSecondary" variant="h6" sx={{ ml: 5,mt:3 }}>
-              {t("Countries")}
+              <Typography
+                color="textSecondary"
+                variant="h6"
+                sx={{ ml: 5, mt: 3 }}
+              >
+                {t("Countries")}
               </Typography>
 
               <Grid
@@ -464,23 +433,23 @@ export default function OverviewStory({}) {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                
               >
-                {selectedStory.data_story.countries.split(',').map((country) => (
-                  <Card sx={{ minWidth: 275, m: 2 }}>
-                    
-                    <CardContent>
-                      <Typography variant="h6"  align='center' color="text.secondary">
-                        {country}
-                      </Typography>
-                    </CardContent>
-                   
-                  </Card>
-                ))}
+                {selectedStory.data_story.countries
+                  .split(",")
+                  .map((country) => (
+                    <Card sx={{ minWidth: 275, m: 2 }}>
+                      <CardContent>
+                        <Typography
+                          variant="h6"
+                          align="center"
+                          color="text.secondary"
+                        >
+                          {country}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))}
               </Grid>
-
-
-
             </Box>
           ) : (
             <></>

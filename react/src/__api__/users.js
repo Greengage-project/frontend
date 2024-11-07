@@ -18,10 +18,8 @@ class UsersApi extends GeneralApi {
   async me() {
     // Call auth microservice first in order to create an account if it does not exist
     const res = await axiosInstance.get('/auth/api/v1/users/me');
-    console.log(res);
     // Coproduction service gets user data from the auth service
     const res2 = await axiosInstance.get('/coproduction/api/v1/users/me');
-    console.log(res2);
     const me = { ...res.data, ...res2.data };
     console.log('get me call', me);
     return me;
@@ -31,11 +29,8 @@ class UsersApi extends GeneralApi {
 
     try {
           const response = await axiosInstance.put('/coproduction/api/v1/users/agree-terms', {});
-          // handle the response if needed
-          console.log(response.data);
           return response.data;
     } catch (error) {
-      // handle error response
       console.error('Error agreeing to terms:', error.response ? error.response.data : error.message);
     }
   }
@@ -44,11 +39,8 @@ class UsersApi extends GeneralApi {
 
     try {
           const response = await axiosInstance.put('/coproduction/api/v1/users/refuse-terms', {});
-          // handle the response if needed
-          console.log(response.data);
           return response.data;
     } catch (error) {
-      // handle error response
       console.error('Error when refuse the terms:', error.response ? error.response.data : error.message);
     }
   }
@@ -86,9 +78,7 @@ class UsersApi extends GeneralApi {
 
     } catch (error) {
         console.error("There was a problem with the download operation:", error);
-        
-        // Throw the error so it can be caught in your component.
-        // You can decide to throw a custom error message or just forward the one from axios.
+
         throw new Error(error.response?.data?.message || "There was a problem with the download operation.");
     }
 }

@@ -1,17 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Avatar,
   Box,
-  Grid,
-  Item,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  CardContent,
-  Button,
-  CardActions,
-  Card,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -20,37 +13,22 @@ import {
   Alert,
   IconButton,
   Input,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
-  Stack,
-  Chip,
   InputAdornment,
   Divider,
 } from "@mui/material";
 
-import {
-  CopyAll,
-  Email,
-  CrisisAlert,
-  Person,
-  Group,
-} from "@mui/icons-material";
+import { CopyAll, Email, Person, Group } from "@mui/icons-material";
 
 import { LoadingButton } from "@mui/lab";
-import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getLanguage, LANGUAGES } from "translations/i18n";
-import { recommenderApi, assetsApi, assignmentsApi } from "__api__";
-import { Done, Delete, Close, KeyboardArrowRight } from "@mui/icons-material";
-import SelectGovernanceModel from "./SelectGovernanceModel";
+import { assetsApi, assignmentsApi } from "__api__";
 import { REACT_APP_COMPLETE_DOMAIN } from "configuration";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import useMounted from "hooks/useMounted";
 import UserSearch from "./UserSearch";
-import { sub } from "date-fns";
 
 export default function AssetsShare({
   open,
@@ -89,8 +67,8 @@ export default function AssetsShare({
   );
 
   const handleCheckboxChange = (event) => {
-    const value = event.target.value;
-    const checked = event.target.checked;
+    const { value } = event.target;
+    const { checked } = event.target;
 
     if (checked) {
       setCheckboxValues([...checkboxValues, value]);
@@ -100,8 +78,8 @@ export default function AssetsShare({
   };
 
   const handleLinkOptionsChange = (event) => {
-    const value = event.target.value;
-    const checked = event.target.checked;
+    const { value } = event.target;
+    const { checked } = event.target;
 
     if (checked) {
       setLinkOptions([...checkboxValues, value]);
@@ -131,9 +109,8 @@ export default function AssetsShare({
   const copyTextToClipboard = async (text) => {
     if ("clipboard" in navigator) {
       return await navigator.clipboard.writeText(text);
-    } else {
-      return document.execCommand("copy", true, text);
     }
+    return document.execCommand("copy", true, text);
   };
 
   const handleClose = () => {
@@ -149,8 +126,6 @@ export default function AssetsShare({
   };
 
   const handleCopyLink = () => {
-    //alert("Link Copied"+assetLink);
-
     copyTextToClipboard(assetLink);
     setOpenSnakbar(true);
   };
@@ -169,7 +144,6 @@ export default function AssetsShare({
     setShowTeamOps(true);
   };
 
-  //Function to create a assignment from a list
   const createAssignments_by_users = async (
     user_ids,
     asset_id,
@@ -178,11 +152,11 @@ export default function AssetsShare({
   ) => {
     const assignmentData = {
       users_id: user_ids,
-      asset_id: asset_id,
+      asset_id,
       task_id: selectedTreeItem.id,
       coproductionprocess_id: process.id,
-      title: title,
-      description: description,
+      title,
+      description,
       state: false,
     };
 
@@ -191,26 +165,8 @@ export default function AssetsShare({
     );
 
     return assigmentsCreated;
-
-    // assignmentsApi.createAssignmentsForUsers(assignmentData).then((res) => {
-    //   const responseData = JSON.parse(res.data);
-    //   console.log(responseData);
-
-    //   if (responseData["excluded"].length > 0) {
-    //     alert(
-    //       t("We couldn't include") +
-    //         ": [" +
-    //         responseData["excluded"] +
-    //         "] " +
-    //         t(
-    //           "users because are not part of a team with permissions over this task. Please check the list of users and try again"
-    //         )
-    //     );
-    //   }
-    // });
   };
 
-  //Function to create a assignments from a team
   const createAssignments_by_teams = async (
     team_ids,
     asset_id,
@@ -219,11 +175,11 @@ export default function AssetsShare({
   ) => {
     const assignmentData = {
       teams_id: team_ids,
-      asset_id: asset_id,
+      asset_id,
       task_id: selectedTreeItem.id,
       coproductionprocess_id: process.id,
-      title: title,
-      description: description,
+      title,
+      description,
       state: false,
     };
 
@@ -231,42 +187,11 @@ export default function AssetsShare({
       assignmentData
     );
     return assigmentsCreated;
-
-    // assignmentsApi.createAssignmentsForTeams(assignmentData).then((res) => {
-    //   const responseData = JSON.parse(res.data);
-    //   console.log(responseData);
-
-    //   if (responseData["excluded"].length > 0) {
-    //     alert(
-    //       t("We couldn't include") +
-    //         ": [" +
-    //         responseData["excluded"] +
-    //         "] " +
-    //         t(
-    //           "users because are not part of a team with permissions over this task. Please check the list of users and try again"
-    //         )
-    //     );
-    //   }
-    // });
   };
 
-  // const handleAskForClaim = async () => {
-  //   alert("Ask for claim");
-
-  //   if (singleuser) {
-  //     createAssignments_by_users( [singleuser.id], asset.id, subject, instructions)
-  //   }
-  //   else {
-  //     createAssignments_by_teams( checkboxValues, asset.id, subject, instructions)
-  //   }
-
-  // };
-
-  // Form validation function
   const validateForm = () => {
     let valid = true;
 
-    // Validations:
     if (instructions === "" || subject === "") {
       setIsError(true);
       setErrorMessage(
@@ -274,7 +199,6 @@ export default function AssetsShare({
       );
       valid = false;
     }
-    // Clearing error message and resetting error state
     if (valid) {
       setErrorMessage("");
       setIsError(false);
@@ -288,8 +212,6 @@ export default function AssetsShare({
       return;
     }
 
-    //Define which link will be sent:
-    //If is a direct link:
     let assetLinkOp = "";
     if (linkOptions.includes("shareDirectLink")) {
       assetLinkOp = assetLink;
@@ -298,10 +220,8 @@ export default function AssetsShare({
     } else if (linkOptions.includes("linktoClaim")) {
       assetLinkOp = "linktoClaim";
     }
-    //If is a assigment link:
 
     if (singleuser) {
-      //Register the assigment for a single user
       const assigmentList = await createAssignments_by_users(
         [singleuser.id],
         asset.id,
@@ -309,14 +229,10 @@ export default function AssetsShare({
         instructions
       );
 
-      //Create the notification and send the email to a single selected user
-
       if (linkOptions.includes("assignmentAsLink")) {
         assetLinkOp = assigmentList[0].link;
-        //console.log(assigmentList[0].link);
-      }else if (linkOptions.includes("linktoClaim")) {
+      } else if (linkOptions.includes("linktoClaim")) {
         assetLinkOp = assigmentList[0].link_to_claim;
-        //console.log(assigmentList[0].link);
       }
 
       const dataToSend = {
@@ -324,28 +240,23 @@ export default function AssetsShare({
         link: assetLinkOp,
         asset_name: asset.internalData.name,
         icon: asset.internalData.icon,
-        subject: subject,
-        instructions: instructions,
+        subject,
+        instructions,
         userTo: singleuser.id,
         resourceId: asset.id,
         taskName: selectedTreeItem.name,
         processId: process.id,
       };
-      //console.log(dataToSend);
-
-      //alert('You share this link: '+assetLinkOp);
 
       assetsApi
         .emailAskUserContribution(dataToSend)
         .then((res) => {
-          //console.log(res);
           handleClose();
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      //Register the assigment for a team
       const assigmentList = await createAssignments_by_teams(
         checkboxValues,
         asset.id,
@@ -353,41 +264,35 @@ export default function AssetsShare({
         instructions
       );
 
-      //Create a dict of assigmentList with the user and assignmentLink
       const assigmentDict = {};
-      for (var i = 0; i < assigmentList.length; i++) {
+      for (let i = 0; i < assigmentList.length; i++) {
         if (linkOptions.includes("assignmentAsLink")) {
           assigmentDict[assigmentList[i].user_id] = assigmentList[i].link;
         } else if (linkOptions.includes("shareDirectLink")) {
           assigmentDict[assigmentList[i].user_id] = assetLink;
         } else if (linkOptions.includes("linktoClaim")) {
-          assigmentDict[assigmentList[i].user_id] = assigmentList[i].link_to_claim;
+          assigmentDict[assigmentList[i].user_id] =
+            assigmentList[i].link_to_claim;
         }
       }
-
-      //Create a notification and send an email to a team
 
       const dataToSend = {
         asset_id: asset.id,
         link: assetLinkOp,
         asset_name: asset.internalData.name,
         icon: asset.internalData.icon,
-        subject: subject,
-        instructions: instructions,
+        subject,
+        instructions,
         resourceId: asset.id,
         taskName: selectedTreeItem.name,
         listTeams: checkboxValues,
         processId: process.id,
-        assigmentDict: assigmentDict,
+        assigmentDict,
       };
-      console.log(dataToSend);
-
-      //alert('You share this link: '+assetLinkOp);
 
       assetsApi
         .emailAskTeamContribution(dataToSend)
         .then((res) => {
-          //console.log(res);
           handleClose();
         })
         .catch((err) => {
@@ -397,12 +302,12 @@ export default function AssetsShare({
   };
 
   useEffect(() => {
-    const permissions = selectedTreeItem.permissions;
+    const { permissions } = selectedTreeItem;
     setListTeams([]);
 
-    let listTeamsTemporal = [];
+    const listTeamsTemporal = [];
 
-    for (var i = 0; i < permissions.length; i++) {
+    for (let i = 0; i < permissions.length; i++) {
       const equipoTemp = permissions[i].team;
 
       if (listTeamsTemporal.includes(equipoTemp)) {
@@ -411,7 +316,7 @@ export default function AssetsShare({
       }
     }
 
-    let listTeamsSet = new Set(listTeamsTemporal);
+    const listTeamsSet = new Set(listTeamsTemporal);
     setListTeams(Array.from(listTeamsSet));
   }, [asset]);
 
@@ -432,18 +337,15 @@ export default function AssetsShare({
                   id="contained-button-file"
                   type="file"
                   sx={{ display: "none" }}
-                  //onChange={handleFileSelected}
                 />
               </label>
             </Box>
             {!(showSingleUserOps || showTeamOps) && (
               <>
                 <Typography sx={{ mb: 1, fontWeight: "bold" }} variant="body1">
-                  {"1.- " +
-                    t(
-                      "You may copy the link below and share it with your colleagues"
-                    ) +
-                    "."}
+                  {`1.- ${t(
+                    "You may copy the link below and share it with your colleagues"
+                  )}.`}
                 </Typography>
 
                 <FormControl fullWidth sx={{ m: 1 }} variant="standard">
@@ -471,7 +373,7 @@ export default function AssetsShare({
             )}
 
             <Typography sx={{ mb: 1, fontWeight: "bold" }} variant="body1">
-              {"2.- " + t("You may send and email") + "."}
+              {`2.- ${t("You may send and email")}.`}
             </Typography>
 
             {!(showSingleUserOps || showTeamOps) && (
@@ -526,17 +428,13 @@ export default function AssetsShare({
                             sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
                             variant="body1"
                           >
-                            {t("Enter the user email") + ":"}
+                            {`${t("Enter the user email")}:`}
                           </Typography>
 
                           <UserSearch
-                            //error={Boolean(touched.user && errors.user)}
                             alert={false}
                             importCsv={false}
-                            //include={Array.from(includedUsers)}
                             onClick={(user) => {
-                              // setFieldValue("user", user);
-                              // setFieldTouched("user");
                               setSingleuser(user);
                             }}
                           />
@@ -559,20 +457,20 @@ export default function AssetsShare({
                         sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
                         variant="body1"
                       >
-                        {"- " + t("Select the Teams") + ":"}
+                        {`- ${t("Select the Teams")}:`}
                       </Typography>
 
                       <Typography sx={{ mt: 1, mb: 1 }} variant="body1">
-                        {t(
+                        {`${t(
                           "If a user is included in multiple teams, the user only will receive one email"
-                        ) + "."}
+                        )}.`}
                       </Typography>
 
                       <FormGroup>
                         {listTeams.length === 0 &&
-                          t(
+                          `${t(
                             "No teams assigned to this task please assign a team to it"
-                          )+"."}
+                          )}.`}
                         {listTeams.length > 0 &&
                           listTeams.map((team) => (
                             <>
@@ -609,13 +507,13 @@ export default function AssetsShare({
                     sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
                     variant="body1"
                   >
-                    {"- " + t("Content included in the email") + ":"}
+                    {`- ${t("Content included in the email")}:`}
                   </Typography>
 
                   <Typography sx={{ mt: 1, mb: 1 }} variant="body1">
-                    {t(
+                    {`${t(
                       "You may add more information and instruction about the activity to perform"
-                    ) + ":"}
+                    )}:`}
                   </Typography>
 
                   {singleuser && (
@@ -623,7 +521,7 @@ export default function AssetsShare({
                       sx={{ mb: 1, mt: 1, fontWeight: "bold" }}
                       variant="body1"
                     >
-                      {t("To") + ": " + singleuser.full_name}
+                      {`${t("To")}: ${singleuser.full_name}`}
                     </Typography>
                   )}
 
@@ -652,12 +550,12 @@ export default function AssetsShare({
                     sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
                     variant="body1"
                   >
-                    {"- " + t("Options to share") + ":"}
+                    {`- ${t("Options to share")}:`}
                   </Typography>
                   <Typography sx={{ mt: 1, mb: 1 }} variant="body1">
-                    {t(
+                    {`${t(
                       "You can choose one of the follow ways to share the link"
-                    ) + ":"}
+                    )}:`}
                   </Typography>
 
                   <FormGroup>
@@ -671,11 +569,9 @@ export default function AssetsShare({
                           value="assignmentAsLink"
                         />
                       }
-                      label={
-                        t(
-                          "Send a link to access assignment and claim registration page"
-                        ) + "."
-                      }
+                      label={`${t(
+                        "Send a link to access assignment and claim registration page"
+                      )}.`}
                     />
 
                     <FormControlLabel
@@ -688,14 +584,12 @@ export default function AssetsShare({
                           value="shareDirectLink"
                         />
                       }
-                      label={
-                        t(
-                          "Send a link with the direct access to the resource"
-                        ) + "."
-                      }
+                      label={`${t(
+                        "Send a link with the direct access to the resource"
+                      )}.`}
                     />
 
-                <FormControlLabel
+                    <FormControlLabel
                       control={
                         <Checkbox
                           defaultChecked
@@ -705,11 +599,9 @@ export default function AssetsShare({
                           value="linktoClaim"
                         />
                       }
-                      label={
-                        t(
-                          "Send a link to the claim submission form"
-                        ) + "."
-                      }
+                      label={`${t(
+                        "Send a link to the claim submission form"
+                      )}.`}
                     />
                   </FormGroup>
                 </>
@@ -726,7 +618,7 @@ export default function AssetsShare({
                 severity="success"
                 sx={{ width: "100%" }}
               >
-                {t("The link has been copied to the clipboard") + "!"}
+                {`${t("The link has been copied to the clipboard")}!`}
               </Alert>
             </Snackbar>
           </>
