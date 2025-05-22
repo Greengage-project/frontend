@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Box,
   Dialog,
@@ -16,133 +16,133 @@ import {
   TextField,
   Typography,
   InputAdornment,
-  Divider,
-} from "@mui/material";
+  Divider
+} from "@mui/material"
 
-import { CopyAll, Email, Person, Group } from "@mui/icons-material";
+import { CopyAll, Email, Person, Group } from "@mui/icons-material"
 
-import { LoadingButton } from "@mui/lab";
-import { useTranslation } from "react-i18next";
-import { getLanguage, LANGUAGES } from "translations/i18n";
-import { assetsApi, assignmentsApi } from "__api__";
-import { REACT_APP_COMPLETE_DOMAIN } from "configuration";
-import { useSelector } from "react-redux";
-import useMounted from "hooks/useMounted";
-import UserSearch from "./UserSearch";
+import { LoadingButton } from "@mui/lab"
+import { useTranslation } from "react-i18next"
+import { getLanguage, LANGUAGES } from "translations/i18n"
+import { assetsApi, assignmentsApi } from "__api__"
+import { REACT_APP_COMPLETE_DOMAIN } from "configuration"
+import { useSelector } from "react-redux"
+import useMounted from "hooks/useMounted"
+import UserSearch from "./UserSearch"
 
 export default function AssetsShare({
   open,
   setOpen,
   loading,
   setLoading,
-  asset,
+  asset
 }) {
   const { process, isAdministrator, selectedTreeItem } = useSelector(
-    (state) => state.process
-  );
-  const [language, setLanguage] = useState(getLanguage());
-  const [assetLink, setAssetLink] = useState("");
-  const [subject, setSubject] = useState("");
-  const [instructions, setInstructions] = useState("");
+    state => state.process
+  )
+  const [language, setLanguage] = useState(getLanguage())
+  const [assetLink, setAssetLink] = useState("")
+  const [subject, setSubject] = useState("")
+  const [instructions, setInstructions] = useState("")
 
-  const [openSnakbar, setOpenSnakbar] = React.useState(false);
-  const { t } = useTranslation();
-  const [listTeams, setListTeams] = useState([]);
+  const [openSnakbar, setOpenSnakbar] = React.useState(false)
+  const { t } = useTranslation()
+  const [listTeams, setListTeams] = useState([])
 
-  const [checkboxValues, setCheckboxValues] = useState([]);
-  const [linkOptions, setLinkOptions] = useState([]);
-  const [singleuser, setSingleuser] = useState(null);
-  const [showSingleUserOps, setShowSingleUserOps] = useState(false);
-  const [showTeamOps, setShowTeamOps] = useState(false);
-  const mounted = useMounted();
+  const [checkboxValues, setCheckboxValues] = useState([])
+  const [linkOptions, setLinkOptions] = useState([])
+  const [singleuser, setSingleuser] = useState(null)
+  const [showSingleUserOps, setShowSingleUserOps] = useState(false)
+  const [showTeamOps, setShowTeamOps] = useState(false)
+  const mounted = useMounted()
 
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const includedUsers = new Set(
     process.enabled_teams
-      .map((team) => team.users.map((user) => user.id))
+      .map(team => team.users.map(user => user.id))
       .flat()
       .concat(process.administrators_ids)
-  );
+  )
 
-  const handleCheckboxChange = (event) => {
-    const { value } = event.target;
-    const { checked } = event.target;
-
-    if (checked) {
-      setCheckboxValues([...checkboxValues, value]);
-    } else {
-      setCheckboxValues(checkboxValues.filter((v) => v !== value));
-    }
-  };
-
-  const handleLinkOptionsChange = (event) => {
-    const { value } = event.target;
-    const { checked } = event.target;
+  const handleCheckboxChange = event => {
+    const { value } = event.target
+    const { checked } = event.target
 
     if (checked) {
-      setLinkOptions([...checkboxValues, value]);
+      setCheckboxValues([...checkboxValues, value])
     } else {
-      setLinkOptions(checkboxValues.filter((v) => v !== value));
+      setCheckboxValues(checkboxValues.filter(v => v !== value))
     }
-  };
+  }
+
+  const handleLinkOptionsChange = event => {
+    const { value } = event.target
+    const { checked } = event.target
+
+    if (checked) {
+      setLinkOptions([...checkboxValues, value])
+    } else {
+      setLinkOptions(checkboxValues.filter(v => v !== value))
+    }
+  }
 
   useEffect(() => {
     if (process && asset) {
       setAssetLink(
         `${REACT_APP_COMPLETE_DOMAIN}/dashboard/coproductionprocesses/${process.id}/${asset.id}/view`
-      );
-      setOpenSnakbar(false);
+      )
+      setOpenSnakbar(false)
     }
-    setLinkOptions(["assignmentAsLink"]);
-  }, [open]);
+    setLinkOptions(["assignmentAsLink"])
+  }, [open])
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
-      return;
+      return
     }
 
-    setOpenSnakbar(false);
-  };
+    setOpenSnakbar(false)
+  }
 
-  const copyTextToClipboard = async (text) => {
+  const copyTextToClipboard = async text => {
     if ("clipboard" in navigator) {
-      return await navigator.clipboard.writeText(text);
+      return await navigator.clipboard.writeText(text)
     }
-    return document.execCommand("copy", true, text);
-  };
+    return document.execCommand("copy", true, text)
+  }
 
   const handleClose = () => {
-    setSubject("");
-    setInstructions("");
-    setCheckboxValues([]);
-    setLinkOptions(["assignmentAsLink"]);
-    setOpen(false);
-    setLoading(false);
-    setSingleuser(null);
-    setShowSingleUserOps(false);
-    setShowTeamOps(false);
-  };
+    setSubject("")
+    setInstructions("")
+    setCheckboxValues([])
+    setLinkOptions(["assignmentAsLink"])
+    setOpen(false)
+    setLoading(false)
+    setSingleuser(null)
+    setShowSingleUserOps(false)
+    setShowTeamOps(false)
+  }
 
   const handleCopyLink = () => {
-    copyTextToClipboard(assetLink);
-    setOpenSnakbar(true);
-  };
+    copyTextToClipboard(assetLink)
+    setOpenSnakbar(true)
+  }
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const handleMouseDownPassword = event => {
+    event.preventDefault()
+  }
 
   const handleShowSingleUserOps = () => {
-    setShowSingleUserOps(true);
-    setShowTeamOps(false);
-  };
+    setShowSingleUserOps(true)
+    setShowTeamOps(false)
+  }
 
   const handleShowTeamsOps = () => {
-    setShowSingleUserOps(false);
-    setShowTeamOps(true);
-  };
+    setShowSingleUserOps(false)
+    setShowTeamOps(true)
+  }
 
   const createAssignments_by_users = async (
     user_ids,
@@ -157,15 +157,15 @@ export default function AssetsShare({
       coproductionprocess_id: process.id,
       title,
       description,
-      state: false,
-    };
+      state: false
+    }
 
     const assigmentsCreated = await assignmentsApi.createAssignmentsForUsers(
       assignmentData
-    );
+    )
 
-    return assigmentsCreated;
-  };
+    return assigmentsCreated
+  }
 
   const createAssignments_by_teams = async (
     team_ids,
@@ -180,45 +180,45 @@ export default function AssetsShare({
       coproductionprocess_id: process.id,
       title,
       description,
-      state: false,
-    };
+      state: false
+    }
 
     const assigmentsCreated = await assignmentsApi.createAssignmentsForTeams(
       assignmentData
-    );
-    return assigmentsCreated;
-  };
+    )
+    return assigmentsCreated
+  }
 
   const validateForm = () => {
-    let valid = true;
+    let valid = true
 
     if (instructions === "" || subject === "") {
-      setIsError(true);
+      setIsError(true)
       setErrorMessage(
         t("Include a subject and instruction for the assignment.")
-      );
-      valid = false;
+      )
+      valid = false
     }
     if (valid) {
-      setErrorMessage("");
-      setIsError(false);
+      setErrorMessage("")
+      setIsError(false)
     }
 
-    return valid;
-  };
+    return valid
+  }
 
   const handleNext = async () => {
     if (!validateForm()) {
-      return;
+      return
     }
 
-    let assetLinkOp = "";
+    let assetLinkOp = ""
     if (linkOptions.includes("shareDirectLink")) {
-      assetLinkOp = assetLink;
+      assetLinkOp = assetLink
     } else if (linkOptions.includes("assignmentAsLink")) {
-      assetLinkOp = "assignmentPageLink";
+      assetLinkOp = "assignmentPageLink"
     } else if (linkOptions.includes("linktoClaim")) {
-      assetLinkOp = "linktoClaim";
+      assetLinkOp = "linktoClaim"
     }
 
     if (singleuser) {
@@ -227,12 +227,15 @@ export default function AssetsShare({
         asset.id,
         subject,
         instructions
-      );
-
+      )
+      console.log({
+        linkOptions,
+        assigmentList
+      })
       if (linkOptions.includes("assignmentAsLink")) {
-        assetLinkOp = assigmentList[0].link;
+        assetLinkOp = assigmentList[0].link
       } else if (linkOptions.includes("linktoClaim")) {
-        assetLinkOp = assigmentList[0].link_to_claim;
+        assetLinkOp = assigmentList[0].link_to_claim
       }
 
       const dataToSend = {
@@ -245,34 +248,34 @@ export default function AssetsShare({
         userTo: singleuser.id,
         resourceId: asset.id,
         taskName: selectedTreeItem.name,
-        processId: process.id,
-      };
+        processId: process.id
+      }
 
       assetsApi
         .emailAskUserContribution(dataToSend)
-        .then((res) => {
-          handleClose();
+        .then(res => {
+          handleClose()
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(err => {
+          console.log(err)
+        })
     } else {
       const assigmentList = await createAssignments_by_teams(
         checkboxValues,
         asset.id,
         subject,
         instructions
-      );
+      )
 
-      const assigmentDict = {};
+      const assigmentDict = {}
       for (let i = 0; i < assigmentList.length; i++) {
         if (linkOptions.includes("assignmentAsLink")) {
-          assigmentDict[assigmentList[i].user_id] = assigmentList[i].link;
+          assigmentDict[assigmentList[i].user_id] = assigmentList[i].link
         } else if (linkOptions.includes("shareDirectLink")) {
-          assigmentDict[assigmentList[i].user_id] = assetLink;
+          assigmentDict[assigmentList[i].user_id] = assetLink
         } else if (linkOptions.includes("linktoClaim")) {
           assigmentDict[assigmentList[i].user_id] =
-            assigmentList[i].link_to_claim;
+            assigmentList[i].link_to_claim
         }
       }
 
@@ -287,77 +290,77 @@ export default function AssetsShare({
         taskName: selectedTreeItem.name,
         listTeams: checkboxValues,
         processId: process.id,
-        assigmentDict,
-      };
+        assigmentDict
+      }
 
       assetsApi
         .emailAskTeamContribution(dataToSend)
-        .then((res) => {
-          handleClose();
+        .then(res => {
+          handleClose()
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(err => {
+          console.log(err)
+        })
     }
-  };
+  }
 
   useEffect(() => {
-    const { permissions } = selectedTreeItem;
-    setListTeams([]);
+    const { permissions } = selectedTreeItem
+    setListTeams([])
 
-    const listTeamsTemporal = [];
+    const listTeamsTemporal = []
 
     for (let i = 0; i < permissions.length; i++) {
-      const equipoTemp = permissions[i].team;
+      const equipoTemp = permissions[i].team
 
       if (listTeamsTemporal.includes(equipoTemp)) {
       } else {
-        listTeamsTemporal.push(equipoTemp);
+        listTeamsTemporal.push(equipoTemp)
       }
     }
 
-    const listTeamsSet = new Set(listTeamsTemporal);
-    setListTeams(Array.from(listTeamsSet));
-  }, [asset]);
+    const listTeamsSet = new Set(listTeamsTemporal)
+    setListTeams(Array.from(listTeamsSet))
+  }, [asset])
 
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle sx={{ textAlign: "left", m: 1 }}>
-          <Typography color="primary" variant="h5">
+          <Typography color='primary' variant='h5'>
             {t("Share or assign options")}
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
           <>
             <Box sx={{ textAlign: "center" }}>
-              <label htmlFor="contained-button-file">
+              <label htmlFor='contained-button-file'>
                 <Input
                   inputProps={{ accept: "image/*" }}
-                  id="contained-button-file"
-                  type="file"
+                  id='contained-button-file'
+                  type='file'
                   sx={{ display: "none" }}
                 />
               </label>
             </Box>
             {!(showSingleUserOps || showTeamOps) && (
               <>
-                <Typography sx={{ mb: 1, fontWeight: "bold" }} variant="body1">
+                <Typography sx={{ mb: 1, fontWeight: "bold" }} variant='body1'>
                   {`1.- ${t(
                     "You may copy the link below and share it with your colleagues"
                   )}.`}
                 </Typography>
 
-                <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                <FormControl fullWidth sx={{ m: 1 }} variant='standard'>
                   <Input
-                    id="standard-adornment-password"
-                    type="text"
+                    id='standard-adornment-password'
+                    type='text'
                     value={assetLink}
                     disabled
                     endAdornment={
-                      <InputAdornment position="end">
+                      <InputAdornment position='end'>
                         <IconButton
-                          aria-label="toggle password visibility"
+                          aria-label='toggle password visibility'
                           onClick={handleCopyLink}
                           onMouseDown={handleMouseDownPassword}
                         >
@@ -372,7 +375,7 @@ export default function AssetsShare({
               </>
             )}
 
-            <Typography sx={{ mb: 1, fontWeight: "bold" }} variant="body1">
+            <Typography sx={{ mb: 1, fontWeight: "bold" }} variant='body1'>
               {`2.- ${t("You may send and email")}.`}
             </Typography>
 
@@ -386,16 +389,16 @@ export default function AssetsShare({
                     mt: 2,
                     flexWrap: "wrap",
                     gap: 2,
-                    alignItems: "center",
+                    alignItems: "center"
                   }}
                 >
                   <LoadingButton
                     sx={{ my: 2 }}
                     loading={loading}
-                    size="large"
+                    size='large'
                     onClick={handleShowSingleUserOps}
-                    color="primary"
-                    variant="outlined"
+                    color='primary'
+                    variant='outlined'
                   >
                     {t("Single user")}
                     <Person sx={{ ml: 2 }} />
@@ -403,10 +406,10 @@ export default function AssetsShare({
                   <LoadingButton
                     sx={{ my: 2 }}
                     loading={loading}
-                    size="large"
+                    size='large'
                     onClick={handleShowTeamsOps}
-                    color="primary"
-                    variant="outlined"
+                    color='primary'
+                    variant='outlined'
                   >
                     {t("Teams")}
                     <Group sx={{ ml: 2 }} />
@@ -415,7 +418,7 @@ export default function AssetsShare({
               </>
             )}
 
-            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+            <FormControl fullWidth sx={{ m: 1 }} variant='standard'>
               {checkboxValues.length == 0 ? (
                 <>
                   {singleuser ? (
@@ -426,7 +429,7 @@ export default function AssetsShare({
                         <>
                           <Typography
                             sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
-                            variant="body1"
+                            variant='body1'
                           >
                             {`${t("Enter the user email")}:`}
                           </Typography>
@@ -434,8 +437,8 @@ export default function AssetsShare({
                           <UserSearch
                             alert={false}
                             importCsv={false}
-                            onClick={(user) => {
-                              setSingleuser(user);
+                            onClick={user => {
+                              setSingleuser(user)
                             }}
                           />
                         </>
@@ -455,12 +458,12 @@ export default function AssetsShare({
                     <>
                       <Typography
                         sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
-                        variant="body1"
+                        variant='body1'
                       >
                         {`- ${t("Select the Teams")}:`}
                       </Typography>
 
-                      <Typography sx={{ mt: 1, mb: 1 }} variant="body1">
+                      <Typography sx={{ mt: 1, mb: 1 }} variant='body1'>
                         {`${t(
                           "If a user is included in multiple teams, the user only will receive one email"
                         )}.`}
@@ -472,7 +475,7 @@ export default function AssetsShare({
                             "No teams assigned to this task please assign a team to it"
                           )}.`}
                         {listTeams.length > 0 &&
-                          listTeams.map((team) => (
+                          listTeams.map(team => (
                             <>
                               <FormControlLabel
                                 control={
@@ -489,7 +492,7 @@ export default function AssetsShare({
 
                               <ul>
                                 {team.users.length > 0 &&
-                                  team.users.map((user) => (
+                                  team.users.map(user => (
                                     <li>{user.full_name}</li>
                                   ))}
                               </ul>
@@ -505,12 +508,12 @@ export default function AssetsShare({
                 <>
                   <Typography
                     sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
-                    variant="body1"
+                    variant='body1'
                   >
                     {`- ${t("Content included in the email")}:`}
                   </Typography>
 
-                  <Typography sx={{ mt: 1, mb: 1 }} variant="body1">
+                  <Typography sx={{ mt: 1, mb: 1 }} variant='body1'>
                     {`${t(
                       "You may add more information and instruction about the activity to perform"
                     )}:`}
@@ -519,7 +522,7 @@ export default function AssetsShare({
                   {singleuser && (
                     <Typography
                       sx={{ mb: 1, mt: 1, fontWeight: "bold" }}
-                      variant="body1"
+                      variant='body1'
                     >
                       {`${t("To")}: ${singleuser.full_name}`}
                     </Typography>
@@ -527,32 +530,32 @@ export default function AssetsShare({
 
                   <TextField
                     sx={{ mb: 3 }}
-                    id="standard-basic"
+                    id='standard-basic'
                     label={t("Subject")}
-                    variant="standard"
+                    variant='standard'
                     value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
+                    onChange={e => setSubject(e.target.value)}
                   />
 
                   <TextField
-                    id="outlined-multiline-static"
+                    id='outlined-multiline-static'
                     label={t("Instructions")}
                     multiline
                     rows={4}
-                    defaultValue="Default Value"
+                    defaultValue='Default Value'
                     value={instructions}
-                    onChange={(e) => setInstructions(e.target.value)}
+                    onChange={e => setInstructions(e.target.value)}
                   />
 
                   <Divider sx={{ my: 2 }} />
 
                   <Typography
                     sx={{ mt: 1, mb: 1, fontWeight: "bold" }}
-                    variant="body1"
+                    variant='body1'
                   >
                     {`- ${t("Options to share")}:`}
                   </Typography>
-                  <Typography sx={{ mt: 1, mb: 1 }} variant="body1">
+                  <Typography sx={{ mt: 1, mb: 1 }} variant='body1'>
                     {`${t(
                       "You can choose one of the follow ways to share the link"
                     )}:`}
@@ -565,8 +568,8 @@ export default function AssetsShare({
                           defaultChecked
                           checked={linkOptions.includes("assignmentAsLink")}
                           onChange={handleLinkOptionsChange}
-                          name="assignmentAsLink"
-                          value="assignmentAsLink"
+                          name='assignmentAsLink'
+                          value='assignmentAsLink'
                         />
                       }
                       label={`${t(
@@ -580,8 +583,8 @@ export default function AssetsShare({
                           defaultChecked
                           checked={linkOptions.includes("shareDirectLink")}
                           onChange={handleLinkOptionsChange}
-                          name="shareDirectLink"
-                          value="shareDirectLink"
+                          name='shareDirectLink'
+                          value='shareDirectLink'
                         />
                       }
                       label={`${t(
@@ -595,8 +598,8 @@ export default function AssetsShare({
                           defaultChecked
                           checked={linkOptions.includes("linktoClaim")}
                           onChange={handleLinkOptionsChange}
-                          name="linktoClaim"
-                          value="linktoClaim"
+                          name='linktoClaim'
+                          value='linktoClaim'
                         />
                       }
                       label={`${t(
@@ -615,7 +618,7 @@ export default function AssetsShare({
             >
               <Alert
                 onClose={handleCloseSnackbar}
-                severity="success"
+                severity='success'
                 sx={{ width: "100%" }}
               >
                 {`${t("The link has been copied to the clipboard")}!`}
@@ -627,14 +630,14 @@ export default function AssetsShare({
         {(showSingleUserOps || showTeamOps) && (
           <DialogActions sx={{ justifyContent: "center" }}>
             {isError && (
-              <Alert variant="outlined" severity="error" sx={{ m: 1 }}>
+              <Alert variant='outlined' severity='error' sx={{ m: 1 }}>
                 {errorMessage}
               </Alert>
             )}
             <LoadingButton
               sx={{ my: 2 }}
               loading={loading}
-              size="large"
+              size='large'
               onClick={handleNext}
             >
               {t("Send email")}
@@ -644,5 +647,5 @@ export default function AssetsShare({
         )}
       </Dialog>
     </>
-  );
+  )
 }
