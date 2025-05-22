@@ -78,13 +78,12 @@ export default function AssetsShare({
   }
 
   const handleLinkOptionsChange = event => {
-    const { value } = event.target
-    const { checked } = event.target
+    const { value, checked } = event.target
 
     if (checked) {
-      setLinkOptions([...checkboxValues, value])
+      setLinkOptions(prev => [...prev, value])
     } else {
-      setLinkOptions(checkboxValues.filter(v => v !== value))
+      setLinkOptions(prev => prev.filter(v => v !== value))
     }
   }
 
@@ -233,8 +232,10 @@ export default function AssetsShare({
         assigmentList
       })
       if (linkOptions.includes("assignmentAsLink")) {
+        console.log("-> assignmentAsLink")
         assetLinkOp = assigmentList[0].link
       } else if (linkOptions.includes("linktoClaim")) {
+        console.log("-> linktoClaim")
         assetLinkOp = assigmentList[0].link_to_claim
       }
 
@@ -250,7 +251,8 @@ export default function AssetsShare({
         taskName: selectedTreeItem.name,
         processId: process.id
       }
-
+      console.log("-> 1")
+      console.log(dataToSend)
       assetsApi
         .emailAskUserContribution(dataToSend)
         .then(res => {
@@ -278,6 +280,7 @@ export default function AssetsShare({
             assigmentList[i].link_to_claim
         }
       }
+      console.log("-> 2")
 
       const dataToSend = {
         asset_id: asset.id,
@@ -292,6 +295,7 @@ export default function AssetsShare({
         processId: process.id,
         assigmentDict
       }
+      console.log(dataToSend)
 
       assetsApi
         .emailAskTeamContribution(dataToSend)
