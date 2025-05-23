@@ -53,10 +53,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
   const [description, setDescription] = useState('');
   const [logotype, setLogotype] = useState(null);
   const [loadingTeams, setLoadingTeams] = useState(true);
-  const [organization, setOrganization] = useState({
-    teams_ids: [],
-    administrators_ids: []
-  });
+  const [organization, setOrganization] = useState({ teams_ids: [], administrators_ids: [] });
   const [teams, setTeams] = useState([]);
   const [teamCreatorOpen, setOpenTeamCreator] = useState(false);
   const [creatingTeam, setCreatingTeam] = useState(false);
@@ -187,15 +184,10 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
     (organization.team_creation_permission === 'administrators' &&
       organization.administrators_ids.includes(user.id)) ||
     (organization.team_creation_permission === 'members' && !organization.public);
-
-  const isAdmin = organization?.current_user_participation?.includes('administrator');
-
-  console.log({
-    organizationId,
-    canCreateTeams,
-    organization,
-    isAdmin
-  });
+  const isAdmin =
+    organization &&
+    organization.current_user_participation &&
+    organization.current_user_participation.includes('administrator');
 
   const [tabValue, setTabValue] = useState('teams');
   const handleTabChange = (event, newValue) => {
@@ -205,7 +197,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
   return (
     <Box>
       {organization ? (
-        <Grid container data-cy={`organization-profile-${organizationId}`}>
+        <Grid container>
           <Grid item md={4}>
             <Stack
               direction="column"
@@ -237,7 +229,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                           height: '100px',
                           position: 'absolute'
                         }}
-                        data-cy="organization-logotype-editMode"
                       />
                       <Edit
                         style={{
@@ -247,7 +238,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                           top: '50%',
                           transform: 'translateY(-50%)'
                         }}
-                        data-cy="organization-logotype-editMode-icon"
                       />
                     </div>
                   </IconButton>
@@ -261,7 +251,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                       width: '100px',
                       height: '100px'
                     }}
-                    data-cy="organization-logotype"
                   />
                 </IconButton>
               )}
@@ -281,9 +270,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                 />
               )}
               {!editMode ? (
-                <Typography variant="body1" data-cy="organization-description">
-                  {organization.description}
-                </Typography>
+                <Typography variant="body1">{organization.description}</Typography>
               ) : (
                 <TextField
                   margin="dense"
@@ -296,7 +283,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                   multiline
                   rows={4}
                   variant="standard"
-                  data-cy="organization-description-editMode"
                 />
               )}
               {!editMode ? (
@@ -304,11 +290,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
               ) : (
                 <Stack sx={{ mt: 2 }} spacing={1} direction="row" alignItems="center">
                   <Typography variant="body2">{t('Public')}</Typography>
-                  <Switch
-                    checked={isPublic}
-                    onChange={event => setPublic(event.target.checked)}
-                    data-cy="organization-public-editMode"
-                  />
+                  <Switch checked={isPublic} onChange={event => setPublic(event.target.checked)} />
                 </Stack>
               )}
               {!editMode ? (
@@ -316,7 +298,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                   <Typography variant="overline">
                     {t('Who can create teams in this organization?')}
                   </Typography>
-                  <Typography variant="body1" data-cy="organizat">
+                  <Typography variant="body1">
                     {teamCreationPermissionTranslations(t)[organization.team_creation_permission]}
                   </Typography>
                 </>
@@ -378,7 +360,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                       variant="contained"
                       color="primary"
                       onClick={() => onChanges && setEditMode(true)}
-                      data-cy="edit-organization-button"
                     >
                       {t('Edit')}
                     </Button>
@@ -406,7 +387,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                         variant="text"
                         color="error"
                         onClick={onClick}
-                        data-cy="delete-organization-button"
                       >
                         {t('Remove {{what}}', { what: organization_trans })}
                       </Button>
@@ -418,7 +398,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                         variant="contained"
                         color="error"
                         onClick={onClick}
-                        data-cy="confirm-delete-organization-button"
                       >
                         {t('Confirm deletion')}
                       </Button>
@@ -438,23 +417,10 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
               sx={{ mb: 2 }}
               centered
             >
-              <Tab
-                value="teams"
-                label={`${t('Teams')} (${organization.teams_ids.length})`}
-                data-cy={
-                  organization.administrators_ids?.length === 0
-                    ? 'organization-teams-tab-0'
-                    : 'organization-teams-tab'
-                }
-              />
+              <Tab value="teams" label={`${t('Teams')} (${organization.teams_ids.length})`} />
               <Tab
                 value="administrators"
-                label={`${t('Administrators')} (${organization.administrators_ids?.length})`}
-                data-cy={
-                  organization.administrators_ids?.length === 0
-                    ? 'organization-administrators-tab-0'
-                    : 'organization-administrators-tab'
-                }
+                label={`${t('Administrators')} (${organization.administrators_ids.length})`}
               />
             </Tabs>
             <TeamCreate
@@ -497,7 +463,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                               ) : (
                                 <People />
                               )}
-                              <b data-cy={`cell-team-name-${team.name}`}>{team.name}</b>
+                              <b>{team.name}</b>
                             </Stack>
                           </TableCell>
                           <TableCell align="center" component="th" scope="row">
@@ -545,8 +511,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                     variant="contained"
                     startIcon={<Add />}
                     onClick={() => setOpenTeamCreator(true)}
-                    disabled={!(canCreateTeams || isAdmin)}
-                    data-cy="create-team-button"
+                    disabled={!canCreateTeams}
                   >
                     {t('Create new team')}
                   </LoadingButton>
