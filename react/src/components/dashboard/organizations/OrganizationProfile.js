@@ -62,7 +62,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
   const mounted = useMounted();
   const { t } = useDependantTranslation();
 
-  const setPublic = (val) => {
+  const setPublic = val => {
     if (val === false && teamCreationPermission === 'anyone') {
       setTeamCreationPermission('administrators');
     }
@@ -71,14 +71,14 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
 
   const getTeams = () => {
     setLoadingTeams(true);
-    organizationsApi.getOrganizationTeams(organizationId).then((res) => {
+    organizationsApi.getOrganizationTeams(organizationId).then(res => {
       setTeams(res);
       setLoadingTeams(false);
     });
   };
 
-  const handleAdministratorAdd = (user) => {
-    organizationsApi.addAdministrator(organizationId, user.id).then((res) => {
+  const handleAdministratorAdd = user => {
+    organizationsApi.addAdministrator(organizationId, user.id).then(res => {
       if (mounted.current) {
         update(() => {
           onChanges && onChanges();
@@ -86,8 +86,8 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
       }
     });
   };
-  const handleAdministratorRemove = (user) => {
-    organizationsApi.removeAdministrator(organizationId, user.id).then((res) => {
+  const handleAdministratorRemove = user => {
+    organizationsApi.removeAdministrator(organizationId, user.id).then(res => {
       if (mounted.current) {
         update(() => {
           onChanges && onChanges();
@@ -96,11 +96,12 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
     });
   };
 
-  const nameAndDescChanged = name !== organization.name
-    || description !== organization.description
-    || isPublic !== organization.public
-    || teamCreationPermission !== organization.team_creation_permission
-    || defaultTeamType !== organization.default_team_type;
+  const nameAndDescChanged =
+    name !== organization.name ||
+    description !== organization.description ||
+    isPublic !== organization.public ||
+    teamCreationPermission !== organization.team_creation_permission ||
+    defaultTeamType !== organization.default_team_type;
   const somethingChanged = nameAndDescChanged || logotype !== null;
 
   const handleSave = async () => {
@@ -147,8 +148,8 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
     });
   };
 
-  const update = (callback) => {
-    organizationsApi.get(organizationId).then((res) => {
+  const update = callback => {
+    organizationsApi.get(organizationId).then(res => {
       if (mounted.current) {
         setOrganization(res);
         setName(res.name);
@@ -166,7 +167,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
     update();
   }, []);
 
-  const handleFileSelected = (e) => {
+  const handleFileSelected = e => {
     const { files } = e.target;
     if (files.length > 0) {
       const file = files[0];
@@ -178,13 +179,19 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
   };
 
   const organization_trans = t('organization');
-  const canCreateTeams = organization?.team_creation_permission === 'anyone'
-    || (organization?.team_creation_permission === 'administrators'
-      && organization?.administrators_ids?.includes(user?.id))
-    || (organization.team_creation_permission === 'members' && !organization.public);
+  const canCreateTeams =
+    organization?.team_creation_permission === 'anyone' ||
+    (organization?.team_creation_permission === 'administrators' &&
+      organization?.administrators_ids?.includes(user?.id)) ||
+    (organization?.team_creation_permission === 'members' &&
+      organization?.current_user_participation?.some(role =>
+        ['member', 'administrator'].includes(role)
+      ));
+
   const isAdmin = organization?.current_user_participation?.includes('administrator');
 
   console.log({
+    userId: user?.id,
     organizationId,
     organization,
     canCreateTeams,
@@ -199,28 +206,22 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
     <Box>
       {organization ? (
         <Grid container>
-          <Grid
-            item
-            md={4}
-          >
+          <Grid item md={4}>
             <Stack
-              direction='column'
+              direction="column"
               sx={{ textAlign: 'center', justifyContent: 'center', p: 2 }}
               spacing={2}
             >
               {editMode ? (
-                <label htmlFor='contained-button-file'>
+                <label htmlFor="contained-button-file">
                   <Input
                     inputProps={{ accept: 'image/*' }}
-                    id='contained-button-file'
-                    type='file'
+                    id="contained-button-file"
+                    type="file"
                     sx={{ display: 'none' }}
                     onChange={handleFileSelected}
                   />
-                  <IconButton
-                    component='span'
-                    color='inherit'
-                  >
+                  <IconButton component="span" color="inherit">
                     <div
                       style={{
                         width: '100px',
@@ -230,7 +231,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                     >
                       <Avatar
                         src={logotype ? logotype.path : organization.logotype_link}
-                        variant='rounded'
+                        variant="rounded"
                         style={{
                           width: '100px',
                           height: '100px',
@@ -250,14 +251,10 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                   </IconButton>
                 </label>
               ) : (
-                <IconButton
-                  component='span'
-                  color='inherit'
-                  disabled
-                >
+                <IconButton component="span" color="inherit" disabled>
                   <Avatar
                     src={logotype ? logotype.path : organization.logotype_link}
-                    variant='rounded'
+                    variant="rounded"
                     style={{
                       width: '100px',
                       height: '100px'
@@ -266,86 +263,70 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                 </IconButton>
               )}
               {!editMode ? (
-                <Typography variant='h5'>{organization.name}</Typography>
+                <Typography variant="h5">{organization.name}</Typography>
               ) : (
                 <TextField
                   autoFocus
-                  margin='dense'
-                  id='name'
-                  label='Name'
+                  margin="dense"
+                  id="name"
+                  label="Name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  type='text'
+                  onChange={e => setName(e.target.value)}
+                  type="text"
                   fullWidth
-                  variant='standard'
+                  variant="standard"
                 />
               )}
               {!editMode ? (
-                <Typography variant='body1'>{organization.description}</Typography>
+                <Typography variant="body1">{organization.description}</Typography>
               ) : (
                 <TextField
-                  margin='dense'
-                  id='description'
-                  label='Description'
-                  type='text'
+                  margin="dense"
+                  id="description"
+                  label="Description"
+                  type="text"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={e => setDescription(e.target.value)}
                   fullWidth
                   multiline
                   rows={4}
-                  variant='standard'
+                  variant="standard"
                 />
               )}
               {!editMode ? (
                 <></>
               ) : (
-                <Stack
-                  sx={{ mt: 2 }}
-                  spacing={1}
-                  direction='row'
-                  alignItems='center'
-                >
-                  <Typography variant='body2'>{t('Public')}</Typography>
-                  <Switch
-                    checked={isPublic}
-                    onChange={(event) => setPublic(event.target.checked)}
-                  />
+                <Stack sx={{ mt: 2 }} spacing={1} direction="row" alignItems="center">
+                  <Typography variant="body2">{t('Public')}</Typography>
+                  <Switch checked={isPublic} onChange={event => setPublic(event.target.checked)} />
                 </Stack>
               )}
               {!editMode ? (
                 <>
-                  <Typography variant='overline'>
+                  <Typography variant="overline">
                     {t('Who can create teams in this organization?')}
                   </Typography>
-                  <Typography variant='body1'>
+                  <Typography variant="body1">
                     {teamCreationPermissionTranslations(t)[organization.team_creation_permission]}
                   </Typography>
                 </>
               ) : (
-                <FormControl
-                  variant='standard'
-                  fullWidth
-                  sx={{ mt: 3 }}
-                >
-                  <InputLabel id='select-creation-permission-label'>
+                <FormControl variant="standard" fullWidth sx={{ mt: 3 }}>
+                  <InputLabel id="select-creation-permission-label">
                     {t('Who can create teams')}
                   </InputLabel>
                   <Select
                     fullWidth
-                    labelId='select-creation-permission-label'
-                    id='select-creation-permission'
+                    labelId="select-creation-permission-label"
+                    id="select-creation-permission"
                     value={teamCreationPermission}
-                    onChange={(event) => {
+                    onChange={event => {
                       setTeamCreationPermission(event.target.value);
                     }}
                     label={t('Who can create teams')}
                   >
-                    {WHO_CAN_CREATE_OPTIONS(t, isPublic).map((lan) => (
-                      <MenuItem
-                        key={lan.value}
-                        disabled={lan.disabled}
-                        value={lan.value}
-                      >
+                    {WHO_CAN_CREATE_OPTIONS(t, isPublic).map(lan => (
+                      <MenuItem key={lan.value} disabled={lan.disabled} value={lan.value}>
                         {lan.label}
                       </MenuItem>
                     ))}
@@ -354,35 +335,24 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
               )}
               {!editMode ? (
                 <>
-                  <Typography variant='overline'>{t('Default team type')}</Typography>
-                  <OrganizationChip
-                    type={organization.default_team_type}
-                    t={t}
-                  />
+                  <Typography variant="overline">{t('Default team type')}</Typography>
+                  <OrganizationChip type={organization.default_team_type} t={t} />
                 </>
               ) : (
-                <FormControl
-                  variant='standard'
-                  fullWidth
-                  sx={{ mt: 3 }}
-                >
-                  <InputLabel id='select-type'>{t('Default team type')}</InputLabel>
+                <FormControl variant="standard" fullWidth sx={{ mt: 3 }}>
+                  <InputLabel id="select-type">{t('Default team type')}</InputLabel>
                   <Select
                     fullWidth
-                    labelId='select-type-label'
-                    id='select-type'
+                    labelId="select-type-label"
+                    id="select-type"
                     value={defaultTeamType}
-                    onChange={(event) => {
+                    onChange={event => {
                       setDefaultTeamType(event.target.value);
                     }}
                     label={t('Default team type')}
                   >
-                    {TEAM_TYPES(t).map((lan) => (
-                      <MenuItem
-                        key={lan.value}
-                        disabled={lan.disabled}
-                        value={lan.value}
-                      >
+                    {TEAM_TYPES(t).map(lan => (
+                      <MenuItem key={lan.value} disabled={lan.disabled} value={lan.value}>
                         {lan.label}
                       </MenuItem>
                     ))}
@@ -395,30 +365,22 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                     <Button
                       disabled={!isAdmin}
                       startIcon={<Edit />}
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={() => onChanges && setEditMode(true)}
                     >
                       {t('Edit')}
                     </Button>
                   ) : (
-                    <Stack
-                      direction='row'
-                      justifyContent='center'
-                      sx={{ mt: 2 }}
-                    >
-                      <Button
-                        variant='text'
-                        color='warning'
-                        onClick={() => setEditMode(false)}
-                      >
+                    <Stack direction="row" justifyContent="center" sx={{ mt: 2 }}>
+                      <Button variant="text" color="warning" onClick={() => setEditMode(false)}>
                         {t('Discard changes')}
                       </Button>
                       <Button
                         disabled={!somethingChanged}
                         startIcon={<Save />}
-                        variant='contained'
-                        color='success'
+                        variant="contained"
+                        color="success"
                         onClick={handleSave}
                       >
                         {t('Save')}
@@ -430,8 +392,8 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                       <Button
                         startIcon={<Delete />}
                         disabled={!editMode}
-                        variant='text'
-                        color='error'
+                        variant="text"
+                        color="error"
                         onClick={onClick}
                       >
                         {t('Remove {{what}}', { what: organization_trans })}
@@ -441,8 +403,8 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                       <Button
                         sx={{ mt: 1 }}
                         fullWidth
-                        variant='contained'
-                        color='error'
+                        variant="contained"
+                        color="error"
                         onClick={onClick}
                       >
                         {t('Confirm deletion')}
@@ -455,24 +417,17 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
               )}
             </Stack>
           </Grid>
-          <Grid
-            item
-            md={8}
-            sx={{ p: 2 }}
-          >
+          <Grid item md={8} sx={{ p: 2 }}>
             <Tabs
               value={tabValue}
               onChange={handleTabChange}
-              aria-label='organization-right-side-tabs'
+              aria-label="organization-right-side-tabs"
               sx={{ mb: 2 }}
               centered
             >
+              <Tab value="teams" label={`${t('Teams')} (${organization.teams_ids.length})`} />
               <Tab
-                value='teams'
-                label={`${t('Teams')} (${organization.teams_ids.length})`}
-              />
-              <Tab
-                value='administrators'
+                value="administrators"
                 label={`${t('Administrators')} (${organization.administrators_ids.length})`}
               />
             </Tabs>
@@ -489,32 +444,28 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell align='center'>{t('Name')}</TableCell>
-                      <TableCell align='center'>{t('Type')}</TableCell>
-                      <TableCell align='center'>{t('Created')}</TableCell>
-                      <TableCell align='center'>{t('Members')}</TableCell>
-                      <TableCell align='center'>{t('Your participation in the team')}</TableCell>
+                      <TableCell align="center">{t('Name')}</TableCell>
+                      <TableCell align="center">{t('Type')}</TableCell>
+                      <TableCell align="center">{t('Created')}</TableCell>
+                      <TableCell align="center">{t('Members')}</TableCell>
+                      <TableCell align="center">{t('Your participation in the team')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {teams
-                      && teams.map((team) => (
+                    {teams &&
+                      teams.map(team => (
                         <TableRow
                           sx={{ cursor: onTeamClick ? 'pointer' : '' }}
                           key={team.id}
                           onClick={() => onTeamClick(team)}
                           hover={onTeamClick !== null}
                         >
-                          <TableCell align='center'>
-                            <Stack
-                              alignItems='center'
-                              direction='row'
-                              spacing={1}
-                            >
+                          <TableCell align="center">
+                            <Stack alignItems="center" direction="row" spacing={1}>
                               {team.logotype_link ? (
                                 <Avatar
                                   sx={{ height: '25px', width: '25px' }}
-                                  variant='rounded'
+                                  variant="rounded"
                                   src={team.logotype_link}
                                 />
                               ) : (
@@ -523,23 +474,16 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                               <b>{team.name}</b>
                             </Stack>
                           </TableCell>
-                          <TableCell
-                            align='center'
-                            component='th'
-                            scope='row'
-                          >
-                            <OrganizationChip
-                              type={team.type}
-                              t={t}
-                            />
+                          <TableCell align="center" component="th" scope="row">
+                            <OrganizationChip type={team.type} t={t} />
                           </TableCell>
-                          <TableCell align='center'>{moment(team.created_at).fromNow()}</TableCell>
-                          <TableCell align='center'>{team.users_count}</TableCell>
-                          <TableCell align='center'>
+                          <TableCell align="center">{moment(team.created_at).fromNow()}</TableCell>
+                          <TableCell align="center">{team.users_count}</TableCell>
+                          <TableCell align="center">
                             {team.current_user_participation.length > 0 ? (
-                              team.current_user_participation.map((p) => (
+                              team.current_user_participation.map(p => (
                                 <Chip
-                                  size='small'
+                                  size="small"
                                   sx={{ mr: 1 }}
                                   key={team.id + p}
                                   title={`You are ${p} of the organization`}
@@ -553,13 +497,10 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                           </TableCell>
                         </TableRow>
                       ))}
-                    {loadingTeams
-                      && [...Array(organization.teams_ids.length).keys()].map((i) => (
+                    {loadingTeams &&
+                      [...Array(organization.teams_ids.length).keys()].map(i => (
                         <TableRow key={`skeleton-${i}`}>
-                          <TableCell
-                            align='center'
-                            colSpan={6}
-                          >
+                          <TableCell align="center" colSpan={6}>
                             <Skeleton />
                           </TableCell>
                         </TableRow>
@@ -568,14 +509,14 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
                 </Table>
 
                 {!loadingTeams && (!teams || teams.length) === 0 && (
-                  <Alert severity='warning'>{t('No teams found in this organization')}</Alert>
+                  <Alert severity="warning">{t('No teams found in this organization')}</Alert>
                 )}
                 <Box sx={{ textAlign: 'center' }}>
                   <LoadingButton
                     loading={loadingTeams || creatingTeam}
                     sx={{ mt: 3 }}
-                    size='small'
-                    variant='contained'
+                    size="small"
+                    variant="contained"
                     startIcon={<Add />}
                     onClick={() => setOpenTeamCreator(true)}
                     disabled={!canCreateTeams}
@@ -587,19 +528,21 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
             )}
             {tabValue === 'administrators' && (
               <UsersList
-                size='small'
+                size="small"
                 searchOnOrganization={isAdmin && organization.id}
                 users={organization.administrators}
                 onSearchResultClick={isAdmin && handleAdministratorAdd}
-                getActions={(user) => isAdmin && [
-                  {
-                    id: `${user.id}-remove-action`,
-                    onClick: handleAdministratorRemove,
-                    text: t('Remove {{what}}'),
-                    icon: <Delete />,
-                    disabled: organization.administrators_ids.length === 1
-                  }
-                ]}
+                getActions={user =>
+                  isAdmin && [
+                    {
+                      id: `${user.id}-remove-action`,
+                      onClick: handleAdministratorRemove,
+                      text: t('Remove {{what}}'),
+                      icon: <Delete />,
+                      disabled: organization.administrators_ids.length === 1
+                    }
+                  ]
+                }
               />
             )}
           </Grid>
