@@ -183,13 +183,10 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
 
   const organization_trans = t('organization');
   const canCreateTeams =
-    !!organization &&
-    !!user &&
-    (organization.team_creation_permission === 'anyone' ||
-      (organization.team_creation_permission === 'administrators' &&
-        organization.administrators_ids?.includes(user.id)) ||
-      (organization.team_creation_permission === 'members' &&
-        organization.current_user_participation?.includes('member')));
+    organization.team_creation_permission === 'anyone' ||
+    (organization.team_creation_permission === 'administrators' &&
+      organization.administrators_ids.includes(user.id)) ||
+    (organization.team_creation_permission === 'members' && !organization.public);
 
   const isAdmin = organization?.current_user_participation?.includes('administrator');
 
