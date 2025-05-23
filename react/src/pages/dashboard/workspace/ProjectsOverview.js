@@ -1,702 +1,549 @@
 import {
   Alert,
   Avatar,
-  AvatarGroup,
   Box,
   Button,
   Chip,
-  Container,
+  FormControl,
   Grid,
-  Paper,
+  IconButton,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  Skeleton,
   Stack,
+  Switch,
+  Tab,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  Divider,
-  Dialog,
-  DialogContent,
-  IconButton,
-} from "@mui/material";
-import { DataGrid, GridToolbar, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { Add, Folder, MenuBook,FileUpload, Close, ViewList } from "@mui/icons-material";
-import { LoadingButton } from "@mui/lab";
-import AuthGuardSkeleton from "components/guards/AuthGuardSkeleton";
-import useMounted from "hooks/useMounted";
-import React from "react";
-import { Helmet } from "react-helmet-async";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+  Tabs,
+  TextField,
+  Typography
+} from '@mui/material';
+import { Add, Delete, Edit, People, Save } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
+import CentricCircularProgress from 'components/CentricCircularProgress';
+import ConfirmationButton from 'components/ConfirmationButton';
+import { OrganizationChip } from 'components/Icons';
+import { TEAM_TYPES, WHO_CAN_CREATE_OPTIONS } from 'constants';
+import useAuth from 'hooks/useAuth';
+import useDependantTranslation from 'hooks/useDependantTranslation';
+import useMounted from 'hooks/useMounted';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { getLanguage } from 'translations/i18n';
 import {
-  getCoproductionProcesses,
-  getUnseenUserNotifications,
-} from "slices/general";
-import { cleanProcess } from "slices/process";
-import useAuth from "../../../hooks/useAuth";
-import CoproductionprocessCreate from "./CoproductionProcessCreate";
-import CentricCircularProgress from "components/CentricCircularProgress";
-import { StatusChip, WarningIcon } from "components/Icons";
-import HelpAlert from "components/HelpAlert";
-import SearchBox from "components/SearchBox";
-import moment from "moment";
-import TeamAvatar from "components/TeamAvatar";
-import Ballot from "@mui/icons-material/Ballot";
+  defaultTeamTypesTranslations,
+  teamCreationPermissionTranslations
+} from 'utils/someCommonTranslations';
+import { organizationsApi } from '__api__';
+import TeamCreate from './TeamCreate';
+import UsersList from './UsersList';
 
-import { coproductionProcessesApi } from "__api__";
-import { styled } from "@mui/material/styles";
-import InterlinkAnimation from "components/home/InterlinkLoading";
-
-function ProcessRow({ process, t }) {
-  const navigate = useNavigate();
-
-  return (
-    <TableRow
-      key={process.id}
-      hover
-      sx={{ "& > *": { borderBottom: "unset" }, cursor: "pointer" }}
-      onClick={() => {
-        if (process.hideguidechecklist) {
-          navigate(`/dashboard/coproductionprocesses/${process.id}/profile`);
-        } else {
-          navigate(`/dashboard/coproductionprocesses/${process.id}/overview`);
-        }
-      }}
-    >
-      <TableCell align="center">
-        <Box style={{ justifyContent: "center", display: "flex" }}>
-          {process.is_part_of_publication && <MenuBook sx={{ mr: 1 }} />}
-
-          {process.logotype_link ? (
-            <Avatar
-              sx={{ height: "25px", width: "25px" }}
-              variant="rounded"
-              src={process.logotype_link}
-            />
-          ) : (
-            <Folder />
-          )}
-        </Box>
-      </TableCell>
-      <TableCell align="center" component="th" scope="row">
-        <b>{process.name}</b>
-      </TableCell>
-      <TableCell align="center">
-        {moment(process.created_at).fromNow()}
-      </TableCell>
-      <TableCell align="center">
-        <StatusChip t={t} status={process.status} />
-      </TableCell>
-      <TableCell align="center">
-        <AvatarGroup max={5} variant="rounded">
-          {process.enabled_teams.length > 0 ? (
-            process.enabled_teams.map((team) => (
-              <TeamAvatar
-                sx={{ height: 25, width: 25 }}
-                key={team.id}
-                team={team}
-              />
-            ))
-          ) : (
-            <Stack direction="row" alignItems="center">
-              <WarningIcon />
-              <Typography sx={{ ml: 2 }}>{t("No teams")}</Typography>
-            </Stack>
-          )}
-        </AvatarGroup>
-      </TableCell>
-      <TableCell align="center">
-        {process.current_user_participation.map((p) => (
-          <Chip key={p} label={p} />
-        ))}
-      </TableCell>
-    </TableRow>
-  );
-}
-const ProjectsOverview = () => {
-  const { processes, loadingProcesses } = useSelector((state) => state.general);
-  const [coproductionProcessCreatorOpen, setCoproductionProcessCreatorOpen] =
-    React.useState(false);
-  const [coproductionProcessLoading, setCoproductionProcessLoading] =
-    React.useState(false);
-  const [searchValue, setSearchValue] = React.useState("");
-  const [pageSize, setPageSize] = React.useState(5);
-  const navigate = useNavigate();
-
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
+const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = null }) => {
+  const [editMode, setEditMode] = useState(false);
+  const [name, setName] = useState('');
+  const [isPublic, _setPublic] = useState(false);
+  const [defaultTeamType, setDefaultTeamType] = useState('');
+  const [teamCreationPermission, setTeamCreationPermission] = useState('administrators');
+  const [description, setDescription] = useState('');
+  const [logotype, setLogotype] = useState(null);
+  const [loadingTeams, setLoadingTeams] = useState(true);
+  const [organization, setOrganization] = useState({ teams_ids: [], administrators_ids: [] });
+  const [teams, setTeams] = useState([]);
+  const [teamCreatorOpen, setOpenTeamCreator] = useState(false);
+  const [creatingTeam, setCreatingTeam] = useState(false);
+  const [profileLanguage, setProfileLanguage] = useState(getLanguage());
+  const { user } = useAuth();
   const mounted = useMounted();
-  const { user, isAuthenticated } = useAuth();
+  const { t } = useDependantTranslation();
 
-  const momentComparator = (a, b) => {
-    return moment(a).diff(moment(b));
+  const setPublic = val => {
+    if (val === false && teamCreationPermission === 'anyone') {
+      setTeamCreationPermission('administrators');
+    }
+    _setPublic(val);
   };
 
-  const [importDialogOpen, setImportDialogOpen] = React.useState(false);
-
-  const [fileContent, setFileContent] = React.useState('');
-  
-  const [isImporting, setIsImporting] = React.useState(false);
-
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
-
-  const logoStyle = {
-    width: "300px",
-    height: "auto",
+  const getTeams = () => {
+    setLoadingTeams(true);
+    organizationsApi.getOrganizationTeams(organizationId).then(res => {
+      setTeams(res);
+      setLoadingTeams(false);
+    });
   };
 
-  const [showTakeLongMsn, setShowTakeLongMsn] = React.useState(false);
-  
-
-  const QuickSearchToolbar = () => {
-    return (
-      <Box
-        sx={{
-          pl: 1,
-          pr: 1,
-          pb: 2,
-          pt: 1,
-          display: 'flex',
-        }}
-      >
-        <GridToolbarQuickFilter
-          style={{ flex: 1 }}
-
-          quickFilterParser={(searchInput) =>
-            searchInput
-              .split(',')
-              .map((value) => value.trim())
-              .filter((value) => value !== '')
-          }
-          debounceMs={600}
-        />
-      </Box>
-    );
-
-  };
-
-  const columns = [
-    {
-      field: "icon",
-      headerName: "",
-      sortable: false,
-      flex: 0.05,
-      disableColumnMenu: true,
-      filterable: false,
-      renderCell: (params) => {
-        return params.row.is_part_of_publication ? (
-          <MenuBook sx={{ mr: 1 }} />
-        ) : params.row.logotype_link ? (
-          <Avatar
-            sx={{ height: "25px", width: "25px" }}
-            variant="rounded"
-            src={params.row.logotype_link}
-          />
-        ) : (
-          <Folder />
-        );
-      },
-    },
-    {
-      field: "name",
-      headerName: t("Name"),
-      flex: 2,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => {
-        return <b>{params.row.name}</b>;
-      },
-      valueGetter: (params) => { return params.row.name },
-    },
-    {
-      field: "tags",
-      headerName: t("Tags"),
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      sortable: false,
-      disableColumnMenu: true,
-      filterable: false,
-      valueGetter: (params) => {
-        if (params.value.length == 0) return t("No tags");
-        let tmp_tags = [];
-        tmp_tags.push(params.value.map((tag) => tag.name));
-        return tmp_tags.toString();
-      },
-      renderCell: (params) => {
-        return (
-          <>
-            {params.row.tags.length > 0 ? (
-              <Chip
-                key={params.row.tags[0].name}
-                label={params.row.tags[0].name}
-              />
-            ) : (
-              <Typography sx={{ ml: 2 }}>{t("No tags")}</Typography>
-            )}
-          </>
-        );
-      },
-    },
-    {
-      field: "created",
-      headerName: t("Created"),
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      filterable: false,
-      valueGetter: (params) => {
-        return params.row.created_at;
-      },
-      sortComparator: momentComparator,
-      renderCell: (params) => {
-        return moment(params.row.created_at).fromNow();
-      },
-    },
-    {
-      field: "status",
-      headerName: t("Status"),
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      sortable: false,
-      disableColumnMenu: true,
-      filterable: false,
-      renderCell: (params) => {
-        return <StatusChip t={t} status={params.row.status} />;
-      },
-    },
-    {
-      field: "teams",
-      headerName: t("Teams"),
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      sortable: false,
-      disableColumnMenu: true,
-      filterable: false,
-      renderCell: (params) => {
-        return (
-          <AvatarGroup max={5} variant="rounded">
-            {params.row.teams.length > 0 ? (
-              params.row.teams.map((team) => (
-                <TeamAvatar
-                  sx={{ height: 25, width: 25 }}
-                  // key={team.id}
-                  team={team}
-                />
-              ))
-            ) : (
-              <Stack direction="row" alignItems="center">
-                <WarningIcon />
-                <Typography sx={{ ml: 2 }}>{t("No teams")}</Typography>
-              </Stack>
-            )}
-          </AvatarGroup>
-        );
-      },
-    },
-    {
-      field: "participation",
-      headerName: t("Roles"),
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      sortable: false,
-      disableColumnMenu: true,
-      filterable: false,
-      renderCell: (params) => {
-        return params.row.participation.map((p) => <Chip key={p} label={p} />);
-      },
-    },
-  ];
-
-  const rows = processes.map((process) => {
-    return {
-      id: process.id,
-      name: process.name,
-      created_at: process.created_at,
-      status: process.status,
-      teams: process.enabled_teams,
-      participation: process.current_user_participation,
-      tags: process.tags,
-      is_part_of_publication: process.is_part_of_publication,
-      logotype_link: process.logotype_link,
-      hideguidechecklist: process.hideguidechecklist,
-    };
-  });
-
-  const getCoproductionProcessesData = React.useCallback(
-    async (search) => {
-      if (isAuthenticated) {
-        dispatch(cleanProcess());
-        dispatch(getCoproductionProcesses(search));
+  const handleAdministratorAdd = user => {
+    organizationsApi.addAdministrator(organizationId, user.id).then(res => {
+      if (mounted.current) {
+        update(() => {
+          onChanges && onChanges();
+        });
       }
-    },
-    [isAuthenticated, mounted]
-  );
-
-  const getUnseenUserNotificationsData = React.useCallback(
-    async (search) => {
-      if (isAuthenticated) {
-        dispatch(cleanProcess());
-        dispatch(getUnseenUserNotifications(search));
-        //dispatch(getUnseenUserNotifications({'user_id':user.id}));
+    });
+  };
+  const handleAdministratorRemove = user => {
+    organizationsApi.removeAdministrator(organizationId, user.id).then(res => {
+      if (mounted.current) {
+        update(() => {
+          onChanges && onChanges();
+        });
       }
-    },
-    [isAuthenticated, mounted]
-  );
+    });
+  };
 
-  // if (mounted.current) {
-  //   dispatch(cleanProcess());
-  //   dispatch(getUnseenUserNotifications(search));
-  // }
+  const nameAndDescChanged =
+    name !== organization.name ||
+    description !== organization.description ||
+    isPublic !== organization.public ||
+    teamCreationPermission !== organization.team_creation_permission ||
+    defaultTeamType !== organization.default_team_type;
+  const somethingChanged = nameAndDescChanged || logotype !== null;
 
-  React.useEffect(() => {
-    let delayDebounceFn;
-    if (mounted.current) {
-      delayDebounceFn = setTimeout(
-        () => {
-          getCoproductionProcessesData(searchValue);
+  const handleSave = async () => {
+    const calls = [];
+
+    let send = false;
+    if (nameAndDescChanged) {
+      const data = {
+        name_translations: {
+          ...organization.name_translations,
+          [profileLanguage]: name
         },
-        searchValue ? 800 : 0
-      );
-    }
-    return () => {
-      if (delayDebounceFn) {
-        clearTimeout(delayDebounceFn);
-      }
-    };
-  }, [getCoproductionProcessesData, searchValue]);
-
-  React.useEffect(() => {
-    let delayDebounceFn;
-    if (mounted.current) {
-      delayDebounceFn = setTimeout(
-        () => {
-          getUnseenUserNotificationsData({ user_id: user?.id });
+        description_translations: {
+          ...organization.description_translations,
+          [profileLanguage]: description
         },
-        searchValue ? 800 : 0
-      );
+        default_team_type: defaultTeamType,
+        public: isPublic,
+        team_creation_permission: teamCreationPermission
+      };
+      console.log('UPDATE', data);
+      calls.push(organizationsApi.update(organization.id, data));
+      send = true;
     }
-    return () => {
-      if (delayDebounceFn) {
-        clearTimeout(delayDebounceFn);
+
+    // change logotype if specified
+    if (logotype) {
+      calls.push(organizationsApi.setFile(organization.id, 'logotype', logotype));
+      send = true;
+    }
+
+    if (send) {
+      await Promise.all(calls);
+      onChanges && onChanges();
+      update(() => {
+        setEditMode(false);
+      });
+    }
+  };
+
+  const handleRemove = () => {
+    organizationsApi.delete(organizationId).then(() => {
+      onChanges && onChanges();
+    });
+  };
+
+  const update = callback => {
+    organizationsApi.get(organizationId).then(res => {
+      if (mounted.current) {
+        setOrganization(res);
+        setName(res.name);
+        setDescription(res.description);
+        setTeamCreationPermission(res.team_creation_permission);
+        setDefaultTeamType(res.default_team_type);
+        setPublic(res.public);
+        getTeams();
+        callback && callback(res);
       }
-    };
-  }, [getUnseenUserNotificationsData]);
-
-  const onProcessCreate = (res) => {
-    navigate(`/dashboard/coproductionprocesses/${res.id}/overview`);
+    });
   };
 
-  const handleDiscovery= () => {
-    // Navigate to the desired page
-    navigate("/dashboard/interlinkers?tab=Processes");
-  };
+  useEffect(() => {
+    update();
+  }, []);
 
-  const handleImportProcess= () => {
-    // Show panel to import a process from a zip file.
-    //alert("show panel of import with a file");
-    setImportDialogOpen(true);
-  };
-
-
-  const handleCapture = async ({ target }) => {
-    const file = target.files[0];
-    if (file) {
-        setIsImporting(true);
-
-        // Prepare to show the modal after 10 seconds if the API call isn't done
-        const modalTimeout = setTimeout(() => {
-          setShowTakeLongMsn(true);
-        }, 10000);  // 10 seconds delay
-
-        try {
-            const fileName = file.name;
-            console.log('File Name: ', fileName);
-            const response = await coproductionProcessesApi.importProcess(file);
-
-            // Clear the timeout once the API call completes, if it's within 10 seconds.
-            // This will prevent the modal from showing.
-            clearTimeout(modalTimeout);
-
-            console.log(response);
-            setIsImporting(false);
-            navigate(`/dashboard/coproductionprocesses/${response.id}/overview`);
-        } catch (error) {
-            // Clear the timeout in case of an error as well, so the modal doesn't show if the error occurs within 10 seconds.
-            clearTimeout(modalTimeout);
-            setIsImporting(false);
-            console.error("Error during import:", error);
-            // Optionally, notify the user about the error
-        }
+  const handleFileSelected = e => {
+    const { files } = e.target;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file) {
+        file.path = URL.createObjectURL(file);
+        setLogotype(file);
+      }
     }
-};
+  };
+
+  const organization_trans = t('organization');
+  const canCreateTeams =
+    organization.team_creation_permission === 'anyone' ||
+    (organization.team_creation_permission === 'administrators' &&
+      organization.administrators_ids.includes(user.id)) ||
+    (organization.team_creation_permission === 'members' && !organization.public);
+  const isAdmin =
+    organization &&
+    organization.current_user_participation &&
+    organization.current_user_participation.includes('administrator');
+
+  const [tabValue, setTabValue] = useState('teams');
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   return (
-    <>
-      <Helmet>
-        <title>{t("workspace-title")}</title>
-      </Helmet>
-      <Box
-        sx={{
-          backgroundColor: "background.default",
-          minHeight: "100%",
-          py: 5,
-          px: 1,
-        }}
-      >
-        <Container maxWidth="lg">
-          <AuthGuardSkeleton height="60vh" width="100%">
-            <Grid container spacing={3}>
-              <Grid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={3}
-                item
-                xs={12}
-              >
-                <Grid item>
-                  <Typography
-                    color="textSecondary"
-                    variant="overline"
-                    data-cy="workspace-title"
-                  >
-                    {t("Workspace")}
-                  </Typography>
-                  <Typography
-                    color="textPrimary"
-                    variant="h5"
-                    data-cy="welcome-to-user"
-                  >
-                    {t("Welcome", {
-                      name: user ? user.given_name : "",
-                    })}
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="subtitle2"
-                    data-cy="workspace-subtitle"
-                  >
-                    {t("workspace-subtitle")}
-                  </Typography>
-                </Grid>
-                <Stack direction="row"  spacing={2} alignItems="center">
-
-                <Grid sx={{m:2}} item>
-                  <LoadingButton
-                    onClick={() => setCoproductionProcessCreatorOpen(true)}
-                    loading={loadingProcesses}
-                    fullWidth
-                    variant="contained"
-                    sx={{ textAlign: "center", mt: 1, mb: 2 }}
-                    startIcon={<Add />}
-                    size="small"
-                    data-cy="add-process"
-                  >
-                    {t("add-process")}
-                  </LoadingButton>
-                  
-
-                </Grid>
-
-                <Grid sx={{m:2}}  item>
-                <Button variant="contained" color="primary" startIcon={<FileUpload />} size="small" sx={{ textAlign: "center", mt: 1, mb: 2 }} onClick={handleImportProcess} data-cy="help">
-                    {t("Import a process")}
-                  </Button>
-                  </Grid>
-                
-                <Grid sx={{m:2}}  item>
-                  <Button variant="contained" color="primary" startIcon={<Ballot />} size="small" sx={{ textAlign: "center", mt: 1, mb: 2 }} onClick={handleDiscovery} data-cy="help">
-                    {t("Discover open processes")}
-                  </Button>
-
-                  </Grid>
-                  </Stack>
-              </Grid>
-            </Grid>
-            <Box sx={{ mt: 4 }}>
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                components={{
-                  Toolbar: QuickSearchToolbar,
-                }}
-                pageSize={pageSize}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowsPerPageOptions={[5, 10, 20]}
-                disableSelectionOnClick
-                disableColumnFilter
-                disableColumnSelector
-                disableDensitySelector
-                rowSelection={false}
-                disableRowSelectionOnClick={true}
-                autoHeight
-                onRowClick={(params) => {
-                  if (params.row.hideguidechecklist) {
-                    navigate(
-                      `/dashboard/coproductionprocesses/${params.row.id}/profile`
-                    );
-                  } else {
-                    navigate(
-                      `/dashboard/coproductionprocesses/${params.row.id}/overview`
-                    );
-                  }
-                }}
-                localeText={{
-                  noRowsLabel: t("No coproduction processes found"),
-                }}
-                sx={{
-                  // pointer cursor on ALL rows
-                  "& .MuiDataGrid-row:hover": {
-                    cursor: "pointer",
-                  },
-                }}
-              />
-              <CoproductionprocessCreate
-                open={coproductionProcessCreatorOpen}
-                setOpen={setCoproductionProcessCreatorOpen}
-                loading={coproductionProcessLoading}
-                setLoading={setCoproductionProcessLoading}
-                onCreate={onProcessCreate}
-              />
-            </Box>
-          </AuthGuardSkeleton>
-        </Container>
-      </Box>
-
-      <Dialog
-        open={importDialogOpen}
-        onClose={() => {
-          setImportDialogOpen(false);
-      
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={() => {
-            setImportDialogOpen(false);
-      
-          }}
-          sx={{
-            position: "absolute",
-            right: 4,
-            top: 4,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <Close />
-        </IconButton>
-
-        <DialogContent sx={{ p: 3 }}>
-        <>
-            <Typography variant="h6" sx={{ mt: 3 }}>
-              {t("Import a Coproduction Process")}
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={6} md={8}>
-                <Typography variant="p" sx={{ mt: 3 }}>
-                  {t("Set up a new collaborative coproduction process utilizing an already downloaded zip file")+"."}
-                </Typography>
-
-                {/* <Typography variant="p" sx={{ mt: 3 }}>
-                  {t("Example file:")}
-                </Typography>
-
-                <Link
-                  to="/static/story/ExampleTemplate.json"
-                  target="_blank"
-                  download
-                >
-                  <Download sx={{ ml: 1 }} />{" "}
-                </Link> */}
-              </Grid>
-
-              <Grid item xs={6} md={4}>
-                <Stack direction="row" spacing={0}>
-                  <LoadingButton
-                    variant="contained"
-                    disabled={false}
-                    loading={false}
-                    //color="warning"
-                    //onClick={handleCapture}
-                    component="label"
-                    startIcon={<ViewList />}
-                    sx={{ mb: 3, justifyContent: "right", textAlign: "center" }}
-                  >
-                    {t("Import from file")}
-                    <input
-                      type="file"
-                      accept=".zip"
-                      hidden
-                      onChange={handleCapture}
-                    />
-                  </LoadingButton>
-                </Stack>
-
-                {/* <Button sx={{ mt: 2 }} variant="contained" component="label">
-                  {t("Publish from a File")}
-                  <input
+    <Box>
+      {organization ? (
+        <Grid container>
+          <Grid item md={4}>
+            <Stack
+              direction="column"
+              sx={{ textAlign: 'center', justifyContent: 'center', p: 2 }}
+              spacing={2}
+            >
+              {editMode ? (
+                <label htmlFor="contained-button-file">
+                  <Input
+                    inputProps={{ accept: 'image/*' }}
+                    id="contained-button-file"
                     type="file"
-                    accept=".json"
-                    hidden
-                    onChange={handleCapture}
+                    sx={{ display: 'none' }}
+                    onChange={handleFileSelected}
                   />
-                </Button> */}
-              </Grid>
-            </Grid>
-          </>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isImporting} >
-      {showTakeLongMsn && (
-        <IconButton
-            aria-label="close"
-            onClick={() => setIsImporting(false)}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <Close />
-          </IconButton>
-        )}
-
-        <DialogContent sx={{ 
-            p: 2, 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center' 
-        }}>
-            <Stack spacing={2} alignItems="center">
-                <div style={logoStyle}>
-                    <InterlinkAnimation />
-                </div>
-                <div>{t("Importing the process please wait.")}</div>
-                <div>{t("The process could last some minutes.")}</div>
-                {showTakeLongMsn && (
-                    <Alert severity="error">The process is taking longer than usual. You can wait here or close the window and check back later.</Alert>
-                )}
+                  <IconButton component="span" color="inherit">
+                    <div
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        position: 'relative'
+                      }}
+                    >
+                      <Avatar
+                        src={logotype ? logotype.path : organization.logotype_link}
+                        variant="rounded"
+                        style={{
+                          width: '100px',
+                          height: '100px',
+                          position: 'absolute'
+                        }}
+                      />
+                      <Edit
+                        style={{
+                          width: '50%',
+                          height: '50%',
+                          position: 'absolute',
+                          top: '50%',
+                          transform: 'translateY(-50%)'
+                        }}
+                      />
+                    </div>
+                  </IconButton>
+                </label>
+              ) : (
+                <IconButton component="span" color="inherit" disabled>
+                  <Avatar
+                    src={logotype ? logotype.path : organization.logotype_link}
+                    variant="rounded"
+                    style={{
+                      width: '100px',
+                      height: '100px'
+                    }}
+                  />
+                </IconButton>
+              )}
+              {!editMode ? (
+                <Typography variant="h5">{organization.name}</Typography>
+              ) : (
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Name"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                />
+              )}
+              {!editMode ? (
+                <Typography variant="body1">{organization.description}</Typography>
+              ) : (
+                <TextField
+                  margin="dense"
+                  id="description"
+                  label="Description"
+                  type="text"
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  variant="standard"
+                />
+              )}
+              {!editMode ? (
+                <></>
+              ) : (
+                <Stack sx={{ mt: 2 }} spacing={1} direction="row" alignItems="center">
+                  <Typography variant="body2">{t('Public')}</Typography>
+                  <Switch checked={isPublic} onChange={event => setPublic(event.target.checked)} />
+                </Stack>
+              )}
+              {!editMode ? (
+                <>
+                  <Typography variant="overline">
+                    {t('Who can create teams in this organization?')}
+                  </Typography>
+                  <Typography variant="body1">
+                    {teamCreationPermissionTranslations(t)[organization.team_creation_permission]}
+                  </Typography>
+                </>
+              ) : (
+                <FormControl variant="standard" fullWidth sx={{ mt: 3 }}>
+                  <InputLabel id="select-creation-permission-label">
+                    {t('Who can create teams')}
+                  </InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="select-creation-permission-label"
+                    id="select-creation-permission"
+                    value={teamCreationPermission}
+                    onChange={event => {
+                      setTeamCreationPermission(event.target.value);
+                    }}
+                    label={t('Who can create teams')}
+                  >
+                    {WHO_CAN_CREATE_OPTIONS(t, isPublic).map(lan => (
+                      <MenuItem key={lan.value} disabled={lan.disabled} value={lan.value}>
+                        {lan.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {!editMode ? (
+                <>
+                  <Typography variant="overline">{t('Default team type')}</Typography>
+                  <OrganizationChip type={organization.default_team_type} t={t} />
+                </>
+              ) : (
+                <FormControl variant="standard" fullWidth sx={{ mt: 3 }}>
+                  <InputLabel id="select-type">{t('Default team type')}</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="select-type-label"
+                    id="select-type"
+                    value={defaultTeamType}
+                    onChange={event => {
+                      setDefaultTeamType(event.target.value);
+                    }}
+                    label={t('Default team type')}
+                  >
+                    {TEAM_TYPES(t).map(lan => (
+                      <MenuItem key={lan.value} disabled={lan.disabled} value={lan.value}>
+                        {lan.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              {isAdmin && (
+                <>
+                  {!editMode ? (
+                    <Button
+                      disabled={!isAdmin}
+                      startIcon={<Edit />}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => onChanges && setEditMode(true)}
+                    >
+                      {t('Edit')}
+                    </Button>
+                  ) : (
+                    <Stack direction="row" justifyContent="center" sx={{ mt: 2 }}>
+                      <Button variant="text" color="warning" onClick={() => setEditMode(false)}>
+                        {t('Discard changes')}
+                      </Button>
+                      <Button
+                        disabled={!somethingChanged}
+                        startIcon={<Save />}
+                        variant="contained"
+                        color="success"
+                        onClick={handleSave}
+                      >
+                        {t('Save')}
+                      </Button>
+                    </Stack>
+                  )}
+                  <ConfirmationButton
+                    Actionator={({ onClick }) => (
+                      <Button
+                        startIcon={<Delete />}
+                        disabled={!editMode}
+                        variant="text"
+                        color="error"
+                        onClick={onClick}
+                      >
+                        {t('Remove {{what}}', { what: organization_trans })}
+                      </Button>
+                    )}
+                    ButtonComponent={({ onClick }) => (
+                      <Button
+                        sx={{ mt: 1 }}
+                        fullWidth
+                        variant="contained"
+                        color="error"
+                        onClick={onClick}
+                      >
+                        {t('Confirm deletion')}
+                      </Button>
+                    )}
+                    onClick={handleRemove}
+                    text={t('Are you sure?')}
+                  />
+                </>
+              )}
             </Stack>
-        </DialogContent>
-        </Dialog>
-    </>
+          </Grid>
+          <Grid item md={8} sx={{ p: 2 }}>
+            <Tabs
+              value={tabValue}
+              onChange={handleTabChange}
+              aria-label="organization-right-side-tabs"
+              sx={{ mb: 2 }}
+              centered
+            >
+              <Tab value="teams" label={`${t('Teams')} (${organization.teams_ids.length})`} />
+              <Tab
+                value="administrators"
+                label={`${t('Administrators')} (${organization.administrators_ids.length})`}
+              />
+            </Tabs>
+            <TeamCreate
+              open={teamCreatorOpen}
+              setOpen={setOpenTeamCreator}
+              onCreate={getTeams}
+              loading={creatingTeam}
+              setLoading={setCreatingTeam}
+              organization={organization}
+            />
+            {tabValue === 'teams' && (
+              <>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">{t('Name')}</TableCell>
+                      <TableCell align="center">{t('Type')}</TableCell>
+                      <TableCell align="center">{t('Created')}</TableCell>
+                      <TableCell align="center">{t('Members')}</TableCell>
+                      <TableCell align="center">{t('Your participation in the team')}</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {teams &&
+                      teams.map(team => (
+                        <TableRow
+                          sx={{ cursor: onTeamClick ? 'pointer' : '' }}
+                          key={team.id}
+                          onClick={() => onTeamClick(team)}
+                          hover={onTeamClick !== null}
+                        >
+                          <TableCell align="center">
+                            <Stack alignItems="center" direction="row" spacing={1}>
+                              {team.logotype_link ? (
+                                <Avatar
+                                  sx={{ height: '25px', width: '25px' }}
+                                  variant="rounded"
+                                  src={team.logotype_link}
+                                />
+                              ) : (
+                                <People />
+                              )}
+                              <b>{team.name}</b>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="center" component="th" scope="row">
+                            <OrganizationChip type={team.type} t={t} />
+                          </TableCell>
+                          <TableCell align="center">{moment(team.created_at).fromNow()}</TableCell>
+                          <TableCell align="center">{team.users_count}</TableCell>
+                          <TableCell align="center">
+                            {team.current_user_participation.length > 0 ? (
+                              team.current_user_participation.map(p => (
+                                <Chip
+                                  size="small"
+                                  sx={{ mr: 1 }}
+                                  key={team.id + p}
+                                  title={`You are ${p} of the organization`}
+                                  variant={p === 'administrator' ? 'contained' : 'outlined'}
+                                  label={p}
+                                />
+                              ))
+                            ) : (
+                              <Chip label={t('None')} />
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    {loadingTeams &&
+                      [...Array(organization.teams_ids.length).keys()].map(i => (
+                        <TableRow key={`skeleton-${i}`}>
+                          <TableCell align="center" colSpan={6}>
+                            <Skeleton />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+
+                {!loadingTeams && (!teams || teams.length) === 0 && (
+                  <Alert severity="warning">{t('No teams found in this organization')}</Alert>
+                )}
+                <Box sx={{ textAlign: 'center' }}>
+                  <LoadingButton
+                    loading={loadingTeams || creatingTeam}
+                    sx={{ mt: 3 }}
+                    size="small"
+                    variant="contained"
+                    startIcon={<Add />}
+                    onClick={() => setOpenTeamCreator(true)}
+                    disabled={!canCreateTeams}
+                  >
+                    {t('Create new team')}
+                  </LoadingButton>
+                </Box>
+              </>
+            )}
+            {tabValue === 'administrators' && (
+              <UsersList
+                size="small"
+                searchOnOrganization={isAdmin && organization.id}
+                users={organization.administrators}
+                onSearchResultClick={isAdmin && handleAdministratorAdd}
+                getActions={user =>
+                  isAdmin && [
+                    {
+                      id: `${user.id}-remove-action`,
+                      onClick: handleAdministratorRemove,
+                      text: t('Remove {{what}}'),
+                      icon: <Delete />,
+                      disabled: organization.administrators_ids.length === 1
+                    }
+                  ]
+                }
+              />
+            )}
+          </Grid>
+        </Grid>
+      ) : (
+        <CentricCircularProgress />
+      )}
+    </Box>
   );
 };
 
-export default ProjectsOverview;
+export default OrganizationProfile;
