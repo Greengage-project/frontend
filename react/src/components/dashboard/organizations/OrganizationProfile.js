@@ -180,15 +180,21 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
 
   const organization_trans = t('organization');
   const canCreateTeams =
-    organization.team_creation_permission === 'anyone' ||
-    (organization.team_creation_permission === 'administrators' &&
-      organization.administrators_ids.includes(user.id)) ||
+    organization?.team_creation_permission === 'anyone' ||
+    (organization?.team_creation_permission === 'administrators' &&
+      organization?.administrators_ids?.includes(user?.id)) ||
     (organization.team_creation_permission === 'members' && !organization.public);
   const isAdmin =
     organization &&
     organization.current_user_participation &&
     organization.current_user_participation.includes('administrator');
 
+  console.log({
+    organizationId,
+    organization,
+    canCreateTeams,
+    isAdmin
+  });
   const [tabValue, setTabValue] = useState('teams');
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
