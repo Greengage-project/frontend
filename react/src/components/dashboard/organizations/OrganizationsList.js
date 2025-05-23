@@ -6,21 +6,21 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-} from "@mui/material";
-import SearchBox from "components/SearchBox";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import OrganizationRow from "./OrganizationRow";
+  TableRow
+} from "@mui/material"
+import SearchBox from "components/SearchBox"
+import React from "react"
+import { useTranslation } from "react-i18next"
+import OrganizationRow from "./OrganizationRow"
 
 const OrganizationsList = ({
   organizations,
   searchValue,
   setSearchValue,
   loading,
-  getCollapseElement,
+  getCollapseElement
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <>
       <Box sx={{ mb: 2 }}>
@@ -35,20 +35,20 @@ const OrganizationsList = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">{t("Name")}</TableCell>
-              <TableCell align="center">{t("Public")}</TableCell>
-              <TableCell align="center">{t("Administrators")}</TableCell>
-              <TableCell align="center">{t("Created")}</TableCell>
-              <TableCell align="center">{t("Team number")}</TableCell>
-              <TableCell align="center">
+              <TableCell align='center'>{t("Name")}</TableCell>
+              <TableCell align='center'>{t("Public")}</TableCell>
+              <TableCell align='center'>{t("Administrators")}</TableCell>
+              <TableCell align='center'>{t("Created")}</TableCell>
+              <TableCell align='center'>{t("Team number")}</TableCell>
+              <TableCell align='center'>
                 {t("Your participation in the organization")}
               </TableCell>
-              <TableCell align="center" />
+              <TableCell align='center' />
             </TableRow>
           </TableHead>
           <TableBody>
             {organizations.length > 0 &&
-              organizations.map((organization) => (
+              organizations.map(organization => (
                 <React.Fragment key={organization.id}>
                   <OrganizationRow
                     collapseElement={getCollapseElement(organization)}
@@ -60,7 +60,7 @@ const OrganizationsList = ({
         </Table>
       </TableContainer>
     </>
-  );
-};
+  )
+}
 
-export default OrganizationsList;
+export default OrganizationsList

@@ -22,6 +22,7 @@
     }
   },
   "rules": {
+    "linebreak-style": ["error", "unix"],
     "jsx-quotes": [2, "prefer-single"],
     "class-methods-use-this": "off",
     "comma-dangle": "off",
