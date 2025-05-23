@@ -190,13 +190,6 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
 
   const isAdmin = organization?.current_user_participation?.includes('administrator');
 
-  console.log({
-    userId: user?.id,
-    organizationId,
-    organization,
-    canCreateTeams,
-    isAdmin
-  });
   const [tabValue, setTabValue] = useState('teams');
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
