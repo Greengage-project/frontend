@@ -193,6 +193,13 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
 
   const isAdmin = organization?.current_user_participation?.includes('administrator');
 
+  console.log({
+    organizationId,
+    canCreateTeams,
+    organization,
+    isAdmin
+  });
+
   const [tabValue, setTabValue] = useState('teams');
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -201,7 +208,7 @@ const OrganizationProfile = ({ organizationId, onChanges = null, onTeamClick = n
   return (
     <Box>
       {organization ? (
-        <Grid container>
+        <Grid container data-cy={`organization-profile-${organizationId}`}>
           <Grid item md={4}>
             <Stack
               direction="column"
