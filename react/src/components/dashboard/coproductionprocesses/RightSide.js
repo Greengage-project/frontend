@@ -788,10 +788,17 @@ const RightSide = ({ softwareInterlinkers }) => {
                       <MenuItem
                         key={si.id}
                         onClick={() => {
-                          setStep(1);
-                          setSelectedInterlinker(si);
-                          setNewAssetDialogOpen(true);
-                          handleMenuClose();
+                          if (!si?.disabled) {
+                            setStep(1);
+                            setSelectedInterlinker(si);
+                            setNewAssetDialogOpen(true);
+                            handleMenuClose();
+                          }
+                        }}
+                        disabled={si?.disabled}
+                        sx={{
+                          opacity: si?.disabled ? 0.5 : 1,
+                          cursor: si?.disabled ? 'not-allowed' : 'pointer'
                         }}
                       >
                         <Avatar
