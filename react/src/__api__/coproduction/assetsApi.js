@@ -11,36 +11,39 @@ class AssetsApi extends GeneralApi {
     super('coproduction/api/v1/assets');
   }
 
-  
-
-  async getListAssetswithInternalInfo(params = {}, language = getLanguage()) {
-    //console.log(`/${this.url}/listAssetswithInternalInfo`+params);
-    //Get data of user_notifications
-    const res = await axiosInstance.get(
-      `/${this.url}/listAssetswithInternalInfo`, {
-        params: removeEmpty(params),
-        headers: {
-          'Accept-Language': language
-        }
+  async getAssetInfo(id, language = getLanguage()) {
+    const res = await axiosInstance.get(`/${this.url}/internal/${id}`, {
+      headers: {
+        'Accept-Language': language
       }
-    );
-    //console.log('getMulti call', res.data, 'in', language);
+    });
     return res.data;
   }
 
+  async getListAssetswithInternalInfo(params = {}, language = getLanguage()) {
+    // console.log(`/${this.url}/listAssetswithInternalInfo`+params);
+    // Get data of user_notifications
+    const res = await axiosInstance.get(`/${this.url}/listAssetswithInternalInfo`, {
+      params: removeEmpty(params),
+      headers: {
+        'Accept-Language': language
+      }
+    });
+    // console.log('getMulti call', res.data, 'in', language);
+    return res.data;
+  }
 
   async getMultiCatalogue(params = {}, language = getLanguage()) {
-    console.log(`/${this.url}/catalogue`+params);
-    //Get data of user_notifications
-    const res = await axiosInstance.get(
-      `/${this.url}/catalogue`, {
-        params: removeEmpty(params),
-        headers: {
-          'Accept-Language': language
-        }
+    console.log(`/${this.url}/catalogue${params}`);
+    // Get data of user_notifications
+    const res = await axiosInstance.get(`/${this.url}/catalogue`, {
+      params: removeEmpty(params),
+      headers: {
+        'Accept-Language': language
       }
-    );
-    //console.log('getMulti call', res.data, 'in', language);
+    });
+    console.log('getMultiCatalogue call', res.data, 'in', language);
+    // console.log('getMulti call', res.data, 'in', language);
     return res.data;
   }
 
@@ -91,7 +94,6 @@ class AssetsApi extends GeneralApi {
   async emailAskUserContribution(data) {
     return axiosInstance.post(`/${this.url}/emailAskUserContribution`, data);
   }
-
 
   async getInternal(id) {
     if (id) {
