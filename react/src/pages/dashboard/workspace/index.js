@@ -146,7 +146,7 @@ const MyWorkspace = () => {
                     align="justify"
                     data-cy="Welcome-description"
                   >
-                    {t("Welcome to the INTERLINK platform") + "."}
+                    {t("Welcome to CE") + "."}
                   </Typography>
 
                   <Typography
